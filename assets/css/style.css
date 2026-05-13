@@ -32,20 +32,14 @@ html {
 
 body {
     min-height: 100vh;
-    width: 100vw;
+    width: 100%;
     background: var(--fundo-principal);
     color: white;
 }
 
 #hero {
     display: none;
-    position: relative;
-    height: 500px;
-    width: 100vw;
-}
-
-div.img {
-    background: transparent url("../img/juan-png.webp") no-repeat;
+    background: black url("../img/juan.jpeg") no-repeat;
     background-position: top center;
     background-size: contain;
     background-attachment: fixed;
@@ -53,21 +47,26 @@ div.img {
     width: 100vw;
 }
 
+/* ============ HEADER + NAV ============ */
 header {
-    background-color: rgba(11, 15, 20, 1);
+    background-color: rgba(11, 15, 20, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 100;
     text-align: center;
+    border-bottom: 1px solid var(--borda);
 }
 
 #menu-navegacao {
     display: flex;
     list-style-type: none;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: space-evenly;
-    align-content: center;
-    padding: 20px;
+    align-items: center;
+    padding: 14px 12px;
+    gap: 12px;
 }
 
 
@@ -76,27 +75,45 @@ header {
     padding-bottom: 3px;
     text-decoration: none;
     color: var(--texto-principal);
+    font-size: 0.88rem;
+    position: relative;
+    padding: 4px 2px;
+    transition: color .2s ease;
+}
+
+#menu-navegacao > li > a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--cor-p1);
+    transition: width .25s ease;
 }
 
 #menu-navegacao > li > a:hover {
-    border-bottom: 1px solid var(--texto-secundario);
     color: var(--texto-secundario);
     cursor: pointer;
 }
 
-main.container {
-    display: grid;
-    grid-template: repeat(6, auto) / 1fr 10fr 1fr;
-    grid-auto-flow: row;
-    grid-auto-rows: 500px;
+#menu-navegacao > li > a:hover::after {
+    width: 100%;
 }
 
-section {
-    margin-bottom: 20px;
+/* ============ HERO ============ */
+#hero {
+    width: 100%;
+    padding: clamp(40px, 10vh, 100px) 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:
+        radial-gradient(ellipse at right, rgba(56, 189, 248, 0.10), transparent 50%),
+        radial-gradient(ellipse at left, rgba(168, 85, 247, 0.08), transparent 50%);
 }
 
-#sobre {
-    grid-area: 1 / 2 / span 1 / span 1;
+.hero-content {
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-evenly;
@@ -107,112 +124,110 @@ section {
     font-size: 1.8rem;
     line-height: 25px;
     text-align: left;
+    margin: 10px;
     font-family: var(--font-titulo);
-    white-space: nowrap;
-    overflow: hidden;
 }
 
-#sobre p.digitando {
-    font-weight: 600;
+#sobre span {
     color: var(--cor-p1);
-    display: block;
-    font-size: 0.8rem;
+    transform: translateY(-2px);
+}
+
+.btn-contato {
+    background: transparent;
+    color: var(--texto-principal);
+    border-color: var(--cor-p1);
+    min-width: 180px;
+}
+
+.btn-contato:hover {
+    background: var(--cor-p1);
+    color: var(--fundo-principal);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.25);
+}
+
+/* ============ MAIN ============ */
+main.container {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    padding: 0 clamp(16px, 5vw, 32px);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+main.container > section {
+    padding: 48px 0;
+    scroll-margin-top: 80px;
+}
+
+/* ============ TÍTULO DE SEÇÃO ============ */
+.titulo-secao {
+    font-family: var(--font-titulo);
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-flow: row wrap;
+    background: linear-gradient(90deg, var(--cor-p1), var(--cor-p3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.titulo-secao > span {
+    -webkit-text-fill-color: var(--texto-secundario);
+    color: var(--texto-secundario);
     font-family: var(--font-code);
-    overflow: hidden;
-    white-space: nowrap;
-    border-right: 2px solid white;
-    border-color: transparent;
-    padding-right: 10px;
-    animation: digitar steps(38) 2s forwards, cursor 300ms 8;
-    margin-bottom: 10px;
-}
-
-@keyframes digitar {
-    from {
-        width: 0ch;
-    }
-    to {
-        width: 36ch;
-    }
-}
-
-@keyframes cursor {
-    50% {
-        border-color: white;
-    }
 }
 
 div.sobre-card {
     padding: 20px;
-    text-align: center;
-    margin: 10px;
-    border: 1px solid rgba(56, 191, 248, 0.2);
+    text-align: left;
+    border: 1px solid rgba(56, 189, 248, 0.2);
     background-color: var(--card);
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(45, 55, 72, 0.5);
-    animation: aparecer-lado 2s cubic-bezier(0.215, 0.610, 0.355, 1);
 }
 
-@keyframes aparecer-lado {
-    from {
-        transform: translateY(200px);
-        opacity: 0%;
-    }
-    to {
-        opacity: 100%;
-        transform: translateY(0);
-    }
-}
-
-div.sobre-card h3 {
+.sobre-card h3 {
     color: var(--texto-principal);
+    font-family: var(--font-titulo);
+    margin-bottom: 8px;
 }
 
-div.sobre-card p {
-    margin: 5px;
+.sobre-card p {
     color: var(--texto-secundario);
+    line-height: 1.6;
 }
 
 #skills {
-    margin-top: 50px;
     grid-area: 2 / 2 / span 1 / span 1;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-items: center;
-    align-items: start;
-}
-
-div.filhos-skills {
-    display: flex;
-    flex-flow: column nowrap;
+    display: grid;
+    grid-template: 50px 100px 100px / repeat(2, 1fr);
     justify-items: center;
     align-items: center;
+    gap: 6px;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
 }
 
-p.hard {
-    color: var(--cor-p3);
+.info:hover {
+    transform: translateY(-3px);
+    border-color: var(--cor-p2);
+    box-shadow: 0 8px 20px rgba(34, 197, 94, 0.18);
 }
 
-h2.hard {
-    color: var(--cor-p3);
-}
-
-div.soft p.soft {
-    color: var(--cor-p2);
-}
-
-h2.soft {
-    color: var(--cor-p2);
-}
-
-.info {
-    height: 130px;
+#skills h2 {
+    grid-area: 1 / 1 / span 1 / -1;
 }
 
 .info h3 {
     font-family: var(--font-code);
+    font-size: 0.92rem;
+    color: var(--texto-principal);
     text-align: center;
-    margin: 5px;
 }
 
 .info p {
@@ -227,32 +242,18 @@ h2.soft {
     text-align: center;
 }
 
-#projetos > h2 {
-    margin: 10px;
-
+.info.so {
+    grid-area: 2 / 1 / span 1 / span 1;
 }
 
-article.projeto {
-    background-color: var(--fundo-secundario);
-    border-radius: 8px;
-    padding: 20px;
-    margin: 10px 0;
+.info.linguagem {
+    grid-area: 3 / 1 / span 1 / span 1;
 }
 
-article.projeto > h3 {
-    font-family: var(--font-titulo);
-    margin-bottom: 10px;
+.info.ferramentas {
+    grid-area: 2 / 2 / span 1 / span 1;
 }
 
-article.projeto > p {
-    margin: 5px 0;
-    text-align: justify;
-}
-
-img.proj-img {
-    border-radius: 8px;
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    object-position: left center;
+.info.aprendizagem {
+    grid-area: 3 / 2 / span 1 / span 1;
 }
