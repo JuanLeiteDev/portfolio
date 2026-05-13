@@ -1,0 +1,167 @@
+/* Baseado em mobile-first */
+
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap');
+
+:root {
+    --fundo-principal: #0B0F14;
+    --fundo-secundario: #111827;
+    --card: #161B22;
+    --borda: #2D3748;
+    --texto-principal: #F8FAFC;
+    --texto-secundario: #94A3B8;
+    --cor-p1: #38BDF8;
+    --cor-p2: #22C55E;
+    --cor-p3: #A855F7;
+
+    --font-titulo: 'Space Grotesk', 'Inter', Arial, Helvetica, sans-serif;
+    --font-texto: 'Inter', Arial, Helvetica, sans-serif;
+    --font-code: 'JetBrains Mono', Arial, Helvetica, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-texto);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    width: 100vw;
+    background: var(--fundo-principal);
+    color: white;
+}
+
+#hero {
+    display: none;
+    background: black url("../img/juan.jpeg") no-repeat;
+    background-position: top center;
+    background-size: contain;
+    background-attachment: fixed;
+    height: 500px;
+    width: 100vw;
+}
+
+header {
+    background-color: rgba(11, 15, 20, 1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-align: center;
+}
+
+#menu-navegacao {
+    display: flex;
+    list-style-type: none;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+    align-content: center;
+    padding: 20px;
+}
+
+#menu-navegacao > li > a {
+    text-decoration: none;
+    color: var(--texto-principal);
+}
+
+#menu-navegacao > li > a:hover {
+    color: var(--texto-secundario);
+    cursor: pointer;
+}
+
+main.container {
+    display: grid;
+    grid-template: repeat(6, auto) / 1fr 10fr 1fr;
+    grid-auto-flow: row;
+    grid-auto-rows: 500px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+#sobre {
+    grid-area: 1 / 2 / span 1 / span 1;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-evenly;
+    align-content: center;
+}
+
+#sobre h2 {
+    font-size: 1.8rem;
+    line-height: 25px;
+    text-align: left;
+    margin: 10px;
+    font-family: var(--font-titulo);
+}
+
+#sobre span {
+    color: var(--cor-p1);
+    display: block;
+    font-size: 0.8rem;
+    font-family: var(--font-code);
+}
+
+div.sobre-card {
+    padding: 20px;
+    text-align: center;
+    margin: 10px;
+    border: 1px solid rgba(56, 191, 248, 0.2);
+    background-color: var(--card);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(45, 55, 72, 0.5);
+}
+
+div.sobre-card h3 {
+    color: var(--texto-principal);
+}
+
+div.sobre-card p {
+    margin: 5px;
+    color: var(--texto-secundario);
+}
+
+#skills {
+    grid-area: 2 / 2 / span 1 / span 1;
+    display: grid;
+    grid-template: 50px 100px 100px / repeat(2, 1fr);
+    justify-items: center;
+    align-items: center;
+}
+
+#skills h2 {
+    grid-area: 1 / 1 / span 1 / -1;
+}
+
+.info h3 {
+    font-family: var(--font-code);
+    text-align: center;
+    margin: 5px;
+}
+
+.info p {
+    color: var(--cor-p2);
+    text-align: center;
+}
+
+.info.so {
+    grid-area: 2 / 1 / span 1 / span 1;
+}
+
+.info.linguagem {
+    grid-area: 3 / 1 / span 1 / span 1;
+}
+
+.info.ferramentas {
+    grid-area: 2 / 2 / span 1 / span 1;
+}
+
+.info.aprendizagem {
+    grid-area: 3 / 2 / span 1 / span 1;
+}
