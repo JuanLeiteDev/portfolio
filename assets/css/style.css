@@ -39,7 +39,13 @@ body {
 
 #hero {
     display: none;
-    background: black url("../img/juan.jpeg") no-repeat;
+    position: relative;
+    height: 500px;
+    width: 100vw;
+}
+
+div.img {
+    background: transparent url("../img/juan-png.webp") no-repeat;
     background-position: top center;
     background-size: contain;
     background-attachment: fixed;
@@ -64,12 +70,16 @@ header {
     padding: 20px;
 }
 
+
 #menu-navegacao > li > a {
+    position: relative;
+    padding-bottom: 3px;
     text-decoration: none;
     color: var(--texto-principal);
 }
 
 #menu-navegacao > li > a:hover {
+    border-bottom: 1px solid var(--texto-secundario);
     color: var(--texto-secundario);
     cursor: pointer;
 }
@@ -97,15 +107,39 @@ section {
     font-size: 1.8rem;
     line-height: 25px;
     text-align: left;
-    margin: 10px;
     font-family: var(--font-titulo);
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-#sobre span {
+#sobre p.digitando {
+    font-weight: 600;
     color: var(--cor-p1);
     display: block;
     font-size: 0.8rem;
     font-family: var(--font-code);
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid white;
+    border-color: transparent;
+    padding-right: 10px;
+    animation: digitar steps(38) 2s forwards, cursor 300ms 8;
+    margin-bottom: 10px;
+}
+
+@keyframes digitar {
+    from {
+        width: 0ch;
+    }
+    to {
+        width: 36ch;
+    }
+}
+
+@keyframes cursor {
+    50% {
+        border-color: white;
+    }
 }
 
 div.sobre-card {
@@ -116,6 +150,18 @@ div.sobre-card {
     background-color: var(--card);
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(45, 55, 72, 0.5);
+    animation: aparecer-lado 2s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+@keyframes aparecer-lado {
+    from {
+        transform: translateY(200px);
+        opacity: 0%;
+    }
+    to {
+        opacity: 100%;
+        transform: translateY(0);
+    }
 }
 
 div.sobre-card h3 {
@@ -128,15 +174,39 @@ div.sobre-card p {
 }
 
 #skills {
+    margin-top: 50px;
     grid-area: 2 / 2 / span 1 / span 1;
-    display: grid;
-    grid-template: 50px 100px 100px / repeat(2, 1fr);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-items: center;
+    align-items: start;
+}
+
+div.filhos-skills {
+    display: flex;
+    flex-flow: column nowrap;
     justify-items: center;
     align-items: center;
 }
 
-#skills h2 {
-    grid-area: 1 / 1 / span 1 / -1;
+p.hard {
+    color: var(--cor-p3);
+}
+
+h2.hard {
+    color: var(--cor-p3);
+}
+
+div.soft p.soft {
+    color: var(--cor-p2);
+}
+
+h2.soft {
+    color: var(--cor-p2);
+}
+
+.info {
+    height: 130px;
 }
 
 .info h3 {
@@ -146,22 +216,43 @@ div.sobre-card p {
 }
 
 .info p {
-    color: var(--cor-p2);
+    color: var(--cor-p3);
     text-align: center;
 }
 
-.info.so {
-    grid-area: 2 / 1 / span 1 / span 1;
+#projetos {
+    grid-area: 4 / 2 / span 1 / span 1;
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: center;
 }
 
-.info.linguagem {
-    grid-area: 3 / 1 / span 1 / span 1;
+#projetos > h2 {
+    margin: 10px;
+
 }
 
-.info.ferramentas {
-    grid-area: 2 / 2 / span 1 / span 1;
+article.projeto {
+    background-color: var(--fundo-secundario);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px 0;
 }
 
-.info.aprendizagem {
-    grid-area: 3 / 2 / span 1 / span 1;
+article.projeto > h3 {
+    font-family: var(--font-titulo);
+    margin-bottom: 10px;
+}
+
+article.projeto > p {
+    margin: 5px 0;
+    text-align: justify;
+}
+
+img.proj-img {
+    border-radius: 8px;
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    object-position: left center;
 }
