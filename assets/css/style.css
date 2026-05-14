@@ -478,6 +478,13 @@ main.container > section {
 }
 
 /* ============ EXPERIÊNCIAS ============ */
+#experiencia {
+    display: none;
+}
+#experiencia-menu {
+    display: none;
+}
+
 .experiencias-lista {
     display: flex;
     flex-flow: column nowrap;
