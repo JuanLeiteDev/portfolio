@@ -241,7 +241,7 @@ main.container {
 
 main.container > section {
     padding: 48px 0;
-    scroll-margin-top: 120px;
+    scroll-margin-top: 60px;
 }
 
 /* ============ TÍTULO DE SEÇÃO ============ */
