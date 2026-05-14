@@ -241,7 +241,7 @@ main.container {
 
 main.container > section {
     padding: 48px 0;
-    scroll-margin-top: 120px;
+    scroll-margin-top: 60px;
 }
 
 /* ============ TÍTULO DE SEÇÃO ============ */
@@ -374,7 +374,6 @@ main.container > section {
 .formacao-card:hover {
     transform: translateX(3px);
     border-left-width: 6px;
-    box-shadow: -2px 0 5px var(--cor-p1);
 }
 
 .formacao-card h3 {
@@ -420,8 +419,8 @@ main.container > section {
 
 .projeto-card:hover {
     transform: translateY(-3px);
-    border-color: var(--cor-p3);
-    box-shadow: 0 8px 20px rgba(168, 85, 247, 0.18);
+    border-color: var(--cor-p1);
+    box-shadow: 0 0 10px #38bff870;
 }
 
 .projeto-card h3 {
@@ -479,6 +478,13 @@ main.container > section {
 }
 
 /* ============ EXPERIÊNCIAS ============ */
+#experiencia {
+    display: none;
+}
+#experiencia-menu {
+    display: none;
+}
+
 .experiencias-lista {
     display: flex;
     flex-flow: column nowrap;
