@@ -33,8 +33,11 @@ portfolio/
 │   │   ├── sections/       # Estilos específicos de seções
 │   │   ├── main.css        # Ponto de entrada dos estilos
 │   │   └── responsive.css  # Media queries
+│   ├── html/
+│   │   └── partials/       # Partes reutilizáveis do HTML
 │   └── js/
 │       ├── main.js         # Ponto de entrada do JavaScript
+│       ├── html.js         # Carregamento dos partials HTML
 │       ├── projects.js     # Dados e renderização dos projetos
 │       ├── animation.js    # Comportamentos visuais
 │       ├── dom.js          # Helpers de DOM
@@ -57,6 +60,7 @@ Depois acesse `http://localhost:5500`. Se a porta estiver ocupada, troque por ou
 ## 🎯 Funcionalidades
 
 - Interface responsiva e moderna
+- HTML modularizado em partials
 - Projetos renderizados por JavaScript a partir de dados separados
 - Navegação intuitiva
 - CSS modular por base, layout, componentes e seções

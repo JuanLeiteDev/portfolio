@@ -1,5 +1,6 @@
 import { setupActiveNavigation } from "./animation.js";
 import { getElement } from "./dom.js";
+import { loadHtmlPartials } from "./html.js";
 import { renderProjects } from "./projects.js";
 import { setupThemePreference } from "./theme.js";
 import { getCurrentYear } from "./utils.js";
@@ -12,11 +13,25 @@ function setupFooterYear() {
     }
 }
 
-function init() {
+function scrollToInitialHash() {
+    if (!window.location.hash) {
+        return;
+    }
+
+    getElement(window.location.hash)?.scrollIntoView();
+}
+
+async function init() {
     setupThemePreference();
+    await loadHtmlPartials();
     renderProjects(getElement("[data-projects-list]"));
     setupActiveNavigation();
     setupFooterYear();
+    scrollToInitialHash();
 }
 
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener("DOMContentLoaded", () => {
+    init().catch((error) => {
+        console.error(error);
+    });
+});
