@@ -41,3 +41,10 @@
     color: var(--texto-secundario);
     line-height: 1.6;
 }
+
+@media (min-width: 768px) {
+    .formacoes-lista {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+}

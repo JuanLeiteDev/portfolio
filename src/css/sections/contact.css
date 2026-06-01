@@ -10,3 +10,10 @@
     flex-flow: column nowrap;
     gap: 12px;
 }
+
+@media (min-width: 768px) {
+    .contato-links {
+        flex-flow: row wrap;
+        justify-content: center;
+    }
+}

@@ -24,3 +24,21 @@ main.container > section {
     font-family: var(--font-code);
     font-size: 0.85rem;
 }
+
+@media (min-width: 768px) {
+    main.container > section {
+        padding: 56px 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    main.container > section {
+        padding: 72px 0;
+    }
+}
+
+@media (min-width: 1280px) {
+    .titulo-secao {
+        font-size: 2.4rem;
+    }
+}

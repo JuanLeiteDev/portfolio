@@ -31,8 +31,7 @@ portfolio/
 │   │   ├── components/     # Componentes reutilizáveis
 │   │   ├── layout/         # Header, hero, página e footer
 │   │   ├── sections/       # Estilos específicos de seções
-│   │   ├── main.css        # Ponto de entrada dos estilos
-│   │   └── responsive.css  # Media queries
+│   │   └── main.css        # Ponto de entrada dos estilos
 │   ├── html/
 │   │   └── partials/       # Partes reutilizáveis do HTML
 │   └── js/
@@ -63,7 +62,7 @@ Depois acesse `http://localhost:5500`. Se a porta estiver ocupada, troque por ou
 - HTML modularizado em partials
 - Projetos renderizados por JavaScript a partir de dados separados
 - Navegação intuitiva
-- CSS modular por base, layout, componentes e seções
+- CSS modular por base, layout, componentes e seções, incluindo responsividade em cada módulo
 
 ## 📞 Entre em Contato
 

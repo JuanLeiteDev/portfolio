@@ -49,3 +49,22 @@ header {
 #menu-navegacao > li > a.is-active::after {
     width: 100%;
 }
+
+@media (min-width: 768px) {
+    #menu-navegacao {
+        padding: 18px 24px;
+        gap: 18px;
+    }
+
+    #menu-navegacao > li > a {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    #menu-navegacao {
+        justify-content: flex-start;
+        padding: 18px 48px;
+        gap: 36px;
+    }
+}
