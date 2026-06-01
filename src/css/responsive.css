@@ -1,8 +1,5 @@
-@charset "UTF-8";
+/* Mobile-first: a base cobre telas pequenas. */
 
-/* Mobile-first puro: só min-width. Base no style.css cobre mobile. */
-
-/* ============ TABLET (>= 768px) ============ */
 @media (min-width: 768px) {
     #menu-navegacao {
         padding: 18px 24px;
@@ -30,30 +27,23 @@
         flex-shrink: 0;
     }
 
-    .hero-texto p {
-        margin: 0 0 24px;
-    }
-
     .hero-cta {
         justify-content: flex-start;
     }
 
-    .sobre-grid {
+    .sobre-flex {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 18px;
     }
 
-    .sobre-grid > .sobre-card:nth-child(3) {
+    .sobre-flex > .sobre-card:nth-child(3) {
         grid-column: 1 / -1;
     }
 
-    .skills-grid {
-        gap: 18px;
-    }
-
-    .info {
-        padding: 24px 16px;
+    .skills-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
     }
 
     .projetos-grid {
@@ -77,7 +67,6 @@
     }
 }
 
-/* ============ DESKTOP (>= 1024px) ============ */
 @media (min-width: 1024px) {
     #menu-navegacao {
         justify-content: flex-end;
@@ -106,24 +95,20 @@
         font-size: 1rem;
     }
 
-    .hero-texto p {
-        font-size: 1.05rem;
-    }
-
-    .sobre-grid {
+    .sobre-flex {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    .sobre-grid > .sobre-card:nth-child(3) {
+    .sobre-flex > .sobre-card:nth-child(3) {
         grid-column: auto;
-    }
-
-    .skills-grid {
-        grid-template-columns: repeat(4, 1fr);
     }
 
     .projetos-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+
+    .skill-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     main.container > section {
@@ -131,7 +116,6 @@
     }
 }
 
-/* ============ LARGE DESKTOP (>= 1280px) ============ */
 @media (min-width: 1280px) {
     .titulo-secao {
         font-size: 2.4rem;

@@ -1,0 +1,49 @@
+#experiencia,
+#experiencia-menu {
+    display: none;
+}
+
+.experiencias-lista {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 16px;
+}
+
+.experiencia-card {
+    padding: 20px;
+    background-color: var(--card);
+    border: 1px solid var(--borda);
+    border-left: 3px solid var(--cor-p3);
+    border-radius: 8px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.experiencia-card:hover {
+    transform: translateX(3px);
+    border-left-color: var(--cor-p1);
+}
+
+.experiencia-card h3 {
+    font-family: var(--font-titulo);
+    color: var(--texto-principal);
+    margin-bottom: 6px;
+}
+
+.experiencia-card .empresa {
+    color: var(--cor-p1);
+    font-family: var(--font-code);
+    font-size: 0.9rem;
+}
+
+.experiencia-card .periodo {
+    color: var(--texto-secundario);
+    font-family: var(--font-code);
+    font-size: 0.82rem;
+    margin-bottom: 10px;
+}
+
+.experiencia-card ul {
+    padding-left: 18px;
+    color: var(--texto-secundario);
+    line-height: 1.7;
+}

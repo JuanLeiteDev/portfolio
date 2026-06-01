@@ -1,0 +1,18 @@
+footer {
+    border-top: 1px solid var(--borda);
+    padding: 24px 16px;
+    text-align: center;
+    color: var(--texto-secundario);
+    margin-top: 32px;
+}
+
+footer p {
+    font-family: var(--font-titulo);
+    color: var(--texto-principal);
+    margin-bottom: 4px;
+}
+
+footer small {
+    font-family: var(--font-code);
+    font-size: 0.78rem;
+}
