@@ -1,0 +1,75 @@
+#hero {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-content {
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+.hero-foto {
+    margin: 0 auto 10px;
+    width: clamp(160px, 50vw, 350px);
+    height: clamp(160px, 50vw, 350px);
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center center;
+    border: 2px solid var(--cor-p1);
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.25);
+    transition: transform 400ms ease, box-shadow 400ms ease;
+}
+
+.hero-foto:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 60px rgba(56, 189, 248, 0.1);
+}
+
+.hero-texto h1 {
+    text-align: left;
+    font-family: var(--font-titulo);
+    font-size: clamp(2rem, 8vw, 3rem);
+    color: white;
+}
+
+.hero-tagline {
+    margin-top: -10px;
+    text-align: left;
+    display: inline-block;
+    overflow: hidden;
+    font-family: var(--font-code);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    margin-bottom: 20px;
+    border-right: 2px solid transparent;
+    color: var(--cor-p1);
+    animation: digitar 2s steps(38) forwards, cursor 400ms 7;
+}
+
+.hero-cta {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+@keyframes digitar {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 38ch;
+    }
+}
+
+@keyframes cursor {
+    50% {
+        border-color: white;
+    }
+}

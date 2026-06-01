@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portfólio de Juan Leite — Engenharia de Sistemas Informáticos, desenvolvimento back-end e full-stack.">
-    <link rel="stylesheet" href="./assets/css/style.css" media="all">
-    <link rel="stylesheet" href="./assets/css/style-media.css">
+    <link rel="stylesheet" href="./src/css/main.css">
     <link rel="shortcut icon" href="./assets/img/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -52,14 +51,14 @@
             <div class="sobre-flex">
                 <div class="sobre-card">
                     <h3>Área de foco</h3>
-                    <p>Desenvolvedor back-end, full-stack, aplicações web e DevOps</p>
+                    <p>Desenvolvedor back-end, full-stack e aplicações web</p>
                 </div>
                 <div class="sobre-card">
                     <h3>Competências em desenvolvimento</h3>
-                    <p>APIs, bases de dados, Docker e JavaScript.</p>
+                    <p>JavaScript e MySQL.</p>
                 </div>
                 <div class="sobre-card">
-                    <h3>No momentos estou...</h3>
+                    <h3>No momento estou...</h3>
                     <p>Com foco em projetos reais e funcionais para o mercado de trabalho.</p><br>
                     <p>Trabalhando como Suporte Técnico de Software e Hardware.</p>
                 </div>
@@ -155,38 +154,8 @@
 
         <section id="projetos">
             <h2 class="titulo-secao">Projetos <span>// o que já construi</span></h2>
-            <div class="projetos-grid">
-                <article class="projeto-card">
-                    <h3>Mini-shell</h3>
-                    <p>Sistema de gestão de ficheiros com interpretador e comandos totalmente personalizados.
-                    </p>
-                    <div class="tags">
-                        <span class="tag">C</span>
-                        <span class="tag">Docker</span>
-                        <span class="tag">Makefile</span>
-                    </div>
-                    <div class="projeto-links">
-                        <a href="https://github.com/JuanLeiteDev/mini-shell-file-system" target="_blank" class="link-projeto">
-                            <span class="material-icons">code</span>
-                            Código
-                        </a>
-                    </div>
-                </article>
-                <article class="projeto-card">
-                    <h3>Análise de Ficheiros PS2</h3>
-                    <p>Gera arquivos PS2 através de dados em ficheiros e os analisa em uma Dashboard.</p>
-                    <div class="tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">C</span>
-                        <span class="tag">Makefile</span>
-                    </div>
-                    <div class="projeto-links">
-                        <a href="https://github.com/JuanLeiteDev/ProjetoPS2" class="link-projeto">
-                            <span class="material-icons">code</span>
-                            Código
-                        </a>
-                    </div>
-                </article>
+            <div class="projetos-grid" data-projects-list>
+                <noscript>Ative o JavaScript para visualizar os projetos.</noscript>
             </div>
         </section>
 
@@ -223,11 +192,11 @@
                     <i class="fa-brands fa-github"></i>
                     GitHub
                 </a>
-                <a href="https://linkedin.com/in/juan-leite-7b61923ab" target="_blank" class="btn btn-contato">
+                <a href="https://linkedin.com/in/juan-leite-7b61923ab" target="_blank" rel="noopener" class="btn btn-contato">
                     <i class="fa-brands fa-linkedin"></i>
                     LinkedIn
                 </a>
-                <a href="https://wa.me/+351914095001" target="_blank" class="btn btn-contato">
+                <a href="https://wa.me/+351914095001" target="_blank" rel="noopener" class="btn btn-contato">
                     <i class="fa-brands fa-whatsapp"></i>
                     WhatsApp
                 </a>
@@ -241,7 +210,8 @@
 
     <footer>
         <p>Juan Lucas Souza Leite</p>
-        <small>&copy; 2026 — Construído com HTML &amp; CSS</small>
+        <small>&copy; <span id="ano-atual">2026</span> — Construído com HTML, CSS &amp; JavaScript</small>
     </footer>
+    <script type="module" src="./src/js/main.js"></script>
 </body>
 </html>

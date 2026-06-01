@@ -1,0 +1,31 @@
+.sobre-flex {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 16px;
+}
+
+.sobre-card {
+    padding: 20px;
+    text-align: left;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    background-color: var(--card);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(45, 55, 72, 0.5);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.sobre-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--cor-p1);
+}
+
+.sobre-card h3 {
+    color: var(--texto-principal);
+    font-family: var(--font-titulo);
+    margin-bottom: 8px;
+}
+
+.sobre-card p {
+    color: var(--texto-secundario);
+    line-height: 1.6;
+}

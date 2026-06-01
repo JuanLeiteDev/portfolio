@@ -1,0 +1,43 @@
+.formacoes-lista {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 16px;
+}
+
+.formacao-card {
+    padding: 20px;
+    background-color: var(--card);
+    border: 1px solid var(--borda);
+    border-left: 3px solid var(--cor-p1);
+    border-radius: 8px;
+    transition: all 0.25s ease;
+}
+
+.formacao-card:hover {
+    transform: translateX(3px);
+    border-left-width: 6px;
+}
+
+.formacao-card h3 {
+    font-family: var(--font-titulo);
+    color: var(--texto-principal);
+    margin-bottom: 6px;
+}
+
+.formacao-card .instituicao {
+    color: var(--cor-p1);
+    font-family: var(--font-code);
+    font-size: 0.9rem;
+}
+
+.formacao-card .periodo {
+    color: var(--texto-secundario);
+    font-family: var(--font-code);
+    font-size: 0.82rem;
+    margin-bottom: 10px;
+}
+
+.formacao-card > p:last-child {
+    color: var(--texto-secundario);
+    line-height: 1.6;
+}

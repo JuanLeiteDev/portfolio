@@ -1,0 +1,15 @@
+:root {
+    --fundo-principal: #0b0f14;
+    --fundo-secundario: #111827;
+    --card: #161b22;
+    --borda: #2d3748;
+    --texto-principal: #f8fafc;
+    --texto-secundario: #94a3b8;
+    --cor-p1: #38bdf8;
+    --cor-p2: #22c55e;
+    --cor-p3: #a855f7;
+
+    --font-titulo: "Space Grotesk", "Inter", Arial, Helvetica, sans-serif;
+    --font-texto: "Inter", Arial, Helvetica, sans-serif;
+    --font-code: "JetBrains Mono", Arial, Helvetica, sans-serif;
+}

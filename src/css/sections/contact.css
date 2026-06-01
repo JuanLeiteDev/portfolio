@@ -1,0 +1,12 @@
+.contato-intro {
+    color: var(--texto-secundario);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    max-width: 640px;
+}
+
+.contato-links {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 12px;
+}

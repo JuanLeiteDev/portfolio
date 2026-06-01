@@ -1,0 +1,26 @@
+main.container {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    padding: 0 clamp(16px, 5vw, 32px);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+main.container > section {
+    padding: 48px 0;
+    scroll-margin-top: 60px;
+}
+
+.titulo-secao {
+    font-family: var(--font-titulo);
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--cor-p1);
+}
+
+.titulo-secao > span {
+    color: var(--texto-secundario);
+    font-family: var(--font-code);
+    font-size: 0.85rem;
+}
