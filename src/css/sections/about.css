@@ -29,3 +29,25 @@
     color: var(--texto-secundario);
     line-height: 1.6;
 }
+
+@media (min-width: 768px) {
+    .sobre-flex {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    .sobre-flex > .sobre-card:nth-child(3) {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (min-width: 1024px) {
+    .sobre-flex {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .sobre-flex > .sobre-card:nth-child(3) {
+        grid-column: auto;
+    }
+}

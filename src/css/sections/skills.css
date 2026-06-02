@@ -70,14 +70,22 @@
 }
 
 .skill-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
     width: 34px;
     height: 34px;
+    min-width: 34px;
     border-radius: 8px;
-    font-size: 1.2rem;
     background: rgba(248, 250, 252, 0.04);
+}
+
+.skill-icon .material-icons {
+    display: block;
+    width: 1em;
+    height: 1em;
+    font-size: 1.25rem;
+    line-height: 1;
+    text-align: center;
 }
 
 .hard-icon {
@@ -100,4 +108,17 @@
     font-size: 0.84rem;
     line-height: 1.35;
     margin-top: 2px;
+}
+
+@media (min-width: 768px) {
+    .skills-layout {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .skill-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }

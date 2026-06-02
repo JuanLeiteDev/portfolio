@@ -1,5 +1,6 @@
 #experiencia,
 #experiencia-menu {
+    max-width: 0px;
     display: none;
 }
 
@@ -46,4 +47,11 @@
     padding-left: 18px;
     color: var(--texto-secundario);
     line-height: 1.7;
+}
+
+@media (min-width: 768px) {
+    .experiencias-lista {
+        max-width: 720px;
+        margin: 0 auto;
+    }
 }
