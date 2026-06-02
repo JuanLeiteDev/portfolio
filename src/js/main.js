@@ -1,4 +1,4 @@
-import { setupActiveNavigation } from "./animation.js";
+import { setupActiveNavigation, setupScrollReveal } from "./animation.js";
 import { getElement } from "./dom.js";
 import { loadHtmlPartials } from "./html.js";
 import { renderProjects } from "./projects.js";
@@ -25,6 +25,7 @@ async function init() {
     setupThemePreference();
     await loadHtmlPartials();
     renderProjects(getElement("[data-projects-list]"));
+    setupScrollReveal();
     setupActiveNavigation();
     setupFooterYear();
     scrollToInitialHash();

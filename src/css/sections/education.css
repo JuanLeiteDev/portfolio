@@ -48,3 +48,21 @@
         margin: 0 auto;
     }
 }
+
+@media (min-width: 1024px) {
+    .formacoes-lista {
+        max-width: 100%;
+        display: grid;
+        grid-template: auto / 1fr 1fr;
+        justify-items: stretch;
+        align-items: stretch;
+        justify-content: center;
+        align-content: center;
+        grid-auto-flow: row;
+    }
+
+    .formacoes-lista > :last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+    }
+
+}

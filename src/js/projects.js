@@ -6,7 +6,7 @@ const projects = [
         links: [
             {
                 label: "Código",
-                href: "https://github.com/JuanLeiteDev/mini-shell-file-system",
+                href: "https://github.com/JuanLeiteDev/fintrack",
                 icon: "code",
             },
         ],
