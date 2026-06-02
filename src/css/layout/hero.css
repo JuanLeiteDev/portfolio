@@ -2,6 +2,7 @@
     width: 100%;
     padding: 20px;
     display: flex;
+    flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
 }
@@ -11,12 +12,13 @@
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
+    justify-content: center;
 }
 
 .hero-foto {
-    margin: 0 auto 10px;
-    width: clamp(160px, 50vw, 350px);
-    height: clamp(160px, 50vw, 350px);
+    margin: 0 0 10px;
+    width: clamp(160px, 50vw, 360px);
+    height: clamp(160px, 50vw, 360px);
     border-radius: 50%;
     object-fit: cover;
     object-position: center center;
@@ -33,22 +35,20 @@
 .hero-texto h1 {
     text-align: left;
     font-family: var(--font-titulo);
-    font-size: clamp(2rem, 8vw, 3rem);
+    font-size: clamp(2rem, 8vw, 3.5rem);
     color: white;
 }
 
 .hero-tagline {
-    margin-top: -10px;
+    transform: translateY(-10px);
     text-align: left;
     display: inline-block;
-    overflow: hidden;
-    font-family: var(--font-code);
-    font-size: 0.95rem;
     white-space: nowrap;
+    font-family: var(--font-code);
+    font-size: clamp(0.7rem, 4vw, 1rem);
     margin-bottom: 20px;
     border-right: 2px solid transparent;
     color: var(--cor-p1);
-    animation: digitar 2s steps(38) forwards, cursor 400ms 7;
 }
 
 .hero-cta {
@@ -58,64 +58,19 @@
     justify-content: center;
 }
 
-@keyframes digitar {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: 38ch;
-    }
-}
-
-@keyframes cursor {
-    50% {
-        border-color: white;
-    }
-}
-
 @media (min-width: 768px) {
     #hero {
-        padding: clamp(60px, 12vh, 120px) 32px;
+        padding: clamp(60px, 12vh, 100px) 20px;
     }
 
     .hero-content {
-        flex-flow: row nowrap;
+        flex-flow: row-reverse nowrap;
         text-align: left;
         gap: 48px;
-        justify-content: center;
-    }
-
-    .hero-foto {
-        width: 200px;
-        height: 200px;
-        flex-shrink: 0;
+        justify-content: space-evenly;
     }
 
     .hero-cta {
         justify-content: flex-start;
-    }
-}
-
-@media (min-width: 1024px) {
-    #hero {
-        padding: 100px 48px;
-    }
-
-    .hero-content {
-        gap: 64px;
-    }
-
-    .hero-foto {
-        width: 220px;
-        height: 220px;
-    }
-
-    .hero-texto h1 {
-        font-size: 3.5rem;
-    }
-
-    .hero-tagline {
-        font-size: 1rem;
     }
 }
