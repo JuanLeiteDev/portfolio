@@ -1,0 +1,27 @@
+.reveal-item {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    filter: blur(2px);
+    transition:
+        opacity 420ms ease,
+        transform 560ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 600ms ease;
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-item.is-visible {
+    filter: blur(0);
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-item,
+    .reveal-item.is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+        will-change: auto;
+    }
+}

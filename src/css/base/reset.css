@@ -12,7 +12,14 @@ html {
 body {
     min-height: 100vh;
     width: 100%;
-    background: var(--fundo-principal);
+    background-color: var(--fundo-principal);
+    background-image: 
+        radial-gradient(ellipse at 20% 20%, rgba(168, 85, 247, 0.05), transparent 50%),
+        radial-gradient(ellipse at 85% 100%, rgba(56, 191, 248, 0.05), transparent 35%);
+    background-position: center center; 
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
     color: var(--texto-principal);
     line-height: 1.5;
 }
