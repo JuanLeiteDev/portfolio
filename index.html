@@ -11,18 +11,293 @@
     <title>Juan Leite — Portfólio</title>
 </head>
 <body>
-    <div data-include="./src/html/partials/header.html"></div>
-    <div data-include="./src/html/partials/hero.html"></div>
+    <!-- ============================================== LOAD ============================================== -->
+    <div id="page-loader">
+        <h1 id="message-load">Seja bem-vindo(a) ao meu portfólio!</p>
+    </div>
 
+    <!-- ============================================== HEADER ============================================== -->
+    <header>
+        <nav aria-label="Navegação principal">
+            <ul id="menu-navegacao">
+                <li><a href="#hero">Início</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#formacoes">Formações</a></li>
+                <li><a href="#projetos">Projetos</a></li>
+                <!-- <li><a id="experiencia-menu" href="#experiencia">Experiências</a></li> -->
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ============================================== HERO ============================================== -->
+    <section id="hero">
+        <div class="hero-content">
+            <img src="./assets/img/juan-png.webp" alt="Foto de Juan Leite" class="hero-foto">
+            <div class="hero-texto">
+                <h1>Juan Leite</h1>
+                <span class="hero-tagline">&gt; Engenharia de Sistemas Informáticos</span>
+                <div class="hero-cta">
+                    <a href="#projetos" class="btn btn-primario">
+                        <span class="material-icons">visibility</span>
+                        Ver projetos
+                    </a>
+                    <a href="./assets/cv/cv.pdf" class="btn btn-secundario" download>
+                        <span class="material-icons">download</span>
+                        Baixar CV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ============================================== MAIN ============================================== -->
     <main class="container">
-        <div data-include="./src/html/partials/about.html"></div>
-        <div data-include="./src/html/partials/skills.html"></div>
-        <div data-include="./src/html/partials/education.html"></div>
-        <div data-include="./src/html/partials/projects.html"></div>
-        <div data-include="./src/html/partials/contact.html"></div>
+
+    <!-- ============================================== ABOUT ============================================== -->
+        <section id="sobre">
+            <h2 class="titulo-secao">Sobre <span>// quem sou</span></h2>
+            <div class="sobre-flex">
+                <div class="sobre-card">
+                    <h3>Área de foco</h3>
+                    <p>Desenvolvedor back-end, full-stack e aplicações web.</p>
+                </div>
+                <div class="sobre-card">
+                    <h3>Competências em desenvolvimento</h3>
+                    <p>JavaScript e MySQL.</p>
+                </div>
+                <div class="sobre-card">
+                    <h3>No momento estou...</h3>
+                    <p>Com foco em projetos reais e funcionais para desenvolvimento pessoal.</p><br>
+                    <p>Trabalhando como Suporte Técnico de Software e Hardware N1.</p>
+                </div>
+            </div>
+        </section>
+
+    <!-- ============================================== SKILLS ============================================== -->
+        <section id="skills">
+            <h2 class="titulo-secao">Skills <span>// competências</span></h2>
+            <div id="skills-container" class="skills-layout">
+                <article class="skill-group skill-group-hard">
+                    <h3 class="skill-group-title">Hard Skills</h3>
+                    <div class="skill-list">
+                        <div class="skill-item hard">
+                            <span class="skill-icon hard-icon" aria-hidden="true">
+                                <span class="material-icons">computer</span>
+                            </span>
+                            <div>
+                                <h4>Sistemas Operativos</h4>
+                                <p>Linux e Windows</p>
+                            </div>
+                        </div>
+                        <div class="skill-item hard">
+                            <span class="skill-icon hard-icon" aria-hidden="true">
+                                <span class="material-icons">code</span>
+                            </span>
+                            <div>
+                                <h4>Linguagens</h4>
+                                <p>Python, C, HTML5, CSS e JavaScript</p>
+                            </div>
+                        </div>
+                        <div class="skill-item hard">
+                            <span class="skill-icon hard-icon" aria-hidden="true">
+                                <span class="material-icons">build</span>
+                            </span>
+                            <div>
+                                <h4>Ferramentas</h4>
+                                <p>Git, GitHub, Docker, Makefile</p>
+                            </div>
+                        </div>
+                        <div class="skill-item hard">
+                            <span class="skill-icon hard-icon" aria-hidden="true">
+                                <span class="material-icons">school</span>
+                            </span>
+                            <div>
+                                <h4>Em Processo</h4>
+                                <p>MySQL e JavaScript</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="skill-group skill-group-soft">
+                    <h3 class="skill-group-title">Soft Skills</h3>
+                    <div class="skill-list">
+                        <div class="skill-item soft">
+                            <span class="skill-icon soft-icon" aria-hidden="true">
+                                <span class="material-icons">psychology</span>
+                            </span>
+                            <div>
+                                <h4>Resolução de problemas</h4>
+                                <p>Criatividade e adaptação</p>
+                            </div>
+                        </div>
+                        <div class="skill-item soft">
+                            <span class="skill-icon soft-icon" aria-hidden="true">
+                                <span class="material-icons">groups</span>
+                            </span>
+                            <div>
+                                <h4>Trabalho em equipa</h4>
+                                <p>Colaboração e respeito</p>
+                            </div>
+                        </div>
+                        <div class="skill-item soft">
+                            <span class="skill-icon soft-icon" aria-hidden="true">
+                                <span class="material-icons">chat</span>
+                            </span>
+                            <div>
+                                <h4>Comunicação</h4>
+                                <p>Clareza e escuta ativa</p>
+                            </div>
+                        </div>
+                        <div class="skill-item soft">
+                            <span class="skill-icon soft-icon" aria-hidden="true">
+                                <span class="material-icons">event_note</span>
+                            </span>
+                            <div>
+                                <h4>Organização</h4>
+                                <p>Responsabilidade e autonomia</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+        
+    <!-- ============================================== EDUCATION ============================================== -->
+        <section id="formacoes">
+            <h2 class="titulo-secao">Formações <span>// trajetória acadêmica</span></h2>
+            <div class="formacoes-lista">
+                <article class="formacao-card">
+                    <h3>Engenharia de Sistemas Informáticos</h3>
+                    <p class="instituicao">Instituto Politécnico do Cávado e do Áve - (pós-laboral)</p>
+                    <p class="periodo">2025 — 2028</p>
+                    <p>Licenciatura voltada ao desenvolvimento e a prática para a integração no mercado de trabalho.</p>
+                </article>
+                <article class="formacao-card">
+                    <h3>HTML5 e CSS3 (200 horas)</h3>
+                    <p class="instituicao">Curso em vídeo</p>
+                    <p class="periodo">2026</p>
+                    <p>Especialização em HTML5 e CSS3.</p>
+                </article>
+                <article class="formacao-card">
+                    <h3>Python 3+ POO (140 horas)</h3>
+                    <p class="instituicao">Udemy - Luiz Miranda</p>
+                    <p class="periodo">2026</p>
+                    <p>Python focado em projetos reais e POO.</p>
+                </article>
+                <article class="formacao-card">
+                    <h3>Python (160 horas)</h3>
+                    <p class="instituicao">Curso em vídeo</p>
+                    <p class="periodo">2026</p>
+                    <p>Curso de python focado em aprendizagem da linguagem.</p>
+                </article>
+                <article class="formacao-card">
+                    <h3>Algoritmos (40 horas)</h3>
+                    <p class="instituicao">Curso em vídeo</p>
+                    <p class="periodo">2023</p>
+                    <p>Algoritmia e lógica de programação.</p>
+                </article>
+            </div>
+        </section>
+        
+    <!-- ============================================== PROJECTS ============================================== -->
+        <section id="projetos">
+            <h2 class="titulo-secao">Projetos <span>// o que já construi</span></h2>
+            <div class="projetos-grid" data-projects-list>
+                <article class="projeto-card">
+                    <h3>FinTrack — Gestor de Finanças Pessoais</h3>
+                    <p>Aplicação web para registo e acompanhamento de transações financeiras com CRUD completo.</p>
+                    <div class="tags">
+                        <span class="tag">Flask</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Docker</span>
+                    </div>
+                    <div class="projeto-links">
+                        <a 
+                            class="link-projeto" 
+                            href="https://github.com/JuanLeiteDev/fintrack" 
+                            target="_blank" 
+                            rel="noopener">
+                            <i class="fa-solid fa-code"></i>
+                            Código
+                        </a>
+                    </div>
+                </article>
+
+                <article class="projeto-card">
+                    <h3>Mini-shell</h3>
+                    <p>Sistema de gestão de ficheiros com interpretador e comandos totalmente personalizados.</p>
+                    <div class="tags">
+                        <span class="tag">C</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">Makefile</span>
+                    </div>
+                    <div class="projeto-links">
+                        <a 
+                            class="link-projeto"
+                            href="https://github.com/JuanLeiteDev/mini-shell-file-system" 
+                            target="_blank" 
+                            rel="noopener">
+                            <i class="fa-solid fa-code"></i>
+                            Código
+                        </a>
+                    </div>
+                </article>
+
+                <article class="projeto-card">
+                    <h3>Análise de Ficheiros PS2</h3>
+                    <p>Gera arquivos PS2 através de dados em ficheiros e os analisa em uma Dashboard.</p>
+                    <div class="tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">C</span>
+                        <span class="tag">Makefile</span>
+                    </div>
+                    <div class="projeto-links">
+                        <a
+                            class="link-projeto"
+                            href="https://github.com/JuanLeiteDev/ProjetoPS2"
+                            target="_blank"
+                            rel="noopener">
+                            <i class="fa-solid fa-code"></i>
+                            Código
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    
+    <!-- ============================================== CONTACT ============================================== -->
+        <section id="contato">
+            <h2 class="titulo-secao">Contato <span>// vamos conversar</span></h2>
+            <p class="contato-intro">Aberto a oportunidades e colaborações. Escolha o canal que preferir.</p>
+            <div class="contato-links">
+                <a href="https://github.com/JuanLeiteDev" target="_blank" rel="noopener" class="btn btn-contato">
+                    <i class="fa-brands fa-github"></i>
+                    GitHub
+                </a>
+                <a href="https://linkedin.com/in/juan-leite-7b61923ab" target="_blank" rel="noopener" class="btn btn-contato">
+                    <i class="fa-brands fa-linkedin"></i>
+                    LinkedIn
+                </a>
+                <a href="https://wa.me/+351914095001" target="_blank" rel="noopener" class="btn btn-contato">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    WhatsApp
+                </a>
+                <a href="./assets/cv/cv.pdf" class="btn btn-contato" target="_blank" download>
+                    <span class="material-icons">download</span>
+                    Baixar CV
+                </a>
+            </div>
+        </section>
     </main>
 
-    <div data-include="./src/html/partials/footer.html"></div>
-    <script type="module" src="./src/js/main.js"></script>
+    <!-- ============================================== FOOTER ============================================== -->
+    <footer>
+        <p>Juan Lucas Souza Leite</p>
+        <small>&copy; <span id="ano-atual">2026</span> — Construído com HTML, CSS &amp; JavaScript</small>
+    </footer>
+
+    <script type="module" src="./src/js/main.js" defer></script>
 </body>
 </html>
