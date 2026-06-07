@@ -1,119 +1,102 @@
-import { getElements } from "./dom.js";
-
-const revealSelectors = [
-    "main.container > section > .titulo-secao",
-    ".sobre-card",
-    ".skill-group",
-    ".formacao-card",
-    ".projeto-card",
-    ".contato-intro",
-    ".btn-contato",
+const selectorsReveal = [
+    ["#menu-navegacao li", "reveal-header"],
+    ["#hero", "reveal section-observer"],
+    ["#sobre", "reveal section-observer"],
+    ["#skills", "reveal section-observer"],
+    ["#formacoes", "reveal section-observer"],
+    ["#projetos", "reveal section-observer"],
+    ["#contato", "reveal section-observer"],
+    [".hero-tagline", "reveal-tagline"],
+    [".skill-item", "reveal-skill"],
 ];
+  
+function getElements(arrSelector, parent = document) {
+    if (!arrSelector || arrSelector.length === 0) return [];
 
-const revealDuration = 560;
-const revealDelayStep = 55;
-const revealDelayLimit = 260;
-
-function prefersReducedMotion() {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function getRevealElements() {
-    return getElements(revealSelectors.join(", "));
-}
-
-function setupRevealDelay(elements) {
-    const sectionIndexes = new Map();
-
-    elements.forEach((element) => {
-        const section = element.closest("section");
-        const sectionId = section?.id ?? "global";
-        const currentIndex = sectionIndexes.get(sectionId) ?? 0;
-        const delay = Math.min(currentIndex * revealDelayStep, revealDelayLimit);
-
-        element.style.setProperty("--reveal-delay", `${delay}ms`);
-        element.classList.add("reveal-item");
-        sectionIndexes.set(sectionId, currentIndex + 1);
+    const elements = arrSelector.map((selector) => {
+        return [...parent.querySelectorAll(selector)];
     });
+
+    return elements;
 }
+  
+function addClass(arrElements, arrClasses) {
+    if (!arrElements || arrElements.length === 0) return [];
+    if (!arrClasses || arrClasses.length === 0) return [];
+    if (arrElements.length !== arrClasses.length) return [];
 
-function clearRevealState(element) {
-    window.setTimeout(() => {
-        element.classList.remove("reveal-item", "is-visible");
-        element.style.removeProperty("--reveal-delay");
-    }, revealDuration + parseFloat(element.style.getPropertyValue("--reveal-delay") || 0));
-}
+    arrElements.forEach((elementList, index) => {
+        const classes = arrClasses[index].split(" ").filter(Boolean);
 
-function revealElement(element) {
-    window.requestAnimationFrame(() => {
-        element.classList.add("is-visible");
-        clearRevealState(element);
-    });
-}
-
-export function setupActiveNavigation() {
-    const navLinks = getElements("#menu-navegacao a[href^='#']");
-    const sections = navLinks
-        .map((link) => document.querySelector(link.getAttribute("href")))
-        .filter(Boolean);
-
-    if (!navLinks.length || !sections.length || !("IntersectionObserver" in window)) {
-        return;
-    }
-
-    const setActiveLink = (sectionId) => {
-        navLinks.forEach((link) => {
-            link.classList.toggle("is-active", link.getAttribute("href") === `#${sectionId}`);
+        elementList.forEach((element) => {
+        element.classList.add(...classes);
         });
+    });
+
+    return arrElements;
+}
+  
+function createObserverAnimation() {
+    const observerOptions = {
+        root: null,
+        threshold: 0.3
     };
 
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveLink(entry.target.id);
-                }
-            });
-        },
-        {
-            rootMargin: "-35% 0px -55% 0px",
-            threshold: 0,
-        },
-    );
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
 
-    sections.forEach((section) => observer.observe(section));
+        entry.target.classList.add("active");
+        });
+    }, observerOptions);
+
+    return observer;
 }
+  
+function createObserverSections() {
+    const observerOptions = {
+        root: null,
+        rootMargin: "-35% 0px -50% 0px",
+        threshold: 0
+    };
 
-export function setupScrollReveal() {
-    const elements = getRevealElements();
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
 
-    if (!elements.length || prefersReducedMotion()) {
-        return;
-    }
+        const sectionID = entry.target.id;
+        const links = document.querySelectorAll("#menu-navegacao a");
 
-    setupRevealDelay(elements);
-
-    if (!("IntersectionObserver" in window)) {
-        elements.forEach((element) => clearRevealState(element));
-        return;
-    }
-
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (!entry.isIntersecting) {
-                    return;
-                }
-
-                revealElement(entry.target);
-                observer.unobserve(entry.target);
+        links.forEach((link) => {
+            const isCurrentLink = link.getAttribute("href") === `#${sectionID}`;
+            link.classList.toggle("active", isCurrentLink);
             });
-        },
-        {
-            rootMargin: "0px 0px -8% 0px",
-            threshold: 0.15,
-        },
-    );
+        });
+    }, observerOptions);
 
-    elements.forEach((element) => observer.observe(element));
+    return observer;
+}
+  
+export function initAnimation() {
+    const selectors = selectorsReveal.map((item) => item[0] ?? "");
+    const animations = selectorsReveal.map((item) => item[1] ?? "");
+
+    const elementsReveal = addClass(getElements(selectors), animations);
+
+    const sections = document.querySelectorAll(".section-observer");
+
+    const observerAnimation = createObserverAnimation();
+    const observerSections = createObserverSections();
+
+    setTimeout(() => {
+        elementsReveal.forEach((elementList) => {
+            elementList.forEach((element) => {
+                observerAnimation.observe(element);
+            });
+        });
+
+        sections.forEach((section) => {
+            observerSections.observe(section);
+        });
+    }, 2500);
 }

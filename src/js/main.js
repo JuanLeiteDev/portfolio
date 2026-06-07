@@ -1,38 +1,19 @@
-import { setupActiveNavigation, setupScrollReveal } from "./animation.js";
-import { getElement } from "./dom.js";
-import { loadHtmlPartials } from "./html.js";
-import { renderProjects } from "./projects.js";
-import { setupThemePreference } from "./theme.js";
-import { getCurrentYear } from "./utils.js";
+import { initAnimation } from "./animation.js";
 
-function setupFooterYear() {
-    const yearElement = getElement("#ano-atual");
-
-    if (yearElement) {
-        yearElement.textContent = getCurrentYear();
-    }
+function initLoader() {
+    const loader = document.querySelector("#page-loader");
+  
+    if (!loader) return;
+  
+    setTimeout(() => {
+      loader.classList.add("hide");
+      document.body.classList.remove("loading");
+    }, 1200);
 }
-
-function scrollToInitialHash() {
-    if (!window.location.hash) {
-        return;
-    }
-
-    getElement(window.location.hash)?.scrollIntoView();
+  
+function init() {
+    initAnimation();
 }
-
-async function init() {
-    setupThemePreference();
-    await loadHtmlPartials();
-    renderProjects(getElement("[data-projects-list]"));
-    setupScrollReveal();
-    setupActiveNavigation();
-    setupFooterYear();
-    scrollToInitialHash();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    init().catch((error) => {
-        console.error(error);
-    });
-});
+  
+window.addEventListener("DOMContentLoaded", init);
+window.addEventListener("load", initLoader);

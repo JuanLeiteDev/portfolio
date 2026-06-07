@@ -11,18 +11,395 @@
     <title>Juan Leite — Portfólio</title>
 </head>
 <body>
-    <div data-include="./src/html/partials/header.html"></div>
-    <div data-include="./src/html/partials/hero.html"></div>
+    <!-- ============================================== LOAD ============================================== -->
+    <div id="page-loader">
+        <h1 id="message-load">Seja bem-vindo(a) ao meu portfólio!</p>
+    </div>
 
+    <!-- ============================================== HEADER ============================================== -->
+    <header>
+        <nav aria-label="Navegação principal">
+            <ul id="menu-navegacao">
+                <li><a href="#hero">Início</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#formacoes">Formações</a></li>
+                <li><a href="#projetos">Projetos</a></li>
+                <!-- <li><a id="experiencia-menu" href="#experiencia">Experiências</a></li> -->
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ============================================== HERO ============================================== -->
+    <section id="hero">
+        <div class="hero-content">
+            <img src="./assets/img/juan-png.webp" alt="Foto de Juan Leite" class="hero-foto">
+            <div class="hero-texto">
+                <h1>Juan Leite</h1>
+                <span class="hero-tagline">&gt; Engenharia de Sistemas Informáticos</span>
+                <div class="hero-cta">
+                    <a href="#projetos" class="btn btn-primario">
+                        <span class="material-icons">visibility</span>
+                        Ver projetos
+                    </a>
+                    <a href="./assets/cv/cv.pdf" class="btn btn-secundario" download>
+                        <span class="material-icons">download</span>
+                        Baixar CV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ============================================== MAIN ============================================== -->
     <main class="container">
-        <div data-include="./src/html/partials/about.html"></div>
-        <div data-include="./src/html/partials/skills.html"></div>
-        <div data-include="./src/html/partials/education.html"></div>
-        <div data-include="./src/html/partials/projects.html"></div>
-        <div data-include="./src/html/partials/contact.html"></div>
+
+    <!-- ============================================== ABOUT ============================================== -->
+        <section id="sobre">
+            <div class="sobre-header">
+                <h2 class="titulo-secao">Sobre <span>// quem sou</span></h2>
+                <p class="sobre-intro">Desenvolvedor Backend em formação, apaixonado por criar experiências digitais funcionais, acessíveis e visualmente atraentes.</p>
+            </div>
+            <div class="sobre-flex">
+                <article class="sobre-card">
+                    <div class="sobre-card-header">
+                        <span class="sobre-card-icon" aria-hidden="true">
+                            <i class="fa-solid fa-laptop"></i>
+                        </span>
+                        <h3>Área de foco</h3>
+                    </div>
+                    <p>Concentrado no front-end, criando interfaces modernas e responsivas.</p>
+                    <span class="sobre-card-line" aria-hidden="true"></span>
+                </article>
+                <article class="sobre-card">
+                    <div class="sobre-card-header">
+                        <span class="sobre-card-icon" aria-hidden="true">
+                            <i class="fa-solid fa-code"></i>
+                        </span>
+                        <h3>Comprometido com o crescimento</h3>
+                    </div>
+                    <p>Sempre aprendendo e evoluindo através de prática e novos desafios.</p>
+                    <span class="sobre-card-line" aria-hidden="true"></span>
+                </article>
+                <article class="sobre-card">
+                    <div class="sobre-card-header">
+                        <span class="sobre-card-icon" aria-hidden="true">
+                            <i class="fa-regular fa-user"></i>
+                        </span>
+                        <h3>Me caracterizo por...</h3>
+                    </div>
+                    <p>Ser dedicado, curioso e focado em entregar soluções que realmente fazem a diferença.</p>
+                    <p>Transformo ideias em interfaces que conectam e geram valor.</p>
+                    <span class="sobre-card-line" aria-hidden="true"></span>
+                </article>
+            </div>
+        </section>
+
+    <!-- ============================================== SKILLS ============================================== -->
+        <section id="skills">
+            <h2 class="titulo-secao">Skills <span>// competências</span></h2>
+            <div class="skills-header">
+                <p class="skills-intro">Ferramentas e tecnologias que uso para transformar ideias em soluções eficientes e funcionais.</p>
+            </div>
+
+            <div id="skills-container" class="skills-layout">
+                <article class="skill-group skill-group-hard">
+                    <div class="skill-group-heading">
+                        <h3 class="skill-group-title"><i class="fa-solid fa-code" aria-hidden="true"></i>Front-end</h3>
+                        <span aria-hidden="true"></span>
+                    </div>
+                    <div class="skill-list">
+                        <div class="skill-item hard">
+                            <span class="skill-icon hard-icon" aria-hidden="true">
+                                <i class="fa-brands fa-html5"></i>
+                            </span>
+                            <div class="skill-copy">
+                                <h4>HTML</h4>
+                                <p>Estrutura e semântica</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="skill-item hard">
+                            <span class="skill-icon hard-icon" aria-hidden="true">
+                                <i class="fa-brands fa-css3-alt"></i>
+                            </span>
+                            <div class="skill-copy">
+                                <h4>CSS</h4>
+                                <p>Estilização e responsividade</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="skill-item hard">
+                            <span class="skill-icon hard-icon" aria-hidden="true">
+                                <i class="fa-brands fa-js"></i>
+                            </span>
+                            <div class="skill-copy">
+                                <h4>JavaScript</h4>
+                                <p>Interatividade e lógica</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="skill-item hard">
+                            <span class="skill-icon hard-icon" aria-hidden="true">
+                                <i class="fa-brands fa-react"></i>
+                            </span>
+                            <div class="skill-copy">
+                                <h4>React</h4>
+                                <p>Biblioteca para interfaces</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="skill-group skill-group-soft">
+                    <div class="skill-group-heading">
+                        <h3 class="skill-group-title"><i class="fa-solid fa-terminal" aria-hidden="true"></i>Back-end</h3>
+                        <span aria-hidden="true"></span>
+                    </div>
+                    <div class="skill-list">
+                        <div class="skill-item soft">
+                            <span class="skill-icon soft-icon" aria-hidden="true">
+                                <i class="fa-brands fa-node-js"></i>
+                            </span>
+                            <div class="skill-copy">
+                                <h4>Node.js</h4>
+                                <p>Ambiente de execução</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="skill-item soft">
+                            <span class="skill-icon soft-icon" aria-hidden="true">
+                                <i class="fa-solid fa-server"></i>
+                            </span>
+                            <div class="skill-copy">
+                                <h4>Express.js</h4>
+                                <p>Framework web para Node.js</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="skill-item soft">
+                            <span class="skill-icon soft-icon" aria-hidden="true">
+                                <i class="fa-solid fa-database"></i>
+                            </span>
+                            <div class="skill-copy">
+                                <h4>MySQL</h4>
+                                <p>Banco de dados relacional</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="skill-item soft">
+                            <span class="skill-icon soft-icon" aria-hidden="true">
+                                <i class="fa-brands fa-git-alt"></i>
+                            </span>
+                            <div class="skill-copy">
+                                <h4>Git &amp; GitHub</h4>
+                                <p>Controle de versão</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="skills-values" aria-label="Valores profissionais">
+                <span><i class="fa-solid fa-bolt" aria-hidden="true"></i>Aprendizado contínuo</span>
+                <span><i class="fa-solid fa-rocket" aria-hidden="true"></i>Foco em soluções reais</span>
+                <span><i class="fa-solid fa-code" aria-hidden="true"></i>Código limpo</span>
+                <span><i class="fa-solid fa-users" aria-hidden="true"></i>Trabalho em equipe</span>
+            </div>
+        </section>
+        
+    <!-- ============================================== EDUCATION ============================================== -->
+        <section id="formacoes">
+            <h2 class="titulo-secao">Formações <span>// trajetória acadêmica</span></h2>
+            <div class="formacoes-lista">
+                <article class="formacao-card">
+                    <h3>Engenharia de Sistemas Informáticos</h3>
+                    <p class="instituicao">Instituto Politécnico do Cávado e do Áve - (pós-laboral)</p>
+                    <p class="periodo">2025 — 2028</p>
+                    <p>Licenciatura voltada ao desenvolvimento e a prática para a integração no mercado de trabalho.</p>
+                </article>
+                <article class="formacao-card">
+                    <h3>HTML5 e CSS3 (200 horas)</h3>
+                    <p class="instituicao">Curso em vídeo</p>
+                    <p class="periodo">2026</p>
+                    <p>Especialização em HTML5 e CSS3.</p>
+                </article>
+                <article class="formacao-card">
+                    <h3>Python 3+ POO (140 horas)</h3>
+                    <p class="instituicao">Udemy - Luiz Miranda</p>
+                    <p class="periodo">2026</p>
+                    <p>Python focado em projetos reais e POO.</p>
+                </article>
+                <article class="formacao-card">
+                    <h3>Python (160 horas)</h3>
+                    <p class="instituicao">Curso em vídeo</p>
+                    <p class="periodo">2026</p>
+                    <p>Curso de python focado em aprendizagem da linguagem.</p>
+                </article>
+                <article class="formacao-card">
+                    <h3>Algoritmos (40 horas)</h3>
+                    <p class="instituicao">Curso em vídeo</p>
+                    <p class="periodo">2023</p>
+                    <p>Algoritmia e lógica de programação.</p>
+                </article>
+            </div>
+        </section>
+        
+    <!-- ============================================== PROJECTS ============================================== -->
+        <section id="projetos">
+            <h2 class="titulo-secao">Projetos <span>// o que já construi</span></h2>
+            <div class="projetos-grid" data-projects-list>
+                <article class="projeto-card">
+                    <h3>FinTrack — Gestor de Finanças Pessoais</h3>
+                    <p>Aplicação web para registo e acompanhamento de transações financeiras com CRUD completo.</p>
+                    <div class="tags">
+                        <span class="tag">Flask</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Docker</span>
+                    </div>
+                    <div class="projeto-links">
+                        <a 
+                            class="link-projeto" 
+                            href="https://github.com/JuanLeiteDev/fintrack" 
+                            target="_blank" 
+                            rel="noopener">
+                            <i class="fa-solid fa-code"></i>
+                            Código
+                        </a>
+                    </div>
+                </article>
+
+                <article class="projeto-card">
+                    <h3>Mini-shell</h3>
+                    <p>Sistema de gestão de ficheiros com interpretador e comandos totalmente personalizados.</p>
+                    <div class="tags">
+                        <span class="tag">C</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">Makefile</span>
+                    </div>
+                    <div class="projeto-links">
+                        <a 
+                            class="link-projeto"
+                            href="https://github.com/JuanLeiteDev/mini-shell-file-system" 
+                            target="_blank" 
+                            rel="noopener">
+                            <i class="fa-solid fa-code"></i>
+                            Código
+                        </a>
+                    </div>
+                </article>
+
+                <article class="projeto-card">
+                    <h3>Análise de Ficheiros PS2</h3>
+                    <p>Gera arquivos PS2 através de dados em ficheiros e os analisa em uma Dashboard.</p>
+                    <div class="tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">C</span>
+                        <span class="tag">Makefile</span>
+                    </div>
+                    <div class="projeto-links">
+                        <a
+                            class="link-projeto"
+                            href="https://github.com/JuanLeiteDev/ProjetoPS2"
+                            target="_blank"
+                            rel="noopener">
+                            <i class="fa-solid fa-code"></i>
+                            Código
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    
+    <!-- ============================================== CONTACT ============================================== -->
+        <section id="contato">
+            <h2 class="titulo-secao">Contato <span>// vamos conversar</span></h2>
+            <p class="contato-intro">Aberto a oportunidades e colaborações. Escolha o canal que preferir.</p>
+            <div class="contato-links">
+                <a href="https://github.com/JuanLeiteDev" target="_blank" rel="noopener" class="btn btn-contato">
+                    <i class="fa-brands fa-github"></i>
+                    GitHub
+                </a>
+                <a href="https://linkedin.com/in/juan-leite-7b61923ab" target="_blank" rel="noopener" class="btn btn-contato">
+                    <i class="fa-brands fa-linkedin"></i>
+                    LinkedIn
+                </a>
+                <a href="https://wa.me/+351914095001" target="_blank" rel="noopener" class="btn btn-contato">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    WhatsApp
+                </a>
+                <a href="./assets/cv/cv.pdf" class="btn btn-contato" target="_blank" download>
+                    <span class="material-icons">download</span>
+                    Baixar CV
+                </a>
+            </div>
+        </section>
     </main>
 
-    <div data-include="./src/html/partials/footer.html"></div>
-    <script type="module" src="./src/js/main.js"></script>
+    <!-- ============================================== FOOTER ============================================== -->
+    <footer>
+        <p>Juan Lucas Souza Leite</p>
+        <small>&copy; <span id="ano-atual">2026</span> — Construído com HTML, CSS &amp; JavaScript</small>
+    </footer>
+
+    <script type="module" src="./src/js/main.js" defer></script>
 </body>
 </html>

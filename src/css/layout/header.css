@@ -40,13 +40,13 @@ header {
 }
 
 #menu-navegacao > li > a:hover,
-#menu-navegacao > li > a.is-active {
+#menu-navegacao > li > a.active {
     color: var(--cor-p1);
     cursor: pointer;
 }
 
 #menu-navegacao > li > a:hover::after,
-#menu-navegacao > li > a.is-active::after {
+#menu-navegacao > li > a.active::after {
     width: 100%;
 }
 
