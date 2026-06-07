@@ -57,110 +57,212 @@
 
     <!-- ============================================== ABOUT ============================================== -->
         <section id="sobre">
-            <h2 class="titulo-secao">Sobre <span>// quem sou</span></h2>
+            <div class="sobre-header">
+                <h2 class="titulo-secao">Sobre <span>// quem sou</span></h2>
+                <p class="sobre-intro">Desenvolvedor Backend em formação, apaixonado por criar experiências digitais funcionais, acessíveis e visualmente atraentes.</p>
+            </div>
             <div class="sobre-flex">
-                <div class="sobre-card">
-                    <h3>Área de foco</h3>
-                    <p>Desenvolvedor back-end, full-stack e aplicações web.</p>
-                </div>
-                <div class="sobre-card">
-                    <h3>Competências em desenvolvimento</h3>
-                    <p>JavaScript e MySQL.</p>
-                </div>
-                <div class="sobre-card">
-                    <h3>No momento estou...</h3>
-                    <p>Com foco em projetos reais e funcionais para desenvolvimento pessoal.</p><br>
-                    <p>Trabalhando como Suporte Técnico de Software e Hardware N1.</p>
-                </div>
+                <article class="sobre-card">
+                    <div class="sobre-card-header">
+                        <span class="sobre-card-icon" aria-hidden="true">
+                            <i class="fa-solid fa-laptop"></i>
+                        </span>
+                        <h3>Área de foco</h3>
+                    </div>
+                    <p>Concentrado no front-end, criando interfaces modernas e responsivas.</p>
+                    <span class="sobre-card-line" aria-hidden="true"></span>
+                </article>
+                <article class="sobre-card">
+                    <div class="sobre-card-header">
+                        <span class="sobre-card-icon" aria-hidden="true">
+                            <i class="fa-solid fa-code"></i>
+                        </span>
+                        <h3>Comprometido com o crescimento</h3>
+                    </div>
+                    <p>Sempre aprendendo e evoluindo através de prática e novos desafios.</p>
+                    <span class="sobre-card-line" aria-hidden="true"></span>
+                </article>
+                <article class="sobre-card">
+                    <div class="sobre-card-header">
+                        <span class="sobre-card-icon" aria-hidden="true">
+                            <i class="fa-regular fa-user"></i>
+                        </span>
+                        <h3>Me caracterizo por...</h3>
+                    </div>
+                    <p>Ser dedicado, curioso e focado em entregar soluções que realmente fazem a diferença.</p>
+                    <p>Transformo ideias em interfaces que conectam e geram valor.</p>
+                    <span class="sobre-card-line" aria-hidden="true"></span>
+                </article>
             </div>
         </section>
 
     <!-- ============================================== SKILLS ============================================== -->
         <section id="skills">
             <h2 class="titulo-secao">Skills <span>// competências</span></h2>
+            <div class="skills-header">
+                <p class="skills-intro">Ferramentas e tecnologias que uso para transformar ideias em soluções eficientes e funcionais.</p>
+            </div>
+
             <div id="skills-container" class="skills-layout">
                 <article class="skill-group skill-group-hard">
-                    <h3 class="skill-group-title">Hard Skills</h3>
+                    <div class="skill-group-heading">
+                        <h3 class="skill-group-title"><i class="fa-solid fa-code" aria-hidden="true"></i>Front-end</h3>
+                        <span aria-hidden="true"></span>
+                    </div>
                     <div class="skill-list">
                         <div class="skill-item hard">
                             <span class="skill-icon hard-icon" aria-hidden="true">
-                                <span class="material-icons">computer</span>
+                                <i class="fa-brands fa-html5"></i>
                             </span>
-                            <div>
-                                <h4>Sistemas Operativos</h4>
-                                <p>Linux e Windows</p>
+                            <div class="skill-copy">
+                                <h4>HTML</h4>
+                                <p>Estrutura e semântica</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
                             </div>
                         </div>
                         <div class="skill-item hard">
                             <span class="skill-icon hard-icon" aria-hidden="true">
-                                <span class="material-icons">code</span>
+                                <i class="fa-brands fa-css3-alt"></i>
                             </span>
-                            <div>
-                                <h4>Linguagens</h4>
-                                <p>Python, C, HTML5, CSS e JavaScript</p>
+                            <div class="skill-copy">
+                                <h4>CSS</h4>
+                                <p>Estilização e responsividade</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
                             </div>
                         </div>
                         <div class="skill-item hard">
                             <span class="skill-icon hard-icon" aria-hidden="true">
-                                <span class="material-icons">build</span>
+                                <i class="fa-brands fa-js"></i>
                             </span>
-                            <div>
-                                <h4>Ferramentas</h4>
-                                <p>Git, GitHub, Docker, Makefile</p>
+                            <div class="skill-copy">
+                                <h4>JavaScript</h4>
+                                <p>Interatividade e lógica</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
                             </div>
                         </div>
                         <div class="skill-item hard">
                             <span class="skill-icon hard-icon" aria-hidden="true">
-                                <span class="material-icons">school</span>
+                                <i class="fa-brands fa-react"></i>
                             </span>
-                            <div>
-                                <h4>Em Processo</h4>
-                                <p>MySQL e JavaScript</p>
+                            <div class="skill-copy">
+                                <h4>React</h4>
+                                <p>Biblioteca para interfaces</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
                             </div>
                         </div>
                     </div>
                 </article>
                 <article class="skill-group skill-group-soft">
-                    <h3 class="skill-group-title">Soft Skills</h3>
+                    <div class="skill-group-heading">
+                        <h3 class="skill-group-title"><i class="fa-solid fa-terminal" aria-hidden="true"></i>Back-end</h3>
+                        <span aria-hidden="true"></span>
+                    </div>
                     <div class="skill-list">
                         <div class="skill-item soft">
                             <span class="skill-icon soft-icon" aria-hidden="true">
-                                <span class="material-icons">psychology</span>
+                                <i class="fa-brands fa-node-js"></i>
                             </span>
-                            <div>
-                                <h4>Resolução de problemas</h4>
-                                <p>Criatividade e adaptação</p>
+                            <div class="skill-copy">
+                                <h4>Node.js</h4>
+                                <p>Ambiente de execução</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
                             </div>
                         </div>
                         <div class="skill-item soft">
                             <span class="skill-icon soft-icon" aria-hidden="true">
-                                <span class="material-icons">groups</span>
+                                <i class="fa-solid fa-server"></i>
                             </span>
-                            <div>
-                                <h4>Trabalho em equipa</h4>
-                                <p>Colaboração e respeito</p>
+                            <div class="skill-copy">
+                                <h4>Express.js</h4>
+                                <p>Framework web para Node.js</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
                             </div>
                         </div>
                         <div class="skill-item soft">
                             <span class="skill-icon soft-icon" aria-hidden="true">
-                                <span class="material-icons">chat</span>
+                                <i class="fa-solid fa-database"></i>
                             </span>
-                            <div>
-                                <h4>Comunicação</h4>
-                                <p>Clareza e escuta ativa</p>
+                            <div class="skill-copy">
+                                <h4>MySQL</h4>
+                                <p>Banco de dados relacional</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
                             </div>
                         </div>
                         <div class="skill-item soft">
                             <span class="skill-icon soft-icon" aria-hidden="true">
-                                <span class="material-icons">event_note</span>
+                                <i class="fa-brands fa-git-alt"></i>
                             </span>
-                            <div>
-                                <h4>Organização</h4>
-                                <p>Responsabilidade e autonomia</p>
+                            <div class="skill-copy">
+                                <h4>Git &amp; GitHub</h4>
+                                <p>Controle de versão</p>
+                            </div>
+                            <div class="skill-level" aria-label="Nível 5 de 6">
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span class="is-filled"></span>
+                                <span></span>
                             </div>
                         </div>
                     </div>
                 </article>
+            </div>
+
+            <div class="skills-values" aria-label="Valores profissionais">
+                <span><i class="fa-solid fa-bolt" aria-hidden="true"></i>Aprendizado contínuo</span>
+                <span><i class="fa-solid fa-rocket" aria-hidden="true"></i>Foco em soluções reais</span>
+                <span><i class="fa-solid fa-code" aria-hidden="true"></i>Código limpo</span>
+                <span><i class="fa-solid fa-users" aria-hidden="true"></i>Trabalho em equipe</span>
             </div>
         </section>
         

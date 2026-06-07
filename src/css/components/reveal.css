@@ -31,6 +31,26 @@
 .reveal-header.active:nth-child(5) { transition-delay: 700ms; }
 .reveal-header.active:nth-child(6) { transition-delay: 850ms; }
 
-.reveal-nav {
+.reveal-tagline.active {
+    animation: digitar 3000ms steps(50);
+}
 
+@keyframes digitar {
+    from {
+        width: 0rem;
+    }
+    to {
+        width: 1rem;
+    }
+}
+
+.reveal-skill {
+    transform: translateY(200px);
+    opacity: 0;
+    transition: transform 500ms ease, opacity 800ms ease;
+}
+
+.reveal-skill.active {
+    transform: translateY(0px);
+    opacity: 1;
 }

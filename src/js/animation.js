@@ -5,7 +5,9 @@ const selectorsReveal = [
     ["#skills", "reveal section-observer"],
     ["#formacoes", "reveal section-observer"],
     ["#projetos", "reveal section-observer"],
-    ["#contato", "reveal section-observer"]
+    ["#contato", "reveal section-observer"],
+    [".hero-tagline", "reveal-tagline"],
+    [".skill-item", "reveal-skill"],
 ];
   
 function getElements(arrSelector, parent = document) {
