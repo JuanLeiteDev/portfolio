@@ -221,22 +221,12 @@
 
 @media (min-width: 1024px) {
     .skills-layout {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr 1fr;
         gap: clamp(52px, 7vw, 92px);
     }
 
-    .skill-group-soft {
-        position: relative;
-    }
-
-    .skill-group-soft::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: calc(clamp(26px, 3.5vw, 46px) * -1);
-        width: 1px;
-        background: var(--borda);
+    .skill-group:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
     }
 
     .skills-values {

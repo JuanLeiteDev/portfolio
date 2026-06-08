@@ -38,7 +38,7 @@
 
 .sobre-card-header {
     display: grid;
-    grid-template-columns: 52px 1fr;
+    grid-template-columns: 52px 1fr auto;
     align-items: center;
     gap: 14px;
     margin-bottom: 18px;
@@ -65,6 +65,30 @@
     font-size: 1.05rem;
     line-height: 1.2;
     margin-bottom: 0;
+}
+
+.sobre-card-toggle {
+    display: none;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    color: var(--cor-p1);
+    background: var(--fundo-secundario);
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.sobre-card-toggle:hover,
+.sobre-card-toggle:focus-visible {
+    border-color: var(--cor-p1);
+    color: var(--texto-principal);
+    outline: none;
+}
+
+.sobre-card-toggle i {
+    font-size: 0.95rem;
 }
 
 .sobre-card p {
@@ -117,18 +141,48 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 767px) {
     .sobre-card {
         min-height: 0;
+        max-height: 420px;
+        overflow: hidden;
+        transition: max-height 200ms ease, border-color 0.2s ease, background 0.2s ease;
     }
 
     .sobre-card-header {
-        grid-template-columns: 46px 1fr;
-        gap: 12px;
+        margin-bottom: 18px;
+        transition: margin-bottom 180ms ease;
     }
 
-    .sobre-card-icon {
-        width: 46px;
-        height: 46px;
+    .sobre-card-toggle {
+        display: grid;
+    }
+
+    .sobre-card p,
+    .sobre-card-line {
+        max-height: 140px;
+        overflow: hidden;
+        opacity: 1;
+        transition: max-height 180ms ease, opacity 150ms ease, margin 180ms ease;
+    }
+
+    .sobre-card:not(.is-open) {
+        max-height: 98px;
+    }
+
+    .sobre-card:not(.is-open) .sobre-card-header {
+        margin-bottom: 0;
+    }
+
+    .sobre-card:not(.is-open) p,
+    .sobre-card:not(.is-open) .sobre-card-line {
+        max-height: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+        opacity: 0;
+    }
+
+    .sobre-card.is-open .sobre-card-line {
+        margin-bottom: 0;
     }
 }
