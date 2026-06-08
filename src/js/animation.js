@@ -5,10 +5,11 @@ const selectorsReveal = [
     ["#skills", "section-observer"],
     ["#formacoes", "section-observer"],
     ["#projetos", "reveal section-observer"],
-    ["#contato", "reveal section-observer"],
+    ["#contato", "section-observer"],
     [".hero-tagline", "reveal-tagline"],
     [".skill-item", "reveal-skill"],
     [".formacao-card", "reveal-formation"],
+    [".btn-contato", "reveal-contact"],
 ];
   
 function getElements(arrSelector, parent = document) {

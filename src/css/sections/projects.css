@@ -74,10 +74,14 @@
     color: var(--cor-p1);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 1023px) {
     .projetos-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 18px;
+    }
+
+    .projeto-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
     }
 }
 
