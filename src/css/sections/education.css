@@ -1,6 +1,6 @@
 #formacoes {
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .formacoes-header {
@@ -43,14 +43,12 @@
 
 .formacao-card.reveal-formation {
     opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 420ms ease, transform 420ms ease;
+    transition: opacity 420ms ease;
 }
 
 .formacao-card.reveal-formation.active {
     opacity: 1;
-    transform: translateY(0);
-    animation: formacao-flash 620ms ease-ou 300ms both;
+    animation: formacao-flash 620ms ease-ouy 300ms both;
 }
 
 .formacao-card.reveal-formation.active .formacao-icone,
