@@ -3,7 +3,7 @@ const selectorsReveal = [
     ["#hero", "reveal section-observer"],
     ["#sobre", "reveal section-observer"],
     ["#skills", "section-observer"],
-    ["#formacoes", "reveal section-observer"],
+    ["#formacoes", "section-observer"],
     ["#projetos", "reveal section-observer"],
     ["#contato", "reveal section-observer"],
     [".hero-tagline", "reveal-tagline"],

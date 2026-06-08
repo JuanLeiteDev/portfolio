@@ -50,12 +50,12 @@
 .formacao-card.reveal-formation.active {
     opacity: 1;
     transform: translateY(0);
-    animation: formacao-flash 620ms ease-out 120ms both;
+    animation: formacao-flash 620ms ease-ou 300ms both;
 }
 
 .formacao-card.reveal-formation.active .formacao-icone,
 .formacao-card.reveal-formation.active .formacao-ponto {
-    animation: formacao-flash-accent 620ms ease-out 120ms both;
+    animation: formacao-flash-accent 620ms ease-out 300ms both;
 }
 
 .formacao-card:last-child {
