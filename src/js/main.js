@@ -1,4 +1,5 @@
 import { initAnimation } from "./animation.js";
+import { initProjects } from "./projects.js";
 
 function initLoader() {
     const loader = document.querySelector("#page-loader");
@@ -66,6 +67,7 @@ function initAboutCardsAccordion() {
 }
   
 function init() {
+    initProjects();
     initAnimation();
     initAboutCardsAccordion();
 }

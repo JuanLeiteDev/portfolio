@@ -1,73 +1,120 @@
-# Portfolio Pessoal
+# Portfólio Juan Leite
 
-Bem-vindo ao meu portfolio! Este é um espaço onde apresento meus projetos, habilidades e experiências como desenvolvedor.
+Portfólio pessoal desenvolvido em HTML, CSS e JavaScript para apresentar perfil profissional, tecnologias, formações, projetos e canais de contato.
 
-## 📋 Sobre
+## Sobre o projeto
 
-Sou um desenvolvedor dedicado a criar soluções web inovadoras e eficientes. Neste portfolio, você encontrará uma coleção dos meus melhores trabalhos e projetos que demonstram minhas competências em desenvolvimento web.
+Este repositório contém um site estático de portfólio com foco em desenvolvimento back-end, full-stack e engenharia de sistemas informáticos. A página é composta por seções independentes e responsivas:
 
-## 🚀 Projetos
+- `Início`: apresentação, foto, tagline e CTAs para projetos e CV.
+- `Sobre`: cards com área de foco, objetivo profissional e características; no mobile, os cards funcionam como accordion.
+- `Skills`: tecnologias organizadas por front-end, back-end e ferramentas, com indicadores visuais de nível.
+- `Formações`: timeline acadêmica com ícones, períodos e descrições.
+- `Projetos`: cards renderizados por JavaScript com tags e links para GitHub.
+- `Contato`: links para GitHub, LinkedIn, WhatsApp e download do CV.
 
-Os projetos desenvolvidos estão documentados e podem ser acessados diretamente neste repositório.
+## Tecnologias
 
-## 💻 Tecnologias
+- HTML5 sem framework.
+- CSS3 modularizado por base, layout, componentes e seções.
+- JavaScript ES Modules para loader, animações de reveal, navegação ativa e interações.
+- Font Awesome e Material Icons para ícones.
+- Google Fonts: Inter, JetBrains Mono e Space Grotesk.
 
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Ferramentas**: Git, VS Code
+## Estrutura
 
-## 📁 Estrutura do Projeto
-
-```
+```text
 portfolio/
-├── index.html              # Página principal
+├── index.html
 ├── assets/
-│   ├── cv/                 # Currículo e documentos públicos
-│   ├── fonts/              # Fontes locais, se forem adicionadas
-│   ├── icons/              # Ícones estáticos, se forem adicionados
-│   └── img/                # Imagens públicas do portfolio
+│   ├── cv/
+│   │   └── cv.pdf
+│   └── img/
+│       ├── favicon.ico
+│       └── juan-png.webp
 ├── src/
 │   ├── css/
-│   │   ├── base/           # Variáveis, reset e estilos globais
-│   │   ├── components/     # Componentes reutilizáveis
-│   │   ├── layout/         # Header, hero, página e footer
-│   │   ├── sections/       # Estilos específicos de seções
-│   │   └── main.css        # Ponto de entrada dos estilos
-│   ├── html/
-│   │   └── partials/       # Partes reutilizáveis do HTML
+│   │   ├── base/
+│   │   │   ├── reset.css
+│   │   │   └── variables.css
+│   │   ├── components/
+│   │   │   ├── buttons.css
+│   │   │   └── reveal.css
+│   │   ├── layout/
+│   │   │   ├── footer.css
+│   │   │   ├── header.css
+│   │   │   ├── hero.css
+│   │   │   ├── html.css
+│   │   │   └── page.css
+│   │   ├── sections/
+│   │   │   ├── about.css
+│   │   │   ├── contact.css
+│   │   │   ├── education.css
+│   │   │   ├── experience.css
+│   │   │   ├── projects.css
+│   │   │   └── skills.css
+│   │   └── main.css
 │   └── js/
-│       ├── main.js         # Ponto de entrada do JavaScript
-│       ├── html.js         # Carregamento dos partials HTML
-│       ├── projects.js     # Dados e renderização dos projetos
-│       ├── animation.js    # Comportamentos visuais
-│       ├── dom.js          # Helpers de DOM
-│       ├── theme.js        # Preferências visuais
-│       └── utils.js        # Funções utilitárias
-├── README.md              # Este arquivo
+│       ├── animation.js
+│       ├── main.js
+│       └── projects.js
+├── README.md
 └── .gitignore
 ```
 
-## ▶️ Rodando localmente
+## Como rodar localmente
 
-Como o projeto usa módulos JavaScript (`type="module"`), prefira abrir por um servidor local:
+Por usar JavaScript com `type="module"`, rode por um servidor local:
 
 ```bash
 python3 -m http.server 5500
 ```
 
-Depois acesse `http://localhost:5500`. Se a porta estiver ocupada, troque por outra, por exemplo `5501`.
+Depois acesse:
 
-## 🎯 Funcionalidades
+```text
+http://localhost:5500
+```
 
-- Interface responsiva e moderna
-- HTML modularizado em partials
-- Projetos renderizados por JavaScript a partir de dados separados
-- Navegação intuitiva
-- CSS modular por base, layout, componentes e seções, incluindo responsividade em cada módulo
+Se a porta estiver ocupada, use outra:
 
-## 📞 Entre em Contato
+```bash
+python3 -m http.server 5501
+```
 
-Sinta-se livre para entrar em contato comigo através das plataformas de redes sociais ou enviar um email direto.
+## CSS
 
----
+O CSS entra por `src/css/main.css`, que importa os módulos em ordem:
 
-**Desenvolvido por Juan Leite**
+- `base`: variáveis de cor, fontes e reset.
+- `layout`: header, hero, container, footer e loader.
+- `components`: botões e animações de reveal.
+- `sections`: estilos específicos para sobre, skills, formações, projetos, experiência e contato.
+
+Os tokens principais ficam em `src/css/base/variables.css`.
+
+## JavaScript
+
+O ponto de entrada é `src/js/main.js`. Atualmente ele inicializa:
+
+- animações de entrada e observação de seções;
+- renderização dos cards da seção `Projetos` a partir de `src/js/projects.js`;
+- link ativo do menu conforme scroll;
+- loader inicial da página;
+- accordion dos cards da seção `Sobre` em telas menores.
+
+## Assets
+
+- `assets/img/juan-png.webp`: foto usada no hero.
+- `assets/img/favicon.ico`: favicon.
+- `assets/cv/cv.pdf`: currículo disponibilizado para download.
+
+## Observações
+
+- O projeto não usa bundler, framework ou etapa de build.
+- A seção de experiências está comentada no menu, mas o CSS correspondente ainda existe em `src/css/sections/experience.css`.
+- Arquivos temporários de composição visual ficam em `tmp/` e são ignorados pelo Git.
+
+## Autor
+
+Desenvolvido por Juan Leite.
