@@ -7,25 +7,6 @@
     max-width: 620px;
 }
 
-#formacoes .titulo-secao {
-    margin-bottom: 0;
-    color: var(--cor-p1);
-}
-
-#formacoes .titulo-secao > span {
-    color: var(--texto-secundario);
-}
-
-#formacoes .titulo-secao::after {
-    content: "";
-    display: block;
-    width: 88px;
-    height: 3px;
-    margin-top: 20px;
-    background: var(--cor-p1);
-    border-radius: 8px;
-}
-
 .formacoes-header > p {
     margin-top: 28px;
     color: var(--texto-secundario);
@@ -58,6 +39,23 @@
     min-height: 112px;
     padding: 20px 0;
     border-bottom: 1px solid var(--borda);
+}
+
+.formacao-card.reveal-formation {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.formacao-card.reveal-formation.active {
+    opacity: 1;
+    transform: translateY(0);
+    animation: formacao-flash 620ms ease-out 120ms both;
+}
+
+.formacao-card.reveal-formation.active .formacao-icone,
+.formacao-card.reveal-formation.active .formacao-ponto {
+    animation: formacao-flash-accent 620ms ease-out 120ms both;
 }
 
 .formacao-card:last-child {
@@ -143,6 +141,44 @@
     line-height: 1.6;
 }
 
+@keyframes formacao-flash {
+    0%,
+    100% {
+        border-color: var(--borda);
+    }
+
+    42% {
+        border-color: var(--cor-p1);
+    }
+}
+
+@keyframes formacao-flash-accent {
+    0%,
+    100% {
+        box-shadow: none;
+    }
+
+    42% {
+        border-color: var(--cor-p1);
+        box-shadow: 0 0 18px var(--cor-p1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .formacao-card.reveal-formation,
+    .formacao-card.reveal-formation.active,
+    .formacao-card.reveal-formation.active .formacao-icone,
+    .formacao-card.reveal-formation.active .formacao-ponto {
+        animation: none;
+        transition: none;
+    }
+
+    .formacao-card.reveal-formation {
+        opacity: 1;
+        transform: none;
+    }
+}
+
 @media (min-width: 768px) {
     .formacoes-lista::before {
         left: 36px;
@@ -178,7 +214,7 @@
 
 @media (min-width: 1024px) {
     .formacoes-lista::before {
-        left: 118px;
+        left: 117px;
     }
 
     .formacao-card {
@@ -211,20 +247,12 @@
 }
 
 @media (min-width: 1280px) {
-    #formacoes .titulo-secao {
-        font-size: 3.6rem;
-    }
-
     .formacoes-lista {
         margin-top: 48px;
     }
 }
 
 @media (max-width: 480px) {
-    #formacoes .titulo-secao {
-        font-size: 2rem;
-    }
-
     .formacoes-header > p {
         margin-top: 22px;
     }

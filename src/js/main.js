@@ -23,7 +23,35 @@ function initAboutCardsAccordion() {
         if (!button) return;
 
         button.addEventListener("click", () => {
-            const isOpen = card.classList.toggle("is-open");
+            const wasOpen = card.classList.contains("is-open");
+
+            // Fecha todos os cards
+            cards.forEach((otherCard) => {
+                const otherButton = otherCard.querySelector(".sobre-card-toggle");
+                const otherIcon = otherButton?.querySelector("i");
+                const otherTitle = otherCard.querySelector("h3")?.textContent?.trim() || "card";
+
+                otherCard.classList.remove("is-open");
+
+                if (otherButton) {
+                    otherButton.setAttribute("aria-expanded", "false");
+                    otherButton.setAttribute("aria-label", `Abrir descrição: ${otherTitle}`);
+                }
+
+                if (otherIcon) {
+                    otherIcon.classList.add("fa-chevron-down");
+                    otherIcon.classList.remove("fa-chevron-up");
+                }
+            });
+
+            // Se o card clicado estava fechado, abre ele
+            // Se já estava aberto, ele continua fechado
+            const isOpen = !wasOpen;
+
+            if (isOpen) {
+                card.classList.add("is-open");
+            }
+
             const icon = button.querySelector("i");
 
             button.setAttribute("aria-expanded", String(isOpen));

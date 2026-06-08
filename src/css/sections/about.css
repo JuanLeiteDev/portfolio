@@ -142,16 +142,33 @@
 }
 
 @media (max-width: 767px) {
+    .sobre-flex {
+        gap: 0px;
+    }
+
     .sobre-card {
         min-height: 0;
         max-height: 420px;
+        border-radius: 0;
         overflow: hidden;
-        transition: max-height 200ms ease, border-color 0.2s ease, background 0.2s ease;
+        transition: max-height 300ms ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .sobre-card:hover {
+        transform: translateY(0);
+    }
+
+    .sobre-card:first-child {
+        border-radius: 8px 8px 0 0;
+    }
+
+    .sobre-card:last-child {
+        border-radius: 0px 0px 8px 8px;
     }
 
     .sobre-card-header {
         margin-bottom: 18px;
-        transition: margin-bottom 180ms ease;
+        transition: margin-bottom 300ms ease;
     }
 
     .sobre-card-toggle {
@@ -163,7 +180,7 @@
         max-height: 140px;
         overflow: hidden;
         opacity: 1;
-        transition: max-height 180ms ease, opacity 150ms ease, margin 180ms ease;
+        transition: max-height 300ms ease, opacity 150ms ease, margin 300ms ease;
     }
 
     .sobre-card:not(.is-open) {
