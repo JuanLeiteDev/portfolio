@@ -6,7 +6,6 @@ const selectorsReveal = [
     ["#formacoes", "section-observer"],
     ["#projetos", "section-observer"],
     ["#experiencia", "section-observer"],
-    ["#formacao-complementar", "section-observer"],
     [".projeto-card", "reveal"],
     ["#contato", "section-observer"],
     [".skill-item", "reveal-skill"],

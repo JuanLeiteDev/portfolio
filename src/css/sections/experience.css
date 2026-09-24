@@ -1,22 +1,23 @@
 .experiencias-lista {
     display: flex;
     flex-flow: column nowrap;
+    width: 100%;
+    min-width: 0;
     gap: 16px;
 }
 
 .experiencia-card {
-    padding: 20px;
+    width: 100%;
+    min-width: 0;
+    padding: clamp(16px, 2.5vw, 32px);
     background-color: var(--card);
     border: 1px solid var(--borda);
     border-left: 3px solid var(--cor-p3);
     border-radius: 8px;
-    transition:
-        transform 0.25s ease,
-        border-color 0.25s ease;
+    transition: border-color 0.25s ease;
 }
 
 .experiencia-card:hover {
-    transform: translateX(3px);
     border-left-color: var(--cor-p1);
 }
 
@@ -24,6 +25,8 @@
     font-family: var(--font-titulo);
     color: var(--texto-principal);
     margin-bottom: 6px;
+    font-size: clamp(1.05rem, 0.9rem + 0.4vw, 1.25rem);
+    line-height: 1.4;
 }
 
 .experiencia-card .empresa {
@@ -45,13 +48,6 @@
     line-height: 1.7;
 }
 
-@media (min-width: 768px) {
-    .experiencias-lista {
-        max-width: 1100px;
-        margin: 0;
-    }
-}
-
 .experiencia-intro {
     max-width: 80ch;
     color: var(--texto-secundario);
@@ -59,7 +55,8 @@
 }
 .experiencia-casos {
     display: grid;
-    gap: 24px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(20px, 2.5vw, 32px);
     border-top: 1px solid var(--borda);
     margin-top: 24px;
     padding-top: 24px;
@@ -72,8 +69,22 @@
     color: var(--texto-secundario);
     line-height: 1.7;
 }
+@media (min-width: 768px) {
+    .experiencia-casos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .experiencia-casos > :last-child {
+        grid-column: 1 / -1;
+    }
+}
+
 @media (min-width: 1024px) {
     .experiencia-casos {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .experiencia-casos > :last-child {
+        grid-column: auto;
     }
 }

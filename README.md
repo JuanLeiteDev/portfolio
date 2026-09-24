@@ -10,8 +10,8 @@ Este repositório contém um site estático de portfólio com foco em Python, de
 - `Sobre`: trajetória profissional, Python na prática e direção de carreira; accordion em mobile.
 - `Experiência`: cargo oficial de suporte N1 na Eleven Systems e contribuições em Python e troubleshooting.
 - `Projetos`: quatro destaques classificados por contexto, com disponibilidade do código; projetos anteriores e estudos numa área expansível.
-- `Stack`: backend, dados, testes, ferramentas e outros conhecimentos, sem escalas de proficiência.
-- `Formação`: licenciatura em curso; cursos complementares numa área separada e expansível.
+- `Stack`: Python/backend numa faixa de destaque; dados, testes, ferramentas e outros conhecimentos organizados em pares de grupos, sem escalas de proficiência.
+- `Formações`: licenciatura em curso e todos os cursos complementares reunidos na mesma timeline.
 - `Contato`: GitHub, LinkedIn, WhatsApp e download do CV.
 
 ## Tecnologias

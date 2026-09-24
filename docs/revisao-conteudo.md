@@ -33,12 +33,12 @@ A ausência na lista pública não permite concluir se um repositório é privad
 
 ## Decisões de apresentação
 
-1. Hero → Sobre → Experiência → Projetos → Stack → Formação académica → Formação complementar → Contato.
+1. Hero → Sobre → Experiência → Projetos → Stack → Formações (licenciatura e cursos complementares juntos) → Contato.
 2. Python / Backend Developer é o posicionamento de carreira. O cargo na Eleven Systems permanece Suporte Técnico de Software e Hardware N1, desde 27/06/2026, em Braga e presencial.
 3. FastAPI é o framework principal. Flask fica apenas no projeto anterior FinTrack. React não aparece na stack principal.
 4. O analisador utiliza apenas as métricas fornecidas: mais de 10.000 ficheiros e 5.000.000 de linhas, em minutos. Não é atribuída uma biblioteca à dashboard ou à automação web.
 5. SQL aparece como conhecimento em desenvolvimento. Foram retiradas escalas subjetivas de proficiência.
-6. Cursos complementares e projetos antigos ficam em áreas expansíveis. O projeto Mini Shell mantém espaço secundário face aos projetos Python.
+6. A licenciatura e os cursos complementares ficam juntos na timeline de Formações. Apenas projetos antigos ficam numa área expansível. O projeto Mini Shell mantém espaço secundário face aos projetos Python.
 7. O PDF do CV foi substituído pelo novo documento fornecido pelo autor, sem alteração do seu conteúdo.
 
 ## Critérios editoriais para futuras atualizações
