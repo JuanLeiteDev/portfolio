@@ -4,21 +4,22 @@ Portfólio pessoal desenvolvido em HTML, CSS e JavaScript para apresentar perfil
 
 ## Sobre o projeto
 
-Este repositório contém um site estático de portfólio com foco em desenvolvimento back-end, full-stack e engenharia de sistemas informáticos. A página é composta por seções independentes e responsivas:
+Este repositório contém um site estático de portfólio com foco em Python, desenvolvimento backend com FastAPI e experiência profissional em TI. A página é composta por seções independentes e responsivas:
 
-- `Início`: apresentação, foto, tagline e CTAs para projetos e CV.
-- `Sobre`: cards com área de foco, objetivo profissional e características; no mobile, os cards funcionam como accordion.
-- `Skills`: tecnologias organizadas por front-end, back-end e ferramentas, com indicadores visuais de nível.
-- `Formações`: timeline acadêmica com ícones, períodos e descrições.
-- `Projetos`: cards renderizados por JavaScript com tags e links para GitHub.
-- `Contato`: links para GitHub, LinkedIn, WhatsApp e download do CV.
+- `Início`: posicionamento Python / Backend Developer, foto e atalhos para projetos e experiência.
+- `Sobre`: trajetória profissional, Python na prática e direção de carreira; accordion em mobile.
+- `Experiência`: cargo oficial de suporte N1 na Eleven Systems e contribuições em Python e troubleshooting.
+- `Projetos`: quatro destaques classificados por contexto, com disponibilidade do código; projetos anteriores e estudos numa área expansível.
+- `Stack`: backend, dados, testes, ferramentas e outros conhecimentos, sem escalas de proficiência.
+- `Formação`: licenciatura em curso; cursos complementares numa área separada e expansível.
+- `Contato`: GitHub, LinkedIn, WhatsApp e download do CV.
 
 ## Tecnologias
 
 - HTML5 sem framework.
 - CSS3 modularizado por base, layout, componentes e seções.
-- JavaScript ES Modules para loader, animações de reveal, navegação ativa e interações.
-- Font Awesome e Material Icons para ícones.
+- JavaScript ES Modules para animações de entrada, navegação ativa e interações.
+- Font Awesome para ícones.
 - Google Fonts: Inter, JetBrains Mono e Space Grotesk.
 
 ## Estrutura
@@ -44,7 +45,6 @@ portfolio/
 │   │   │   ├── footer.css
 │   │   │   ├── header.css
 │   │   │   ├── hero.css
-│   │   │   ├── html.css
 │   │   │   └── page.css
 │   │   ├── sections/
 │   │   │   ├── about.css
@@ -87,7 +87,7 @@ python3 -m http.server 5501
 O CSS entra por `src/css/main.css`, que importa os módulos em ordem:
 
 - `base`: variáveis de cor, fontes e reset.
-- `layout`: header, hero, container, footer e loader.
+- `layout`: header, hero, container e footer.
 - `components`: botões e animações de reveal.
 - `sections`: estilos específicos para sobre, skills, formações, projetos, experiência e contato.
 
@@ -100,7 +100,6 @@ O ponto de entrada é `src/js/main.js`. Atualmente ele inicializa:
 - animações de entrada e observação de seções;
 - renderização dos cards da seção `Projetos` a partir de `src/js/projects.js`;
 - link ativo do menu conforme scroll;
-- loader inicial da página;
 - accordion dos cards da seção `Sobre` em telas menores.
 
 ## Assets
@@ -112,7 +111,11 @@ O ponto de entrada é `src/js/main.js`. Atualmente ele inicializa:
 ## Observações
 
 - O projeto não usa bundler, framework ou etapa de build.
-- A seção de experiências está comentada no menu, mas o CSS correspondente ainda existe em `src/css/sections/experience.css`.
+- A experiência profissional está ativa no menu e na página.
+- Os projetos são mantidos em `src/js/projects.js`, separados em destaques e arquivo. Links só são apresentados quando existe um repositório público verificado.
+- A verificação do GitHub, as fontes do conteúdo e os pontos para revisão estão em [docs/revisao-conteudo.md](docs/revisao-conteudo.md).
+- O domínio público é `https://juanleitedev.com`; a branch de produção é `main`.
+- As alterações visuais e verificações estão em [docs/verificacao-visual.md](docs/verificacao-visual.md).
 - Arquivos temporários de composição visual ficam em `tmp/` e são ignorados pelo Git.
 
 ## Autor

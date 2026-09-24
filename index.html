@@ -1,445 +1,542 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfólio de Juan Leite — Engenharia de Sistemas Informáticos, desenvolvimento back-end e full-stack.">
-    <link rel="stylesheet" href="./src/css/main.css">
-    <link rel="shortcut icon" href="./assets/img/favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <title>Juan Leite — Portfólio</title>
-</head>
-<body>
-    <!-- ============================================== LOAD ============================================== -->
-    <div id="page-loader">
-        <h1 id="message-load">Seja bem-vindo(a) ao meu portfólio!</p>
-    </div>
-
-    <!-- ============================================== HEADER ============================================== -->
-    <header>
-        <nav aria-label="Navegação principal">
-            <ul id="menu-navegacao">
-                <li><a href="#hero">Início</a></li>
-                <li><a href="#sobre">Sobre</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#formacoes">Formações</a></li>
-                <li><a href="#projetos">Projetos</a></li>
-                <!-- <li><a id="experiencia-menu" href="#experiencia">Experiências</a></li> -->
-                <li><a href="#contato">Contato</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- ============================================== HERO ============================================== -->
-    <section id="hero">
-        <div class="hero-content">
-            <img src="./assets/img/juan-png.webp" alt="Foto de Juan Leite" class="hero-foto">
-            <div class="hero-texto">
-                <h1>Juan Leite</h1>
-                <span class="hero-tagline">&gt; Engenharia de Sistemas Informáticos</span>
-                <div class="hero-cta">
-                    <a href="#projetos" class="btn btn-primario">
-                        <span class="material-icons">visibility</span>
-                        Ver projetos
+<!doctype html>
+<html lang="pt">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Juan Leite — Python / Backend Developer. Experiência profissional em TI, ferramentas internas e automação com Python. Projetos backend com FastAPI e APIs REST."
+        />
+        <link rel="stylesheet" href="./src/css/main.css" />
+        <link rel="shortcut icon" href="./assets/img/favicon.ico" type="image/x-icon" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        />
+        <title>Juan Leite — Python / Backend Developer</title>
+    </head>
+    <body>
+        <a class="skip-link" href="#sobre">Saltar para o conteúdo</a>
+        <header>
+            <nav aria-label="Navegação principal">
+                <ul id="menu-navegacao">
+                    <li><a href="#hero">Início</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#experiencia">Experiência</a></li>
+                    <li><a href="#projetos">Projetos</a></li>
+                    <li><a href="#skills">Stack</a></li>
+                    <li><a href="#formacoes">Formação</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </nav>
+        </header>
+        <section id="hero" aria-labelledby="hero-title">
+            <div class="hero-content">
+                <img
+                    src="./assets/img/juan-png.webp"
+                    alt="Foto de Juan Leite"
+                    class="hero-foto"
+                    width="360"
+                    height="360"
+                />
+                <div class="hero-texto">
+                    <p class="hero-eyebrow">Python · FastAPI · APIs · Automação</p>
+                    <h1 id="hero-title">Juan Leite</h1>
+                    <p class="hero-tagline">Python / Backend Developer</p>
+                    <p class="hero-description">
+                        Profissional de TI e estudante de Engenharia de Sistemas Informáticos. Transformo
+                        problemas da operação em ferramentas Python e direciono a minha carreira para
+                        desenvolvimento backend com FastAPI.
+                    </p>
+                    <div class="hero-cta">
+                        <a href="#projetos" class="btn btn-primario"
+                            ><i class="fa-solid fa-code" aria-hidden="true"></i>Ver projetos</a
+                        >
+                        <a href="#experiencia" class="btn btn-secundario"
+                            ><i class="fa-solid fa-briefcase" aria-hidden="true"></i>Minha experiência</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+        <main class="container">
+            <section id="sobre">
+                <h2 class="titulo-secao">Sobre <span>// trajetória e direção</span></h2>
+                <p class="sobre-intro">
+                    Sou estudante de Engenharia de Sistemas Informáticos no IPCA e trabalho na Eleven Systems
+                    como Suporte Técnico de Software e Hardware N1. O contacto com incidentes em produção
+                    acompanha o meu percurso em Python, automação e desenvolvimento backend.
+                </p>
+                <div class="sobre-flex">
+                    <article class="sobre-card">
+                        <div class="sobre-card-header">
+                            <span class="sobre-card-icon" aria-hidden="true"
+                                ><i class="fa-solid fa-terminal"></i
+                            ></span>
+                            <h3>Python na prática</h3>
+                            <button
+                                class="sobre-card-toggle"
+                                type="button"
+                                aria-expanded="false"
+                                aria-label="Abrir descrição: Python na prática"
+                            >
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <p>
+                            No trabalho, desenvolvo ferramentas em Python para análise de logs, automação de
+                            processos e melhoria de fluxos internos, a partir de problemas reais da operação.
+                        </p>
+                        <span class="sobre-card-line" aria-hidden="true"></span>
+                    </article>
+                    <article class="sobre-card">
+                        <div class="sobre-card-header">
+                            <span class="sobre-card-icon" aria-hidden="true"
+                                ><i class="fa-solid fa-server"></i
+                            ></span>
+                            <h3>Foco em backend</h3>
+                            <button
+                                class="sobre-card-toggle"
+                                type="button"
+                                aria-expanded="false"
+                                aria-label="Abrir descrição: Foco em backend"
+                            >
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <p>
+                            Nos meus projetos pessoais, aprofundo APIs REST com FastAPI, persistência com
+                            SQLAlchemy e PostgreSQL, autenticação, Docker e testes.
+                        </p>
+                        <span class="sobre-card-line" aria-hidden="true"></span>
+                    </article>
+                    <article class="sobre-card">
+                        <div class="sobre-card-header">
+                            <span class="sobre-card-icon" aria-hidden="true"
+                                ><i class="fa-solid fa-graduation-cap"></i
+                            ></span>
+                            <h3>Próximos passos</h3>
+                            <button
+                                class="sobre-card-toggle"
+                                type="button"
+                                aria-expanded="false"
+                                aria-label="Abrir descrição: Próximos passos"
+                            >
+                                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <p>
+                            Quero evoluir como Python / Backend Developer, aprofundando arquitetura de
+                            aplicações, bases de dados, segurança, performance e sistemas distribuídos.
+                        </p>
+                        <span class="sobre-card-line" aria-hidden="true"></span>
+                    </article>
+                </div>
+            </section>
+            <section id="experiencia">
+                <h2 class="titulo-secao">Experiência <span>// problemas reais, soluções práticas</span></h2>
+                <div class="experiencias-lista">
+                    <article class="experiencia-card">
+                        <p class="empresa">Eleven Systems</p>
+                        <h3>Suporte Técnico de Software e Hardware N1</h3>
+                        <p class="periodo">
+                            <time datetime="2026-06-27">27/06/2026</time> — Atual · Braga, Portugal ·
+                            Presencial
+                        </p>
+                        <p class="experiencia-intro">
+                            Atuo em suporte técnico N1 e, além das atividades de suporte, desenvolvo scripts,
+                            automações e ferramentas internas em Python para apoiar a operação.
+                        </p>
+                        <ul>
+                            <li>
+                                Diagnóstico de incidentes, análise de logs e investigação de causas em
+                                software, hardware e equipamentos em produção.
+                            </li>
+                            <li>
+                                Suporte remoto e configuração de aplicações, drivers, impressoras, redes e VPN
+                                em contextos Windows e Android.
+                            </li>
+                            <li>
+                                Organização e análise de dados, criação de folhas de cálculo e documentação
+                                técnica.
+                            </li>
+                        </ul>
+                        <div class="experiencia-casos">
+                            <div>
+                                <h4>Análise de logs</h4>
+                                <p>
+                                    Desenvolvi uma ferramenta Python que processa mais de 10.000 ficheiros e
+                                    5.000.000 de linhas em minutos, organizando os resultados numa dashboard
+                                    para apoiar a investigação.
+                                </p>
+                            </div>
+                            <div>
+                                <h4>Investigação em produção</h4>
+                                <p>
+                                    Investiguei um problema de acumulação de dados que esgotava o
+                                    armazenamento e provocava crashes. Participei na análise da causa e na
+                                    implementação da solução.
+                                </p>
+                            </div>
+                            <div>
+                                <h4>Automação de processos web</h4>
+                                <p>
+                                    Desenvolvi automações em Python para preenchimento de formulários e
+                                    tarefas repetitivas, reduzindo a necessidade de ações manuais na operação.
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+            <section id="projetos">
+                <h2 class="titulo-secao">Projetos <span>// Python em prática</span></h2>
+                <p class="section-intro">
+                    Ferramentas profissionais, projetos pessoais e fundamentos académicos. Cada projeto
+                    identifica o seu contexto e a disponibilidade do código.
+                </p>
+                <div class="projetos-grid" data-projects-list="featured"></div>
+                <details class="projetos-arquivo">
+                    <summary>Outros projetos e estudos públicos</summary>
+                    <p class="section-intro">
+                        Estudos de backend e projetos anteriores que fazem parte do meu percurso.
+                    </p>
+                    <div class="projetos-grid" data-projects-list="archive"></div>
+                </details>
+                <noscript
+                    ><p>
+                        Para consultar os projetos públicos, visite o
+                        <a href="https://github.com/JuanLeiteDev">meu GitHub</a>. Ative o JavaScript para ver
+                        os cards nesta página.
+                    </p></noscript
+                >
+            </section>
+            <section id="skills">
+                <h2 class="titulo-secao">Stack <span>// foco em Python e backend</span></h2>
+                <p class="section-intro">
+                    Tecnologias aplicadas em ferramentas profissionais, projetos pessoais e estudos. A
+                    experiência varia conforme o contexto; continuo a aprofundar SQL e bases de dados.
+                </p>
+                <div class="skills-layout">
+                    <article class="skill-group">
+                        <div class="skill-group-heading">
+                            <h3 class="skill-group-title">
+                                <i class="fa-solid fa-server" aria-hidden="true"></i>Python / Backend
+                            </h3>
+                            <span aria-hidden="true"></span>
+                        </div>
+                        <div class="skill-list">
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-brands fa-python"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>Python</h4>
+                                    <p>Scripts, automação e aplicações backend</p>
+                                </div>
+                            </div>
+                            <div class="skill-item skill-item-primary">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-bolt"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>FastAPI</h4>
+                                    <p>Framework principal para APIs e aplicações backend em Python</p>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-layer-group"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>SQLAlchemy · Pydantic · Alembic</h4>
+                                    <p>Persistência, validação e migrations</p>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-diagram-project"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>APIs REST</h4>
+                                    <p>Organização de endpoints e integração de sistemas</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="skill-group">
+                        <div class="skill-group-heading">
+                            <h3 class="skill-group-title">
+                                <i class="fa-solid fa-database" aria-hidden="true"></i>Dados e armazenamento
+                            </h3>
+                            <span aria-hidden="true"></span>
+                        </div>
+                        <div class="skill-list">
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-database"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>PostgreSQL · SQLite</h4>
+                                    <p>Bases de dados relacionais nos projetos</p>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-box-archive"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>Redis · MinIO</h4>
+                                    <p>Cache e armazenamento de ficheiros no projeto pessoal</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="skill-group">
+                        <div class="skill-group-heading">
+                            <h3 class="skill-group-title">
+                                <i class="fa-solid fa-vial" aria-hidden="true"></i>Testes e qualidade
+                            </h3>
+                            <span aria-hidden="true"></span>
+                        </div>
+                        <div class="skill-list">
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-vial"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>pytest</h4>
+                                    <p>Testes de aplicações Python</p>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-check-double"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>Ruff</h4>
+                                    <p>Análise estática e formatação de código</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="skill-group">
+                        <div class="skill-group-heading">
+                            <h3 class="skill-group-title">
+                                <i class="fa-solid fa-terminal" aria-hidden="true"></i>DevOps e ferramentas
+                            </h3>
+                            <span aria-hidden="true"></span>
+                        </div>
+                        <div class="skill-list">
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-brands fa-docker"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>Docker · Docker Compose</h4>
+                                    <p>Ambientes de desenvolvimento em containers</p>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-brands fa-git-alt"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>Git · GitHub</h4>
+                                    <p>Controlo de versões e repositórios</p>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-brands fa-linux"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>uv · Linux</h4>
+                                    <p>Ambientes Python e ferramentas de desenvolvimento</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="skill-group">
+                        <div class="skill-group-heading">
+                            <h3 class="skill-group-title">
+                                <i class="fa-solid fa-code" aria-hidden="true"></i>Outros conhecimentos
+                            </h3>
+                            <span aria-hidden="true"></span>
+                        </div>
+                        <div class="skill-list">
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-code"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>C</h4>
+                                    <p>Sistemas operativos, processos e chamadas POSIX</p>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-table"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>SQL</h4>
+                                    <p>Consultas e modelação de dados em aprendizagem</p>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <span class="skill-icon" aria-hidden="true"
+                                    ><i class="fa-solid fa-laptop-code"></i
+                                ></span>
+                                <div class="skill-copy">
+                                    <h4>HTML · CSS · JavaScript</h4>
+                                    <p>Fundamentos e interfaces para aplicações web</p>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+            <section id="formacoes">
+                <div class="formacoes-header">
+                    <h2 class="titulo-secao">Formação <span>// fundamentos de engenharia</span></h2>
+                </div>
+                <div class="formacoes-lista">
+                    <article class="formacao-card">
+                        <span class="formacao-icone" aria-hidden="true">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </span>
+                        <span class="formacao-ponto" aria-hidden="true"></span>
+                        <p class="periodo">2025 — 2028 · Em curso</p>
+                        <div class="formacao-info">
+                            <h3>Engenharia de Sistemas Informáticos</h3>
+                            <p class="instituicao">
+                                Instituto Politécnico do Cávado e do Ave — IPCA · Pós-laboral
+                            </p>
+                        </div>
+                        <p class="formacao-descricao">
+                            Licenciatura em curso, com foco de estudo em programação, bases de dados e
+                            sistemas operativos.
+                        </p>
+                    </article>
+                </div>
+            </section>
+            <section id="formacao-complementar">
+                <h2 class="titulo-secao">Formação complementar <span>// aprendizagem contínua</span></h2>
+                <details class="formacoes-complementares">
+                    <summary>Cursos de Python, web e algoritmia</summary>
+                    <div class="formacoes-lista">
+                        <article class="formacao-card">
+                            <span class="formacao-icone" aria-hidden="true">
+                                <i class="fa-solid fa-code"></i>
+                            </span>
+                            <span class="formacao-ponto" aria-hidden="true"></span>
+                            <p class="periodo">2026</p>
+                            <div class="formacao-info">
+                                <h3>HTML5 e CSS3 (200 horas)</h3>
+                                <p class="instituicao">
+                                    Curso em vídeo <span>|</span>
+                                    <i class="fa-regular fa-calendar" aria-hidden="true"></i> 2026
+                                </p>
+                            </div>
+                            <p class="formacao-descricao">
+                                Fundamentos de estruturação e apresentação de páginas web.
+                            </p>
+                        </article>
+                        <article class="formacao-card">
+                            <span class="formacao-icone" aria-hidden="true">
+                                <i class="fa-brands fa-python"></i>
+                            </span>
+                            <span class="formacao-ponto" aria-hidden="true"></span>
+                            <p class="periodo">2026</p>
+                            <div class="formacao-info">
+                                <h3>Python 3+ POO (140 horas)</h3>
+                                <p class="instituicao">
+                                    Udemy • Luiz Miranda <span>|</span>
+                                    <i class="fa-regular fa-calendar" aria-hidden="true"></i> 2026
+                                </p>
+                            </div>
+                            <p class="formacao-descricao">Python focado em projetos reais e POO.</p>
+                        </article>
+                        <article class="formacao-card">
+                            <span class="formacao-icone" aria-hidden="true">
+                                <i class="fa-brands fa-python"></i>
+                            </span>
+                            <span class="formacao-ponto" aria-hidden="true"></span>
+                            <p class="periodo">2026</p>
+                            <div class="formacao-info">
+                                <h3>Python (160 horas)</h3>
+                                <p class="instituicao">
+                                    Curso em vídeo <span>|</span>
+                                    <i class="fa-regular fa-calendar" aria-hidden="true"></i> 2026
+                                </p>
+                            </div>
+                            <p class="formacao-descricao">
+                                Curso de Python focado em aprendizagem da linguagem.
+                            </p>
+                        </article>
+                        <article class="formacao-card">
+                            <span class="formacao-icone" aria-hidden="true">
+                                <i class="fa-solid fa-chart-diagram"></i>
+                            </span>
+                            <span class="formacao-ponto" aria-hidden="true"></span>
+                            <p class="periodo">2023</p>
+                            <div class="formacao-info">
+                                <h3>Algoritmos (40 horas)</h3>
+                                <p class="instituicao">
+                                    Curso em vídeo <span>|</span>
+                                    <i class="fa-regular fa-calendar" aria-hidden="true"></i> 2023
+                                </p>
+                            </div>
+                            <p class="formacao-descricao">Algoritmia e lógica de programação.</p>
+                        </article>
+                    </div>
+                </details>
+            </section>
+            <section id="contato">
+                <h2 class="titulo-secao">Contato <span>// vamos conversar</span></h2>
+                <p class="contato-intro">
+                    Aberto a oportunidades em Python e desenvolvimento backend, e a colaborações em APIs e
+                    automação.
+                </p>
+                <div class="contato-links">
+                    <a
+                        href="https://github.com/JuanLeiteDev"
+                        target="_blank"
+                        rel="noopener"
+                        class="btn btn-contato"
+                    >
+                        <i class="fa-brands fa-github" aria-hidden="true"></i>
+                        GitHub
                     </a>
-                    <a href="./assets/cv/cv.pdf" class="btn btn-secundario" download>
-                        <span class="material-icons">download</span>
+                    <a
+                        href="https://linkedin.com/in/juan-leite-7b61923ab"
+                        target="_blank"
+                        rel="noopener"
+                        class="btn btn-contato"
+                    >
+                        <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                        LinkedIn
+                    </a>
+                    <a
+                        href="https://wa.me/+351914095001"
+                        target="_blank"
+                        rel="noopener"
+                        class="btn btn-contato"
+                    >
+                        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                        WhatsApp
+                    </a>
+                    <a href="./assets/cv/cv.pdf" class="btn btn-contato" target="_blank" download>
+                        <i class="fa-solid fa-download" aria-hidden="true"></i>
                         Baixar CV
                     </a>
                 </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- ============================================== MAIN ============================================== -->
-    <main class="container">
-
-    <!-- ============================================== ABOUT ============================================== -->
-        <section id="sobre">
-            <div class="sobre-header">
-                <h2 class="titulo-secao">Sobre <span>// quem sou</span></h2>
-                <p class="sobre-intro">Desenvolvedor Backend em formação, focado em construir soluções digitais eficientes e pensadas para resolver problemas reais.</p>
-            </div>
-            <div class="sobre-flex">
-                <article class="sobre-card">
-                    <div class="sobre-card-header">
-                        <span class="sobre-card-icon" aria-hidden="true">
-                            <i class="fa-solid fa-laptop"></i>
-                        </span>
-                        <h3>Área de foco</h3>
-                        <button class="sobre-card-toggle" type="button" aria-expanded="false" aria-label="Abrir descrição: Área de foco">
-                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <p>Construção de arquiteturas backend escaláveis e bem estruturadas, conectadas a interfaces modernas e responsivas.</p>
-                    <span class="sobre-card-line" aria-hidden="true"></span>
-                </article>
-                <article class="sobre-card">
-                    <div class="sobre-card-header">
-                        <span class="sobre-card-icon" aria-hidden="true">
-                            <i class="fa-solid fa-bullseye"></i>
-                        </span>
-                        <h3>Objetivo profissional</h3>
-                        <button class="sobre-card-toggle" type="button" aria-expanded="false" aria-label="Abrir descrição: Objetivo profissional">
-                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <p>Evoluir como desenvolvedor e atuar em projetos reais, com domínio cada vez maior de arquitetura, performance e regras de negócio.</p>
-                    <span class="sobre-card-line" aria-hidden="true"></span>
-                </article>
-                <article class="sobre-card">
-                    <div class="sobre-card-header">
-                        <span class="sobre-card-icon" aria-hidden="true">
-                            <i class="fa-regular fa-user"></i>
-                        </span>
-                        <h3>Me caracterizo por...</h3>
-                        <button class="sobre-card-toggle" type="button" aria-expanded="false" aria-label="Abrir descrição: Me caracterizo por...">
-                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <p>Ser dedicado, curioso e focado em entregar soluções que realmente fazem a diferença.</p>
-                    <span class="sobre-card-line" aria-hidden="true"></span>
-                </article>
-            </div>
-        </section>
-
-    <!-- ============================================== SKILLS ============================================== -->
-        <section id="skills">
-            <h2 class="titulo-secao">Skills <span>// competências</span></h2>
-            <div class="skills-header">
-                <p class="skills-intro">Ferramentas e tecnologias que utilizo no meu dia a dia.</p>
-            </div>
-
-            <div id="skills-container" class="skills-layout">
-                <article class="skill-group skill-group-hard">
-                    <div class="skill-group-heading">
-                        <h3 class="skill-group-title"><i class="fa-solid fa-code" aria-hidden="true"></i>Front-end</h3>
-                        <span aria-hidden="true"></span>
-                    </div>
-                    <div class="skill-list">
-                        <div class="skill-item hard">
-                            <span class="skill-icon hard-icon" aria-hidden="true">
-                                <i class="fa-brands fa-html5"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>HTML</h4>
-                                <p>Estrutura e semântica</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 6 de 6">
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                            </div>
-                        </div>
-                        <div class="skill-item hard">
-                            <span class="skill-icon hard-icon" aria-hidden="true">
-                                <i class="fa-brands fa-css3-alt"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>CSS</h4>
-                                <p>Estilização e responsividade</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 6 de 6">
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                            </div>
-                        </div>
-                        <div class="skill-item hard">
-                            <span class="skill-icon hard-icon" aria-hidden="true">
-                                <i class="fa-brands fa-js"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>JavaScript</h4>
-                                <p>Interatividade e lógica</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 6 de 6">
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                            </div>
-                        </div>
-                        <div class="skill-item hard">
-                            <span class="skill-icon hard-icon" aria-hidden="true">
-                                <i class="fa-brands fa-react"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>React</h4>
-                                <p>Biblioteca para interfaces</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 1 de 6">
-                                <span class="is-filled"></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <article class="skill-group skill-group-hard">
-                    <div class="skill-group-heading">
-                        <h3 class="skill-group-title"><i class="fa-solid fa-terminal" aria-hidden="true"></i>Back-end</h3>
-                        <span aria-hidden="true"></span>
-                    </div>
-                    <div class="skill-list">
-                        <div class="skill-item hard">
-                            <span class="skill-icon hard-icon" aria-hidden="true">
-                                <i class="fa-brands fa-python"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>Python</h4>
-                                <p>Ambiente de execução</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 6 de 6">
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                            </div>
-                        </div>
-                        <div class="skill-item hard">
-                            <span class="skill-icon hard-icon" aria-hidden="true">
-                                <i class="fa-solid fa-flask"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>Flask</h4>
-                                <p>Framework web para Python</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 4 de 6">
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                        <div class="skill-item hard">
-                            <span class="skill-icon hard-icon" aria-hidden="true">
-                                <i class="fa-solid fa-database"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>PostgreSQL</h4>
-                                <p>Banco de dados relacional</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 1 de 6">
-                                <span class="is-filled"></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                        <div class="skill-item hard">
-                            <span class="skill-icon hard-icon" aria-hidden="true">
-                                <i class="fa-brands fa-c"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>Linguagem C</h4>
-                                <p>Para respostas rápidas</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 5 de 6">
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-                <article class="skill-group skill-group-soft">
-                    <div class="skill-group-heading">
-                        <h3 class="skill-group-title"><i class="fa-solid fa-terminal" aria-hidden="true"></i>Ferramentas</h3>
-                        <span aria-hidden="true"></span>
-                    </div>
-                    <div class="skill-list">
-                        <div class="skill-item soft">
-                            <span class="skill-icon soft-icon" aria-hidden="true">
-                                <i class="fa-brands fa-docker"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>Docker</h4>
-                                <p>Conteinerização</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 4 de 6">
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                        <div class="skill-item soft">
-                            <span class="skill-icon soft-icon" aria-hidden="true">
-                                <i class="fa-brands fa-linux"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>Linux</h4>
-                                <p>Sistema Operativo</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 6 de 6">
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                            </div>
-                        </div>
-                        <div class="skill-item soft">
-                            <span class="skill-icon soft-icon" aria-hidden="true">
-                                <i class="fa-brands fa-git-alt"></i>
-                            </span>
-                            <div class="skill-copy">
-                                <h4>Git &amp; GitHub</h4>
-                                <p>Controle de versão</p>
-                            </div>
-                            <div class="skill-level" aria-label="Nível 5 de 6">
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                                <span class="is-filled"></span>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-            </div>
-
-            <div class="skills-values" aria-label="Valores profissionais">
-                <span><i class="fa-solid fa-bolt" aria-hidden="true"></i>Aprendizado contínuo</span>
-                <span><i class="fa-solid fa-rocket" aria-hidden="true"></i>Foco em soluções reais</span>
-                <span><i class="fa-solid fa-code" aria-hidden="true"></i>Código limpo</span>
-                <span><i class="fa-solid fa-users" aria-hidden="true"></i>Trabalho em equipe</span>
-            </div>
-        </section>
-        
-    <!-- ============================================== EDUCATION ============================================== -->
-        <section id="formacoes">
-            <div class="formacoes-header">
-                <h2 class="titulo-secao">Formações <span>// trajetória acadêmica</span></h2>
-                <p>Cada formação representa um passo importante na construção do meu conhecimento e evolução profissional.</p>
-            </div>
-            <div class="formacoes-lista">
-                <article class="formacao-card">
-                    <span class="formacao-icone" aria-hidden="true">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </span>
-                    <span class="formacao-ponto" aria-hidden="true"></span>
-                    <p class="periodo">2025 — 2028</p>
-                    <div class="formacao-info">
-                        <h3>Engenharia de Sistemas Informáticos</h3>
-                        <p class="instituicao">Instituto Politécnico do Cávado e do Ave (pós-laboral)</p>
-                    </div>
-                    <p class="formacao-descricao">Licenciatura voltada ao desenvolvimento e à prática para a integração no mercado de trabalho.</p>
-                </article>
-                <article class="formacao-card">
-                    <span class="formacao-icone" aria-hidden="true">
-                        <i class="fa-solid fa-code"></i>
-                    </span>
-                    <span class="formacao-ponto" aria-hidden="true"></span>
-                    <p class="periodo">2026</p>
-                    <div class="formacao-info">
-                        <h3>HTML5 e CSS3 (200 horas)</h3>
-                        <p class="instituicao">Curso em vídeo <span>|</span> <i class="fa-regular fa-calendar" aria-hidden="true"></i> 2026</p>
-                    </div>
-                    <p class="formacao-descricao">Especialização em HTML5 e CSS3.</p>
-                </article>
-                <article class="formacao-card">
-                    <span class="formacao-icone" aria-hidden="true">
-                        <i class="fa-brands fa-python"></i>
-                    </span>
-                    <span class="formacao-ponto" aria-hidden="true"></span>
-                    <p class="periodo">2026</p>
-                    <div class="formacao-info">
-                        <h3>Python 3+ POO (140 horas)</h3>
-                        <p class="instituicao">Udemy • Luiz Miranda <span>|</span> <i class="fa-regular fa-calendar" aria-hidden="true"></i> 2026</p>
-                    </div>
-                    <p class="formacao-descricao">Python focado em projetos reais e POO.</p>
-                </article>
-                <article class="formacao-card">
-                    <span class="formacao-icone" aria-hidden="true">
-                        <i class="fa-brands fa-python"></i>
-                    </span>
-                    <span class="formacao-ponto" aria-hidden="true"></span>
-                    <p class="periodo">2026</p>
-                    <div class="formacao-info">
-                        <h3>Python (160 horas)</h3>
-                        <p class="instituicao">Curso em vídeo <span>|</span> <i class="fa-regular fa-calendar" aria-hidden="true"></i> 2026</p>
-                    </div>
-                    <p class="formacao-descricao">Curso de Python focado em aprendizagem da linguagem.</p>
-                </article>
-                <article class="formacao-card">
-                    <span class="formacao-icone" aria-hidden="true">
-                        <i class="fa-solid fa-chart-diagram"></i>
-                    </span>
-                    <span class="formacao-ponto" aria-hidden="true"></span>
-                    <p class="periodo">2023</p>
-                    <div class="formacao-info">
-                        <h3>Algoritmos (40 horas)</h3>
-                        <p class="instituicao">Curso em vídeo <span>|</span> <i class="fa-regular fa-calendar" aria-hidden="true"></i> 2023</p>
-                    </div>
-                    <p class="formacao-descricao">Algoritmia e lógica de programação.</p>
-                </article>
-            </div>
-        </section>
-        
-    <!-- ============================================== PROJECTS ============================================== -->
-        <section id="projetos">
-            <h2 class="titulo-secao">Projetos <span>// o que já construi</span></h2>
-            <div class="projetos-grid" data-projects-list></div>
-        </section>
-    
-    <!-- ============================================== CONTACT ============================================== -->
-        <section id="contato">
-            <h2 class="titulo-secao">Contato <span>// vamos conversar</span></h2>
-            <p class="contato-intro">Aberto a oportunidades e colaborações. Escolha o canal que preferir.</p>
-            <div class="contato-links">
-                <a href="https://github.com/JuanLeiteDev" target="_blank" rel="noopener" class="btn btn-contato">
-                    <i class="fa-brands fa-github"></i>
-                    GitHub
-                </a>
-                <a href="https://linkedin.com/in/juan-leite-7b61923ab" target="_blank" rel="noopener" class="btn btn-contato">
-                    <i class="fa-brands fa-linkedin"></i>
-                    LinkedIn
-                </a>
-                <a href="https://wa.me/+351914095001" target="_blank" rel="noopener" class="btn btn-contato">
-                    <i class="fa-brands fa-whatsapp"></i>
-                    WhatsApp
-                </a>
-                <a href="./assets/cv/cv.pdf" class="btn btn-contato" target="_blank" download>
-                    <span class="material-icons">download</span>
-                    Baixar CV
-                </a>
-            </div>
-        </section>
-    </main>
-
-    <!-- ============================================== FOOTER ============================================== -->
-    <footer>
-        <p>Juan Lucas Souza Leite</p>
-        <small>&copy; <span id="ano-atual">2026</span> — Construído com HTML, CSS &amp; JavaScript</small>
-    </footer>
-
-    <script type="module" src="./src/js/main.js" defer></script>
-</body>
+            </section>
+        </main>
+        <footer>
+            <p>Juan Lucas Souza Leite</p>
+            <small>&copy; <span id="ano-atual">2026</span> — Construído com HTML, CSS &amp; JavaScript</small>
+        </footer>
+        <script type="module" src="./src/js/main.js"></script>
+    </body>
 </html>

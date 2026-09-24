@@ -9,6 +9,10 @@
     --cor-p2: #22c55e;
     --cor-p3: #a855f7;
 
+    --destaque-suave: color-mix(in srgb, var(--cor-p1) 10%, transparent);
+    --destaque-borda: color-mix(in srgb, var(--cor-p1) 25%, transparent);
+    --sombra-destaque: 0 8px 24px color-mix(in srgb, var(--cor-p1) 15%, transparent);
+
     --font-titulo: "Space Grotesk", "Inter", Arial, Helvetica, sans-serif;
     --font-texto: "Inter", Arial, Helvetica, sans-serif;
     --font-code: "JetBrains Mono", Arial, Helvetica, sans-serif;

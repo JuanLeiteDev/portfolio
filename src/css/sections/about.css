@@ -27,7 +27,10 @@
     border: 1px solid var(--borda);
     background: var(--card);
     border-radius: 8px;
-    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
 }
 
 .sobre-card:hover {
@@ -77,7 +80,10 @@
     color: var(--cor-p1);
     background: var(--fundo-secundario);
     cursor: pointer;
-    transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+    transition:
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
 }
 
 .sobre-card-toggle:hover,
@@ -148,10 +154,13 @@
 
     .sobre-card {
         min-height: 0;
-        max-height: 420px;
+        max-height: none;
         border-radius: 0;
         overflow: hidden;
-        transition: max-height 300ms ease, border-color 0.2s ease, background 0.2s ease;
+        transition:
+            max-height 300ms ease,
+            border-color 0.2s ease,
+            background 0.2s ease;
     }
 
     .sobre-card:hover {
@@ -177,10 +186,13 @@
 
     .sobre-card p,
     .sobre-card-line {
-        max-height: 140px;
+        max-height: none;
         overflow: hidden;
         opacity: 1;
-        transition: max-height 300ms ease, opacity 150ms ease, margin 300ms ease;
+        transition:
+            max-height 300ms ease,
+            opacity 150ms ease,
+            margin 300ms ease;
     }
 
     .sobre-card:not(.is-open) {

@@ -48,7 +48,7 @@
 
 .formacao-card.reveal-formation.active {
     opacity: 1;
-    animation: formacao-flash 620ms ease-ouy 300ms both;
+    animation: formacao-flash 620ms ease-out 300ms both;
 }
 
 .formacao-card.reveal-formation.active .formacao-icone,
@@ -97,7 +97,7 @@
     transition: transform 0.25s ease;
 }
 
-.periodo {
+.formacao-card .periodo {
     grid-column: 2;
     margin: 0;
     color: var(--cor-p1);
@@ -198,7 +198,7 @@
         font-size: 1.8rem;
     }
 
-    .periodo,
+    .formacao-card .periodo,
     .formacao-info,
     .formacao-descricao {
         grid-column: auto;

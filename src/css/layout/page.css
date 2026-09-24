@@ -2,13 +2,14 @@ main.container {
     display: flex;
     flex-flow: column nowrap;
     width: 100%;
+    max-width: 1440px;
     padding: 0 clamp(20px, 5vw, 80px);
     margin: 0 auto;
 }
 
 main.container > section {
     padding: 48px 0;
-    scroll-margin-top: 60px;
+    scroll-margin-top: 120px;
 }
 
 .titulo-secao {
@@ -40,4 +41,36 @@ main.container > section {
     .titulo-secao {
         font-size: 2.4rem;
     }
+}
+
+.section-intro {
+    max-width: 72ch;
+    color: var(--texto-secundario);
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+summary {
+    color: var(--texto-principal);
+    cursor: pointer;
+    padding: 16px 0;
+    font-weight: 500;
+}
+details[open] > summary {
+    margin-bottom: 16px;
+}
+:focus-visible {
+    outline: 2px solid var(--cor-p1);
+    outline-offset: 5px;
+}
+.skip-link {
+    position: fixed;
+    top: -100px;
+    left: 16px;
+    z-index: 200;
+    padding: 12px;
+    background: var(--card);
+    color: var(--cor-p1);
+}
+.skip-link:focus {
+    top: 12px;
 }

@@ -10,10 +10,14 @@
     font-weight: 500;
     font-size: 0.92rem;
     cursor: pointer;
-    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.3s ease;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.3s ease;
 }
 
-.btn .material-icons {
+.btn i {
     font-size: 1.1rem;
 }
 
@@ -24,7 +28,7 @@
 
 .btn-primario:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+    box-shadow: var(--sombra-destaque);
 }
 
 .btn-secundario {
@@ -36,8 +40,8 @@
 .btn-secundario:hover {
     background-color: var(--cor-p1);
     border-color: var(--cor-p1);
-    color: white;
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+    color: var(--fundo-principal);
+    box-shadow: var(--sombra-destaque);
     transform: translateY(-2px);
 }
 
@@ -53,5 +57,5 @@
     background: var(--cor-p1);
     color: var(--fundo-principal);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.25);
+    box-shadow: var(--sombra-destaque);
 }

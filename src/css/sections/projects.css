@@ -1,6 +1,6 @@
 .projetos-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 16px;
 }
 
@@ -11,13 +11,16 @@
     background-color: var(--card);
     border: 1px solid var(--borda);
     border-radius: 8px;
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .projeto-card:hover {
     transform: translateY(-3px);
     border-color: var(--cor-p1);
-    box-shadow: 0 0 10px #38bff870;
+    box-shadow: var(--sombra-destaque);
 }
 
 .projeto-card h3 {
@@ -26,7 +29,7 @@
     margin-bottom: 8px;
 }
 
-.projeto-card > p {
+.projeto-descricao {
     color: var(--texto-secundario);
     line-height: 1.6;
     margin-bottom: 14px;
@@ -45,9 +48,9 @@
     font-size: 0.75rem;
     padding: 4px 8px;
     border-radius: 4px;
-    background: rgba(56, 189, 248, 0.1);
+    background: var(--destaque-suave);
     color: var(--cor-p1);
-    border: 1px solid rgba(56, 189, 248, 0.25);
+    border: 1px solid var(--destaque-borda);
 }
 
 .projeto-links {
@@ -66,7 +69,7 @@
     transition: color 0.2s ease;
 }
 
-.link-projeto .material-icons {
+.link-projeto i {
     font-size: 1rem;
 }
 
@@ -76,7 +79,7 @@
 
 @media (min-width: 768px) and (max-width: 1023px) {
     .projetos-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 18px;
     }
 
@@ -87,6 +90,39 @@
 
 @media (min-width: 1024px) {
     .projetos-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+}
+
+.projeto-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    margin-bottom: 18px;
+    font-size: 0.75rem;
+}
+.projeto-categoria {
+    color: var(--cor-p1);
+    font-family: var(--font-code);
+    border: 1px solid var(--destaque-borda);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+.projeto-status,
+.projeto-disponibilidade {
+    color: var(--texto-secundario);
+}
+.projeto-disponibilidade {
+    font-size: 0.82rem;
+}
+.projeto-destaque {
+    color: var(--cor-p1);
+    border-left: 2px solid var(--cor-p1);
+    padding-left: 12px;
+    margin-bottom: 18px;
+}
+.projetos-arquivo {
+    margin-top: 32px;
+    border-top: 1px solid var(--borda);
 }

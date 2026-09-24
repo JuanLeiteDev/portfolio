@@ -1,17 +1,6 @@
 import { initAnimation } from "./animation.js";
 import { initProjects } from "./projects.js";
 
-function initLoader() {
-    const loader = document.querySelector("#page-loader");
-  
-    if (!loader) return;
-  
-    setTimeout(() => {
-      loader.classList.add("hide");
-      document.body.classList.remove("loading");
-    }, 1200);
-}
-
 function initAboutCardsAccordion() {
     const cards = document.querySelectorAll(".sobre-card");
 
@@ -65,12 +54,11 @@ function initAboutCardsAccordion() {
         });
     });
 }
-  
+
 function init() {
     initProjects();
     initAnimation();
     initAboutCardsAccordion();
 }
-  
+
 window.addEventListener("DOMContentLoaded", init);
-window.addEventListener("load", initLoader);

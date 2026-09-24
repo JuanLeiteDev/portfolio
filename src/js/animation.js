@@ -4,14 +4,16 @@ const selectorsReveal = [
     ["#sobre", "reveal section-observer"],
     ["#skills", "section-observer"],
     ["#formacoes", "section-observer"],
-    ["#projetos", "reveal section-observer"],
+    ["#projetos", "section-observer"],
+    ["#experiencia", "section-observer"],
+    ["#formacao-complementar", "section-observer"],
+    [".projeto-card", "reveal"],
     ["#contato", "section-observer"],
-    [".hero-tagline", "reveal-tagline"],
     [".skill-item", "reveal-skill"],
     [".formacao-card", "reveal-formation"],
     [".btn-contato", "reveal-contact"],
 ];
-  
+
 function getElements(arrSelector, parent = document) {
     if (!arrSelector || arrSelector.length === 0) return [];
 
@@ -21,7 +23,7 @@ function getElements(arrSelector, parent = document) {
 
     return elements;
 }
-  
+
 function addClass(arrElements, arrClasses) {
     if (!arrElements || arrElements.length === 0) return [];
     if (!arrClasses || arrClasses.length === 0) return [];
@@ -31,54 +33,54 @@ function addClass(arrElements, arrClasses) {
         const classes = arrClasses[index].split(" ").filter(Boolean);
 
         elementList.forEach((element) => {
-        element.classList.add(...classes);
+            element.classList.add(...classes);
         });
     });
 
     return arrElements;
 }
-  
+
 function createObserverAnimation() {
     const observerOptions = {
         root: null,
-        threshold: 0.3
+        threshold: 0.05,
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
+            if (!entry.isIntersecting) return;
 
-        entry.target.classList.add("active");
+            entry.target.classList.add("active");
         });
     }, observerOptions);
 
     return observer;
 }
-  
+
 function createObserverSections() {
     const observerOptions = {
         root: null,
         rootMargin: "-35% 0px -50% 0px",
-        threshold: 0
+        threshold: 0,
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
+            if (!entry.isIntersecting) return;
 
-        const sectionID = entry.target.id;
-        const links = document.querySelectorAll("#menu-navegacao a");
+            const sectionID = entry.target.id;
+            const links = document.querySelectorAll("#menu-navegacao a");
 
-        links.forEach((link) => {
-            const isCurrentLink = link.getAttribute("href") === `#${sectionID}`;
-            link.classList.toggle("active", isCurrentLink);
+            links.forEach((link) => {
+                const isCurrentLink = link.getAttribute("href") === `#${sectionID}`;
+                link.classList.toggle("active", isCurrentLink);
             });
         });
     }, observerOptions);
 
     return observer;
 }
-  
+
 export function initAnimation() {
     const selectors = selectorsReveal.map((item) => item[0] ?? "");
     const animations = selectorsReveal.map((item) => item[1] ?? "");
@@ -100,5 +102,5 @@ export function initAnimation() {
         sections.forEach((section) => {
             observerSections.observe(section);
         });
-    }, 2500);
+    }, 100);
 }
