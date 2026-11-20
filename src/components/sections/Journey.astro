@@ -49,6 +49,11 @@ const rows = Math.max(...cols.map((c) => c.entries.length));
                           {e.points[lang].map((pt) => <li>{pt}</li>)}
                         </ul>
                       )}
+                      {e.tags && (
+                        <ul class="tags mono" role="list" aria-label={lang === 'pt' ? 'Tecnologias' : 'Technologies'}>
+                          {e.tags.map((tag) => <li>{tag}</li>)}
+                        </ul>
+                      )}
                       {e.hint && <Hint text={t(e.hint, lang)} id={hid} />}
                     </div>
                   </li>
@@ -195,6 +200,20 @@ const rows = Math.max(...cols.map((c) => c.entries.length));
   .points li::before {
     content: '→ ';
     color: var(--c-signal);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+  }
+  .tags li {
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-s);
+    color: var(--c-fg-muted);
+    font-size: 0.7rem;
   }
 
   .list {

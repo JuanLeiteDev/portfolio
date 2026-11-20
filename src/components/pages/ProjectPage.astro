@@ -149,6 +149,20 @@ const jsonLd = [
             )
           }
         </dl>
+        <nav class="toc" aria-label={lang === 'pt' ? 'Nesta página' : 'On this page'}>
+          <p class="label">{lang === 'pt' ? 'Nesta página' : 'On this page'}</p>
+          <ol role="list">
+            {
+              blocks.map((s) => (
+                <li>
+                  <a href={`#b-${s.key}`} data-toc-link={`b-${s.key}`}>
+                    {s.heading}
+                  </a>
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
       </aside>
 
       <div class="prose">
@@ -315,6 +329,40 @@ const jsonLd = [
       align-self: start;
     }
   }
+  /* "on this page" index: desktop only, under the sticky facts */
+  .toc {
+    display: none;
+  }
+  @media (min-width: 64rem) {
+    .toc {
+      display: grid;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--c-line);
+    }
+  }
+  .toc ol {
+    display: grid;
+    gap: 0.15rem;
+    border-inline-start: 1px solid var(--c-line);
+  }
+  .toc a {
+    display: block;
+    margin-inline-start: -1px;
+    padding: 0.3rem 0 0.3rem 0.9rem;
+    border-inline-start: 1px solid transparent;
+    color: var(--c-fg-subtle);
+    font-size: 0.9rem;
+    transition: color var(--dur-1) linear, border-color var(--dur-1) linear;
+  }
+  .toc a:hover {
+    color: var(--c-fg);
+  }
+  .toc a[aria-current="true"] {
+    color: var(--c-fg);
+    border-color: var(--c-signal);
+  }
   .facts dl {
     display: grid;
     gap: 1.1rem;
@@ -358,6 +406,7 @@ const jsonLd = [
     max-width: 44rem;
   }
   .block {
+    scroll-margin-top: 2rem;
     display: grid;
     gap: 1rem;
   }

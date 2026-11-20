@@ -75,10 +75,6 @@ const { lang } = Astro.props;
         <span class="corner tl" aria-hidden="true"></span>
         <span class="corner br" aria-hidden="true"></span>
       </div>
-      <figcaption class="caption mono" aria-hidden="true">
-        <span>fig. 00 — {profile.name.toLowerCase().replace(' ', '_')}</span>
-        <span class="num">41.53°N 8.62°W</span>
-      </figcaption>
     </figure>
 
     <dl class="meta mono">
@@ -90,6 +86,11 @@ const { lang } = Astro.props;
           </div>
         ))
       }
+      <!-- live local time (Barcelos); filled by main.ts, hidden without JS -->
+      <div data-clock-row hidden>
+        <dt>{t(hero.clockLabel, lang)}</dt>
+        <dd><time class="num" data-clock data-tz="Europe/Lisbon" data-locale={lang === 'pt' ? 'pt-PT' : 'en-GB'}></time></dd>
+      </div>
     </dl>
   </div>
 </Section>
@@ -403,16 +404,10 @@ const { lang } = Astro.props;
     bottom: 10px;
     border-width: 0 1px 1px 0;
   }
-  .caption {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 0.6rem;
-    font-size: 0.7rem;
-    color: var(--c-fg-subtle);
-  }
-
   /* metadata */
+  .meta [hidden] {
+    display: none;
+  }
   .meta {
     display: grid;
     gap: 0.4rem;
@@ -421,7 +416,7 @@ const { lang } = Astro.props;
   }
   @media (min-width: 48rem) {
     .meta {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
       gap: 1.5rem;
     }
   }

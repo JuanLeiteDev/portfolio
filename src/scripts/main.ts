@@ -183,3 +183,43 @@ document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
     }, 2200);
   });
 });
+
+/* ---------------------------------------------------- live local time */
+
+const clock = document.querySelector<HTMLTimeElement>('[data-clock]');
+const clockRow = document.querySelector<HTMLElement>('[data-clock-row]');
+if (clock && clockRow) {
+  const fmt = new Intl.DateTimeFormat(clock.dataset.locale ?? 'pt-PT', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: clock.dataset.tz ?? 'Europe/Lisbon',
+    timeZoneName: 'shortOffset',
+  });
+  const tick = () => {
+    const now = new Date();
+    clock.textContent = fmt.format(now);
+    clock.dateTime = now.toISOString();
+  };
+  tick();
+  clockRow.hidden = false;
+  window.setInterval(tick, 30_000);
+}
+
+/* ------------------------------------- case study: "on this page" spy */
+
+const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+if (tocLinks.length) {
+  const byId = new Map(tocLinks.map((a) => [a.dataset.tocLink ?? '', a]));
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        const id = (e.target as HTMLElement).querySelector('h2')?.id ?? '';
+        tocLinks.forEach((a) => a.removeAttribute('aria-current'));
+        byId.get(id)?.setAttribute('aria-current', 'true');
+      }
+    },
+    { rootMargin: '-30% 0px -60% 0px' },
+  );
+  document.querySelectorAll('.block').forEach((b) => io.observe(b));
+}
