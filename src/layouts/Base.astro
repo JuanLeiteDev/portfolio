@@ -1,0 +1,129 @@
+---
+/**
+ * Base document: metadata, SEO, theme bootstrap and page chrome.
+ * Each page passes its localised paths so canonical + hreflang are reciprocal.
+ */
+import '@/styles/global.css';
+import { htmlLang, ogLocale, otherLang, ui, t, type L, type Lang } from '@/i18n';
+import { profile } from '@/data/profile';
+import Rail from '@/components/chrome/Rail.astro';
+import TopBar from '@/components/chrome/TopBar.astro';
+import Dock from '@/components/chrome/Dock.astro';
+import Footer from '@/components/chrome/Footer.astro';
+import CommandMenuIsland from '@/components/chrome/CommandMenuIsland.astro';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  /** Path of this page in each language (for canonical + hreflang). */
+  paths: L;
+  /** Whether the section anchors live on this page. */
+  onHome?: boolean;
+  ogType?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>[];
+  /** Error pages: no canonical/hreflang, not indexed. */
+  noindex?: boolean;
+}
+
+const { lang, title, description, paths, onHome = false, ogType = 'website', jsonLd = [], noindex = false } = Astro.props;
+const site = Astro.site ?? new URL(profile.url);
+const canonical = new URL(paths[lang], site).href;
+const alternate = new URL(paths[otherLang(lang)], site).href;
+const ogImage = new URL(`/og/og-${lang}.png`, site).href;
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.fullName,
+  alternateName: profile.name,
+  url: site.href,
+  image: new URL('/og/juan-leite.jpg', site).href,
+  jobTitle: lang === 'pt' ? 'Suporte Técnico de Software e Hardware N1' : 'Software and Hardware Technical Support (L1)',
+  worksFor: { '@type': 'Organization', name: 'Eleven Systems' },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'IPCA — Instituto Politécnico do Cávado e do Ave' },
+  ],
+  address: { '@type': 'PostalAddress', addressLocality: 'Barcelos', addressCountry: 'PT' },
+  knowsLanguage: ['pt', 'en'],
+  sameAs: ['https://github.com/JuanLeiteDev', 'https://www.linkedin.com/in/juan-leite/'],
+};
+const structured = [person, ...jsonLd];
+---
+
+<!doctype html>
+<html lang={htmlLang[lang]} data-lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {!noindex && <link rel="alternate" hreflang={htmlLang[lang]} href={canonical} />}
+    {!noindex && <link rel="alternate" hreflang={htmlLang[otherLang(lang)]} href={alternate} />}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={new URL(paths.pt, site).href} />}
+
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0d0e0c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f1eee6" media="(prefers-color-scheme: light)" />
+    <meta name="author" content={profile.fullName} />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={ogLocale[lang]} />
+    <meta property="og:locale:alternate" content={ogLocale[otherLang(lang)]} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${profile.name} — ${t(profile.field, lang)}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preload" href="/fonts/schibsted-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Theme + JS flags before first paint (no flash, no layout shift). -->
+    <script is:inline>
+      (function () {
+        const d = document.documentElement;
+        try {
+          const s = localStorage.getItem('theme');
+          if (s === 'light' || s === 'dark') d.setAttribute('data-theme', s);
+        } catch {
+          /* storage blocked */
+        }
+        d.classList.add('js');
+        // Safety net: never leave reveal-on-scroll content hidden if the
+        // enhancement script fails to boot.
+        setTimeout(function () {
+          if (!d.classList.contains('enhanced')) d.classList.remove('js');
+        }, 2500);
+      })();
+    </script>
+
+    {structured.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t(ui.skip, lang)}</a>
+    <div class="grain" aria-hidden="true"></div>
+    <Rail lang={lang} paths={paths} onHome={onHome} />
+    <TopBar lang={lang} paths={paths} />
+    <main id="main" tabindex="-1" class="with-rail">
+      <slot />
+    </main>
+    <Footer lang={lang} paths={paths} onHome={onHome} />
+    <Dock lang={lang} onHome={onHome} />
+    <CommandMenuIsland lang={lang} paths={paths} onHome={onHome} />
+    <script>
+      import '@/scripts/main';
+    </script>
+  </body>
+</html>

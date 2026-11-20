@@ -1,0 +1,30 @@
+---
+/**
+ * Heading of an intent card: a disclosure button inside the heading
+ * (WAI-ARIA disclosure pattern) controlling the card's <Hint>.
+ * Rendered expanded (the hint is visible without JS); main.ts collapses
+ * the state on boot.
+ */
+interface Props {
+  level?: 2 | 3 | 4;
+  controls: string;
+  class?: string;
+}
+const { level = 3, controls, class: className = '' } = Astro.props;
+const Tag = `h${level}` as 'h3';
+---
+
+<Tag class:list={['intent-title', className]}>
+  <button type="button" class="intent-btn" data-intent-btn aria-expanded="true" aria-controls={controls}>
+    <slot />
+    <span class="intent-mark" aria-hidden="true"></span>
+  </button>
+</Tag>
+
+<style>
+  .intent-btn {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+</style>

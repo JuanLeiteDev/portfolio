@@ -1,0 +1,163 @@
+---
+/**
+ * Skills — six capability tiles, keywords only (no percentages, no logos).
+ * Each chip carries where it is evidenced (doc 01 §6) via a small swatch
+ * + accessible text. The tile's one-line summary is revealed on intent.
+ */
+import Section from '@/components/ui/Section.astro';
+import Hint from '@/components/ui/Hint.astro';
+import IntentTitle from '@/components/ui/IntentTitle.astro';
+import { skills, evidenceLabel, type Evidence } from '@/data/home';
+import { t, type L, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const legend: Evidence[] = ['work', 'project', 'academic', 'learning', 'practice'];
+const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
+---
+
+<Section lang={lang} section="skills" title={t(skills.title, lang)} aliases={lang === 'pt' ? ['skills'] : []}>
+  <div class="frame">
+    <p class="legend mono">
+      <span class="sr-only">{t(skills.legend, lang)}:</span>
+      {
+        legend.map((e) => (
+          <span class="ev" data-ev={e}>
+            <span class="sw" aria-hidden="true" />
+            {t(evidenceLabel[e], lang)}
+          </span>
+        ))
+      }
+    </p>
+
+    <ul class="tiles" role="list">
+      {
+        skills.areas.map((area, i) => (
+          <li class="tile spot" data-intent data-reveal style={`--i:${i}`}>
+            <div class="head">
+              <span class="ai mono num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <IntentTitle controls={`skill-${area.id}`} class="at">
+                {t(area.title, lang)}
+              </IntentTitle>
+            </div>
+            <Hint text={t(area.hint, lang)} id={`skill-${area.id}`} />
+            <ul class="chips" role="list">
+              {area.items.map((it) => (
+                <li data-ev={it.ev}>
+                  <span class="sw" aria-hidden="true" />
+                  {name(it.name)}
+                  <span class="sr-only"> — {t(evidenceLabel[it.ev], lang)}</span>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin-bottom: 1.5rem;
+    color: var(--c-fg-subtle);
+    font-size: 0.72rem;
+  }
+  .ev {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  /* evidence swatches: shape + tone, never colour alone */
+  .sw {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border: 1px solid var(--c-fg-muted);
+  }
+  [data-ev='work'] > .sw {
+    background: var(--c-signal);
+    border-color: var(--c-signal);
+  }
+  [data-ev='project'] > .sw {
+    background: var(--c-fg);
+    border-color: var(--c-fg);
+  }
+  [data-ev='academic'] > .sw {
+    background: linear-gradient(135deg, var(--c-fg-muted) 50%, transparent 50%);
+  }
+  [data-ev='learning'] > .sw {
+    border-style: dashed;
+  }
+  [data-ev='practice'] > .sw {
+    border-radius: 50%;
+    border-color: var(--c-signal);
+  }
+
+  .tiles {
+    display: grid;
+    gap: 0.75rem;
+  }
+  @media (min-width: 40rem) {
+    .tiles {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .tiles {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+  .tile {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+    padding: 1.4rem;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-l);
+    cursor: pointer;
+    transition: border-color var(--dur-2) var(--ease-out), background-color var(--dur-2) var(--ease-out);
+  }
+  .tile:is(:hover, :focus-within, .is-open) {
+    border-color: var(--c-line-strong);
+    background: var(--c-bg-raised);
+  }
+  .head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  .ai {
+    color: var(--c-signal);
+  }
+  .tile :global(.at) {
+    font-size: var(--step-2);
+    letter-spacing: -0.025em;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .chips li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.28rem 0.6rem;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-s);
+    font-size: 0.85rem;
+    transition: border-color var(--dur-2) var(--ease-out);
+  }
+  .tile:hover .chips li {
+    border-color: var(--c-line-strong);
+  }
+</style>

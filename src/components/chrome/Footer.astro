@@ -1,0 +1,139 @@
+---
+/**
+ * Footer = full site map (#menu). It is the no-JS fallback target for the
+ * dock "Menu" button, so every destination is reachable without scripts.
+ */
+import { sectionOrder, sectionLabels, sectionHref, routes, ui, t, type L, type Lang } from '@/i18n';
+import { projects } from '@/data/projects';
+import { contactActions, profile } from '@/data/profile';
+import { colophon } from '@/data/home';
+import LangSwitch from './LangSwitch.astro';
+
+interface Props {
+  lang: Lang;
+  paths: L;
+  onHome: boolean;
+}
+const { lang, paths, onHome } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer id="menu" class="footer" tabindex="-1">
+  <div class="frame-inner">
+    <div class="ruler" aria-hidden="true"></div>
+    <div class="grid">
+      <nav aria-label={lang === 'pt' ? 'Mapa do site' : 'Site map'}>
+        <p class="label">{lang === 'pt' ? 'secções' : 'sections'}</p>
+        <ul>
+          {
+            sectionOrder.map((key) => (
+              <li>
+                <a class="link" href={sectionHref(key, lang, onHome)}>
+                  {t(sectionLabels[key], lang)}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <nav aria-label={t(ui.allProjects, lang)}>
+        <p class="label">{lang === 'pt' ? 'projetos' : 'projects'}</p>
+        <ul>
+          {
+            projects.map((p) => (
+              <li>
+                <a class="link" href={routes.project(p.slug)[lang]}>
+                  {t(p.name, lang)}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div>
+        <p class="label">{lang === 'pt' ? 'contacto' : 'contact'}</p>
+        <ul>
+          {
+            contactActions.map((a) => (
+              <li>
+                <a
+                  class="link"
+                  href={a.href}
+                  {...(a.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  {...(a.download ? { download: a.download } : {})}
+                >
+                  {t(a.label, lang)}
+                  {a.external && <span class="sr-only"> {t(ui.newTab, lang)}</span>}
+                </a>
+              </li>
+            ))
+          }
+          <li><a class="link" href={`mailto:${profile.email}`}>{profile.email}</a></li>
+        </ul>
+      </div>
+      <div class="lang">
+        <p class="label">{t(ui.langSwitch, lang).toLowerCase()}</p>
+        <LangSwitch lang={lang} paths={paths} />
+      </div>
+    </div>
+    <div class="colophon">
+      <p class="built">{t(colophon.built, lang)}</p>
+      <p class="mono copy">
+        © {year} {profile.fullName}. {t(colophon.rights, lang)}
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--section-gap);
+    padding-block: 0 3rem;
+  }
+  .frame-inner {
+    max-width: 92rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+  @media (min-width: 64rem) {
+    .footer {
+      padding-inline-start: var(--rail-w);
+    }
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    gap: 2.5rem 2rem;
+    padding-block: 3rem;
+  }
+  .label {
+    margin-bottom: 0.9rem;
+  }
+  ul {
+    display: grid;
+    gap: 0.35rem;
+  }
+  ul a {
+    display: inline-block;
+    padding-block: 0.3rem;
+    color: var(--c-fg-muted);
+    overflow-wrap: anywhere;
+  }
+  ul a:hover {
+    color: var(--c-fg);
+  }
+  .lang :global(.lang-switch) {
+    margin-inline-start: -0.6rem;
+  }
+  .colophon {
+    display: grid;
+    gap: 0.6rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--c-line);
+    color: var(--c-fg-subtle);
+    font-size: var(--step--1);
+  }
+  .built {
+    max-width: 60ch;
+  }
+</style>

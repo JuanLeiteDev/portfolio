@@ -1,0 +1,72 @@
+---
+/**
+ * Bilingual 404 (a single static file serves both languages on Netlify).
+ * Portuguese first, English second, each with its own lang attribute.
+ */
+import Base from '@/layouts/Base.astro';
+import { routes } from '@/i18n';
+---
+
+<Base
+  lang="pt"
+  title="404 — Página não encontrada · Juan Leite"
+  description="A página que procura não existe. / The page you are looking for does not exist."
+  paths={routes.home}
+  noindex
+>
+  <section class="nf frame" aria-labelledby="nf-title">
+    <p class="code mono num" aria-hidden="true">
+      <span>ERR</span> 404 <span class="cur"></span>
+    </p>
+    <h1 id="nf-title" class="t">Rasto perdido.</h1>
+    <p class="d">Esta página não existe ou mudou de sítio.</p>
+    <p class="d" lang="en">Trace lost — this page does not exist or has moved.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href={routes.home.pt}>Ir para o início</a>
+      <a class="btn" href={routes.home.en} lang="en" hreflang="en">Go to the English home</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    display: grid;
+    gap: 1.25rem;
+    align-content: center;
+    min-height: 70svh;
+    padding-top: 4rem;
+  }
+  .code {
+    color: var(--c-signal);
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .code span:first-child {
+    padding: 0.1rem 0.4rem;
+    border: 1px solid currentColor;
+    border-radius: var(--radius-s);
+  }
+  .cur {
+    width: 0.55rem;
+    height: 1rem;
+    background: currentColor;
+  }
+  .t {
+    font-size: var(--step-display);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+  }
+  .d {
+    color: var(--c-fg-muted);
+    font-size: var(--step-1);
+    max-width: 40ch;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+</style>

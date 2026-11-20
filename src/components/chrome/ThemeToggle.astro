@@ -1,0 +1,70 @@
+---
+/** Light/dark toggle. Requires JS, so it is hidden when JS is unavailable. */
+import { Sun, Moon } from '@lucide/astro';
+import { ui, t, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+const { lang, class: className = '' } = Astro.props;
+---
+
+<button
+  type="button"
+  class:list={['theme-toggle', className]}
+  data-theme-toggle
+  data-needs-js
+  aria-label={t(ui.themeToggle, lang)}
+  aria-pressed="false"
+>
+  <Sun class="i-sun" size={18} stroke-width={1.6} aria-hidden="true" />
+  <Moon class="i-moon" size={18} stroke-width={1.6} aria-hidden="true" />
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-m);
+    color: var(--c-fg-muted);
+    cursor: pointer;
+    transition: color var(--dur-1) linear, background-color var(--dur-1) linear;
+  }
+  .theme-toggle:hover {
+    color: var(--c-fg);
+    background: var(--c-bg-raised);
+  }
+  .theme-toggle > :global(svg) {
+    grid-area: 1 / 1;
+    transition: opacity var(--dur-2) var(--ease-out), rotate var(--dur-3) var(--ease-out);
+  }
+  /* Show the icon of the theme you would switch TO. */
+  :global(:root) .theme-toggle :global(.i-moon) {
+    opacity: 0;
+    rotate: -45deg;
+  }
+  :global(:root[data-theme='light']) .theme-toggle :global(.i-sun) {
+    opacity: 0;
+    rotate: 45deg;
+  }
+  :global(:root[data-theme='light']) .theme-toggle :global(.i-moon) {
+    opacity: 1;
+    rotate: 0deg;
+  }
+  @media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme])) .theme-toggle :global(.i-sun) {
+      opacity: 0;
+      rotate: 45deg;
+    }
+    :global(:root:not([data-theme])) .theme-toggle :global(.i-moon) {
+      opacity: 1;
+      rotate: 0deg;
+    }
+  }
+  :global(:root:not(.js)) [data-needs-js] {
+    display: none;
+  }
+</style>

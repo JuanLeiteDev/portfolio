@@ -1,0 +1,246 @@
+---
+/**
+ * Impact — real evidence, minimal text. The log analyser's two documented
+ * figures carry the section; the problem → solution → value flow and the
+ * case summaries are revealed on intent (hover/focus/tap).
+ */
+import Section from '@/components/ui/Section.astro';
+import Hint from '@/components/ui/Hint.astro';
+import IntentTitle from '@/components/ui/IntentTitle.astro';
+import { Image } from 'astro:assets';
+import { impact } from '@/data/home';
+import { getProject } from '@/data/projects';
+import { htmlLang, routes, ui, t, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const fmt = new Intl.NumberFormat(htmlLang[lang]);
+const a = impact.anchor;
+const logShot = getProject('log-analyzer')?.media?.[0];
+---
+
+<Section lang={lang} section="impact" title={t(impact.title, lang)}>
+  <div class="frame layout">
+    <article class="anchor paper spot" data-reveal aria-labelledby="impact-anchor">
+      <header class="anchor-head">
+        <h3 id="impact-anchor" class="anchor-title">{t(a.label, lang)}</h3>
+        <span class="mono where">{t(a.where, lang)}</span>
+      </header>
+
+      <div class="stats">
+        {
+          a.stats.map((s) => {
+            const final = fmt.format(s.value) + s.suffix;
+            return (
+              <p class="stat">
+                <span class="count num" data-count={s.value} data-suffix={s.suffix} data-locale={htmlLang[lang]}>
+                  <span class="count-ghost" aria-hidden="true">{final}</span>
+                  <span class="count-live" aria-hidden="true">{final}</span>
+                  <span class="sr-only">{final}</span>
+                </span>
+                <span class="unit mono">{t(s.unit, lang)}</span>
+              </p>
+            );
+          })
+        }
+      </div>
+      <p class="timing mono"><span aria-hidden="true">→ </span>{t(a.timing, lang)}</p>
+
+      {
+        logShot && (
+          <a class="shot-link" href={routes.project('log-analyzer')[lang]} tabindex="-1" aria-hidden="true">
+            <Image
+              src={logShot.src}
+              alt=""
+              widths={[480, 720, 960]}
+              sizes="(min-width: 64rem) 45vw, 100vw"
+              format="webp"
+              loading="lazy"
+              decoding="async"
+              class="shot"
+            />
+          </a>
+          <a class="case-link link mono" href={routes.project('log-analyzer')[lang]}>
+            {t(ui.viewProject, lang)}
+            <span aria-hidden="true"> →</span>
+          </a>
+        )
+      }
+
+    </article>
+
+    <ul class="cases" role="list">
+      {
+        impact.cases.map((c, i) => {
+          const hid = `impact-case-${i}`;
+          return (
+            <li class="case spot" data-intent data-reveal style={`--i:${i + 1}`}>
+              {c.tag && (
+                <span class="tag mono">
+                  <span aria-hidden="true">[</span>
+                  {t(c.tag, lang)}
+                  <span aria-hidden="true">]</span>
+                </span>
+              )}
+              <IntentTitle controls={hid} class="case-title">
+                {t(c.title, lang)}
+              </IntentTitle>
+              <Hint text={t(c.hint, lang)} id={hid} />
+              {c.projectSlug && (
+                <a class="case-link link mono" href={routes.project(c.projectSlug)[lang]}>
+                  {t(ui.viewProject, lang)}
+                  <span aria-hidden="true"> →</span>
+                </a>
+              )}
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .layout {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 64rem) {
+    .layout {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 1.25rem;
+      align-items: start;
+    }
+  }
+
+  .anchor {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-l);
+    background-color: var(--c-bg-raised);
+    transition: border-color var(--dur-2) var(--ease-out);
+  }
+  .anchor:hover {
+    border-color: var(--c-line-strong);
+  }
+  .anchor-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+  }
+  .anchor-title {
+    font-size: var(--step-2);
+  }
+  .where {
+    color: var(--c-fg-subtle);
+  }
+
+  .stats {
+    display: grid;
+    gap: 1rem;
+    container-type: inline-size;
+  }
+  @media (min-width: 36rem) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1.5rem;
+    }
+  }
+  .stat {
+    display: grid;
+    gap: 0.3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--c-line-strong);
+  }
+  .count {
+    position: relative;
+    display: inline-block;
+    justify-self: start;
+    /* sized by the stats container so the two figures never collide */
+    font-size: clamp(2.4rem, 9.5cqi, 4.6rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+  .count-ghost {
+    visibility: hidden;
+  }
+  .count-live {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .unit {
+    color: var(--c-fg-muted);
+  }
+  .timing {
+    color: var(--c-signal);
+  }
+
+  .shot-link {
+    position: relative;
+    display: block;
+    margin-top: 0.25rem;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+  .shot-link :global(.shot) {
+    width: 100%;
+    height: auto;
+    filter: grayscale(0.35) brightness(0.92);
+    transition: filter var(--dur-3) var(--ease-out), scale var(--dur-3) var(--ease-out);
+  }
+  .shot-link:is(:hover, :focus-visible) :global(.shot) {
+    filter: none;
+    scale: 1.015;
+  }
+
+  .cases {
+    display: grid;
+    gap: 1rem;
+  }
+  .case {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding: 1.4rem;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-l);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      background-color var(--dur-2) var(--ease-out);
+  }
+  .case:is(:hover, :focus-within, .is-open) {
+    border-color: var(--c-line-strong);
+    background: var(--c-bg-raised);
+  }
+  .tag {
+    color: var(--c-signal);
+  }
+  .case :global(.case-title) {
+    font-size: var(--step-1);
+  }
+  .case-link {
+    justify-self: start;
+    margin-top: 0.25rem;
+    color: var(--c-fg);
+  }
+
+  /* tablet: three cases in a row */
+  @media (min-width: 48rem) and (max-width: 63.999rem) {
+    .cases {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>
