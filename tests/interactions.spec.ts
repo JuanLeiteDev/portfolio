@@ -74,7 +74,7 @@ test.describe('mobile navigation', () => {
 
   test('intent cards: summaries collapsed, a tap expands and updates aria-expanded', async ({ page }) => {
     await page.goto('/');
-    const card = page.locator('.step').nth(1);
+    const card = page.locator('.practice').nth(1);
     const btn = card.locator('[data-intent-btn]');
     const hint = card.locator('.hint-wrap');
     await expect(btn).toHaveAttribute('aria-expanded', 'false');
