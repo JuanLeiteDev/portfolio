@@ -89,13 +89,13 @@ if (!reduce.matches) {
   onceVisible(Array.from(document.querySelectorAll('[data-count]')), (el) => countUp(el), '0px 0px -20% 0px');
 }
 
-/* -------------------------------------------------- glyph portrait (lazy) */
+/* ------------------------------------------------- portrait effect (lazy) */
 
-const portrait = document.querySelector<HTMLElement>('[data-glyph-portrait]');
+const portrait = document.querySelector<HTMLElement>('[data-portrait-fx]');
 if (portrait && !reduce.matches) {
   const load = () =>
-    import('./glyph-portrait').then(({ initGlyphPortrait }) => {
-      initGlyphPortrait(portrait);
+    import('./portrait-fx').then(({ initPortraitFx }) => {
+      initPortraitFx(portrait);
     });
   if (typeof window.requestIdleCallback === 'function') window.requestIdleCallback(() => void load(), { timeout: 1500 });
   else window.setTimeout(() => void load(), 300);
