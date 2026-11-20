@@ -40,12 +40,12 @@ const cols: { key: string; id: string; label: string; entries: JourneyEntry[] }[
                       {t(e.org, lang)}
                       {e.upcoming && <span class="badge mono">{upcoming}</span>}
                     </p>
-                    {e.hint && <Hint text={t(e.hint, lang)} id={hid} />}
                     {e.points && (
                       <ul class="points" role="list">
                         {e.points[lang].map((pt) => <li>{pt}</li>)}
                       </ul>
                     )}
+                    {e.hint && <Hint text={t(e.hint, lang)} id={hid} />}
                   </div>
                 </li>
               );
