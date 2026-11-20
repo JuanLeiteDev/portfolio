@@ -31,7 +31,7 @@ export const hero = {
   ctaSecondary: { pt: 'Vamos falar', en: "Let's talk" },
   meta: [
     { k: { pt: 'base', en: 'based' }, v: { pt: 'Barcelos, PT', en: 'Barcelos, PT' } },
-    { k: { pt: 'estudo', en: 'study' }, v: { pt: 'Eng. Sistemas Informáticos · IPCA', en: 'Computer Systems Eng. · IPCA' } },
+    { k: { pt: 'estudo', en: 'study' }, v: { pt: 'Eng. Sistemas Informáticos · UPCA', en: 'Computer Systems Eng. · UPCA' } },
     { k: { pt: 'agora', en: 'now' }, v: { pt: 'Suporte Técnico N1 · Eleven Systems', en: 'L1 Technical Support · Eleven Systems' } },
   ] satisfies { k: L; v: L }[],
   photoAlt: {
@@ -61,7 +61,7 @@ export const projectsSection = {
       { value: 10000, suffix: '+', unit: { pt: 'ficheiros', en: 'files' } },
       { value: 5000000, suffix: '+', unit: { pt: 'linhas', en: 'lines' } },
     ],
-    timing: { pt: 'processados em minutos', en: 'processed in minutes' },
+    timing: { pt: 'processados em menos de 3 minutos', en: 'processed in under 3 minutes' },
   },
   code: {
     label: { pt: 'código', en: 'code' },
@@ -130,10 +130,8 @@ export const skills = {
       hint: { pt: 'Ferramentas internas, desktop, web e APIs.', en: 'Internal tools, desktop, web and APIs.' },
       items: [
         { name: 'Python', ev: 'work' },
-        { name: 'Qt', ev: 'work' },
-        { name: 'SQLite', ev: 'work' },
         { name: 'C', ev: 'academic' },
-        { name: 'HTML · CSS', ev: 'academic' },
+        { name: 'C#', ev: 'academic' },
       ],
     },
     {
@@ -158,12 +156,10 @@ export const skills = {
     {
       id: 'systems',
       title: { pt: 'Sistemas', en: 'Systems' },
-      hint: { pt: 'Incidentes, logs e equipamentos Android em produção.', en: 'Incidents, logs and Android devices in production.' },
+      hint: { pt: 'Diagnóstico de incidentes de software e hardware.', en: 'Diagnosing software and hardware incidents.' },
       items: [
         { name: 'Windows', ev: 'work' },
         { name: 'Linux', ev: 'academic' },
-        { name: 'Android', ev: 'work' },
-        { name: { pt: 'Análise de logs', en: 'Log analysis' }, ev: 'work' },
       ],
     },
     {
@@ -248,7 +244,7 @@ export const journey = {
     {
       period: { pt: '2025—28', en: '2025—28' },
       title: { pt: 'Eng. de Sistemas Informáticos', en: 'Computer Systems Engineering' },
-      org: { pt: 'IPCA · licenciatura em curso, pós-laboral', en: 'IPCA · BSc in progress, evening classes' },
+      org: { pt: 'UPCA · licenciatura em curso, pós-laboral', en: 'UPCA · BSc in progress, evening classes' },
       hint: { pt: 'Disciplinas de programação, bases de dados e sistemas operativos.', en: 'Courses in programming, databases and operating systems.' },
     },
     {
@@ -290,8 +286,8 @@ export const journey = {
 export const contact = {
   title: { pt: 'Vamos falar.', en: "Let's talk." },
   body: {
-    pt: 'Procuro oportunidades em backend, dados e automação com Python.',
-    en: "I'm looking for opportunities in backend, data and automation with Python.",
+    pt: 'Procuro trabalho remoto em desenvolvimento de software e programação.',
+    en: "I'm looking for remote work in software development and programming.",
   },
   emailLabel: { pt: 'email', en: 'email' },
 };

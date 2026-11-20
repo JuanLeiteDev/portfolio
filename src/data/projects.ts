@@ -112,8 +112,8 @@ const all: Project[] = [
       en: 'A Python tool that processes thousands of log files and shows on a dashboard where problems recur.',
     },
     description: {
-      pt: 'Analisador de logs em Python e Streamlit: mais de 10 000 ficheiros e 5 milhões de linhas processados em minutos. Estudo de caso de Juan Leite.',
-      en: 'A Python and Streamlit log analyser: more than 10,000 files and 5 million lines processed in minutes. Case study by Juan Leite.',
+      pt: 'Analisador de logs em Python e Streamlit: mais de 10 000 ficheiros e 5 milhões de linhas processados em menos de 3 minutos. Estudo de caso de Juan Leite.',
+      en: 'A Python and Streamlit log analyser: more than 10,000 files and 5 million lines processed in under 3 minutes. Case study by Juan Leite.',
     },
     lede: {
       pt: 'Uma ferramenta em Python que processa grandes volumes de logs e mostra, numa dashboard, onde os problemas se repetem.',
@@ -160,10 +160,10 @@ const all: Project[] = [
       result: {
         body: {
           pt: [
-            'Em 2026, a ferramenta processou mais de 10 000 ficheiros e 5 milhões de linhas de logs em minutos. As vistas por dispositivo e por motorista mostram onde os problemas se repetem e apoiam o diagnóstico de incidentes.',
+            'Em 2026, a ferramenta processou mais de 10 000 ficheiros e 5 milhões de linhas de logs em menos de 3 minutos. As vistas por dispositivo e por motorista mostram onde os problemas se repetem e apoiam o diagnóstico de incidentes.',
           ],
           en: [
-            'In 2026 the tool processed more than 10,000 files and 5 million log lines in minutes. The per-device and per-driver views show where problems recur and support incident diagnosis.',
+            'In 2026 the tool processed more than 10,000 files and 5 million log lines in under 3 minutes. The per-device and per-driver views show where problems recur and support incident diagnosis.',
           ],
         },
       },
@@ -193,14 +193,15 @@ const all: Project[] = [
         },
       },
     ],
-    pending: 'Exact processing time and analysis time before the tool; cost of the problem (context).',
+    // Processing time (< 3 min) confirmed by Juan (2026-11-20).
+    pending: 'Analysis time before the tool; cost of the problem (context).',
   },
 
   // Source: doc 01 §3–4 (most recent) + CV (context). Stack per doc 01.
   {
     slug: 'xi-repair',
     name: { pt: 'XI.Repair', en: 'XI.Repair' },
-    tagline: { pt: 'Reparações: do papel para uma app offline', en: 'Repairs moved from paper to an offline app' },
+    tagline: { pt: 'Reparações: do papel para uma app', en: 'Repairs moved from paper to an app' },
     year: '2026',
     kind: 'professional',
     context: { pt: 'Eleven Systems · ferramenta interna', en: 'Eleven Systems · internal tool' },
@@ -412,15 +413,15 @@ const all: Project[] = [
     tagline: { pt: 'Shell em C sobre chamadas POSIX', en: 'A shell in C built on raw POSIX calls' },
     year: '2026',
     kind: 'academic',
-    context: { pt: 'IPCA · Sistemas Operativos', en: 'IPCA · Operating Systems' },
+    context: { pt: 'UPCA · Sistemas Operativos', en: 'UPCA · Operating Systems' },
     platform: { pt: 'CLI · C · POSIX', en: 'CLI · C · POSIX' },
     summary: {
       pt: 'Interpretador de comandos e ferramentas de ficheiros em C, escritos apenas com chamadas ao sistema POSIX.',
       en: 'A command interpreter and file tools in C, written using only POSIX system calls.',
     },
     description: {
-      pt: 'Mini Shell File System: interpretador de comandos em C com oito comandos, fork e execve, redirecionamento e pipes. Trabalho de Sistemas Operativos no IPCA.',
-      en: 'Mini Shell File System: a command interpreter in C with eight commands, fork and execve, redirection and pipes. Operating Systems coursework at IPCA.',
+      pt: 'Mini Shell File System: interpretador de comandos em C com oito comandos, fork e execve, redirecionamento e pipes. Trabalho de Sistemas Operativos na UPCA.',
+      en: 'Mini Shell File System: a command interpreter in C with eight commands, fork and execve, redirection and pipes. Operating Systems coursework at UPCA.',
     },
     lede: {
       pt: 'Um pequeno sistema de gestão de ficheiros com interpretador próprio, escrito em C sem funções de alto nível da libc e sem system().',
@@ -431,8 +432,8 @@ const all: Project[] = [
     study: {
       context: {
         body: {
-          pt: ['Trabalho prático de Sistemas Operativos da Licenciatura em Engenharia de Sistemas Informáticos, IPCA, 2025/26.'],
-          en: ['Operating Systems coursework for the Computer Systems Engineering degree, IPCA, 2025/26.'],
+          pt: ['Trabalho prático de Sistemas Operativos da Licenciatura em Engenharia de Sistemas Informáticos, UPCA, 2025/26.'],
+          en: ['Operating Systems coursework for the Computer Systems Engineering degree, UPCA, 2025/26.'],
         },
       },
       role: {
@@ -471,6 +472,13 @@ const all: Project[] = [
           ],
         },
       },
+      // Grade confirmed by Juan (2026-11-20).
+      result: {
+        body: {
+          pt: ['Trabalho avaliado com 20 valores em 20 (2025/26).'],
+          en: ['The project was graded 20 out of 20 (2025/26).'],
+        },
+      },
     },
     links: [
       {
@@ -492,18 +500,17 @@ const all: Project[] = [
         },
       },
     ],
-    pending: 'Result (grade or evaluation).',
   },
 
   // Source: github.com/JuanLeiteDev/ProjetoPS2 (README, 2026-11-20).
-  // Two accounts contributed (JuanLeite16, JuanLeiteDev); individual contribution not confirmed → role omitted.
+  // Role and grade confirmed by Juan (2026-11-20): he built the metrics dashboard; graded 20/20.
   {
     slug: 'ps2',
     name: { pt: 'PS2 · Débitos diretos', en: 'PS2 · Direct debits' },
     tagline: { pt: 'Validação de dados bancários e geração de ficheiros PS2', en: 'Bank data validation and PS2 file generation' },
     year: '2026',
     kind: 'academic',
-    context: { pt: 'IPCA · projeto académico em equipa', en: 'IPCA · academic team project' },
+    context: { pt: 'UPCA · projeto académico em equipa', en: 'UPCA · academic team project' },
     platform: { pt: 'CLI · dashboard', en: 'CLI · dashboard' },
     summary: {
       pt: 'Validação de dados bancários e geração de ficheiros PS2 em C, com análise de métricas numa dashboard em Python.',
@@ -523,13 +530,19 @@ const all: Project[] = [
       context: {
         body: {
           pt: [
-            'Projeto em equipa da Licenciatura em Engenharia de Sistemas Informáticos (IPCA, 2025/26). Uma empresa fictícia de eletricidade, a «IPCA Energy», quer automatizar a cobrança mensal por débito direto.',
+            'Projeto em equipa da Licenciatura em Engenharia de Sistemas Informáticos (UPCA, 2025/26). Uma empresa fictícia de eletricidade, a «IPCA Energy», quer automatizar a cobrança mensal por débito direto.',
             'O programa tem de ler os ficheiros de clientes, consumos e preçário, calcular o valor a faturar e gerar um único ficheiro PS2 apenas com os clientes que têm NIF e NIB válidos.',
           ],
           en: [
-            'Team project for the Computer Systems Engineering degree (IPCA, 2025/26). A fictional electricity company, “IPCA Energy”, wants to automate monthly billing through direct debit.',
+            'Team project for the Computer Systems Engineering degree (UPCA, 2025/26). A fictional electricity company, “IPCA Energy”, wants to automate monthly billing through direct debit.',
             'The program has to read the customer, consumption and pricing files, compute each bill and produce a single PS2 file containing only customers with a valid NIF (tax ID) and NIB (bank account number).',
           ],
+        },
+      },
+      role: {
+        body: {
+          pt: ['Na equipa, desenvolvi a dashboard de métricas em Python.'],
+          en: ['Within the team, I built the Python metrics dashboard.'],
         },
       },
       solution: {
@@ -556,6 +569,12 @@ const all: Project[] = [
             'C and Python have separate jobs: C reads the files and writes the PS2 output, Python validates and analyses the data.',
             'Code documentation generated with Doxygen, and the report written in LaTeX.',
           ],
+        },
+      },
+      result: {
+        body: {
+          pt: ['Projeto avaliado com 20 valores em 20 (2025/26).'],
+          en: ['The project was graded 20 out of 20 (2025/26).'],
         },
       },
     },
@@ -589,7 +608,7 @@ const all: Project[] = [
         },
       },
     ],
-    pending: "Juan's individual role in the team; result (grade or evaluation).",
+
   },
 ];
 
