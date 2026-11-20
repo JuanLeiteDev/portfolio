@@ -22,7 +22,7 @@ const { lang, onHome } = Astro.props;
   <a class="btn-dock" href="#menu" data-cmd-open aria-haspopup="dialog">
     <span class="burger" aria-hidden="true"><span></span><span></span></span>
     <span>{t(ui.menu, lang)}</span>
-    <span class="sr-only">— {t(ui.openMenu, lang)}</span>
+    <span class="sr-only">, {t(ui.openMenu, lang)}</span>
   </a>
   <a class="btn-dock is-cta" href={sectionHref('contact', lang, onHome)}>
     {t(sectionLabels.contact, lang)}

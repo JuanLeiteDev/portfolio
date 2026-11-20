@@ -19,7 +19,7 @@ const { lang, paths, onHome } = Astro.props;
 <header class="rail">
   <a class="brand" href={routes.home[lang]}>
     <span class="mark" aria-hidden="true">JL<span class="caret"></span></span>
-    <span class="name">Juan Leite<span class="sr-only"> — {lang === 'pt' ? 'página inicial' : 'home'}</span></span>
+    <span class="name">Juan Leite<span class="sr-only">, {lang === 'pt' ? 'página inicial' : 'home page'}</span></span>
   </a>
 
   <nav class="index" aria-label={t(ui.primaryNav, lang)}>
@@ -41,8 +41,9 @@ const { lang, paths, onHome } = Astro.props;
   </nav>
 
   <div class="tools">
-    <button type="button" class="cmd mono" data-cmd-open data-needs-js aria-haspopup="dialog">
+    <button type="button" class="cmd mono" data-cmd-open data-needs-js aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
       <span>{lang === 'pt' ? 'Ir para' : 'Go to'}</span>
+      <span class="sr-only"> {t(ui.openMenu, lang)}</span>
       <span class="keys" aria-hidden="true">
         <kbd class="kbd" data-mod-key>Ctrl</kbd><kbd class="kbd">K</kbd>
       </span>

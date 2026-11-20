@@ -71,7 +71,7 @@ export const ui = {
   langName: { pt: 'Português', en: 'English' },
   switchTo: { pt: 'Ver em English', en: 'Ver em Português' },
   menu: { pt: 'Menu', en: 'Menu' },
-  openMenu: { pt: 'Abrir menu e atalhos', en: 'Open menu and shortcuts' },
+  openMenu: { pt: 'secções, projetos e contactos', en: 'sections, projects and contacts' },
   close: { pt: 'Fechar', en: 'Close' },
   themeToggle: { pt: 'Alternar tema claro/escuro', en: 'Toggle light/dark theme' },
   newTab: { pt: '(abre num novo separador)', en: '(opens in a new tab)' },
