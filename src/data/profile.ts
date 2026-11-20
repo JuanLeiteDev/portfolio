@@ -10,8 +10,8 @@ export const profile = {
   url: 'https://juanleitedev.com',
   location: { pt: 'Barcelos, Portugal', en: 'Barcelos, Portugal' } satisfies L,
   field: {
-    pt: 'Engenharia de software & automação inteligente',
-    en: 'Software engineering & intelligent automation',
+    pt: 'Software, automação e IA aplicada',
+    en: 'Software, automation and applied AI',
   } satisfies L,
   email: 'leite.souza.juan@gmail.com',
 } as const;
