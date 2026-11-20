@@ -52,7 +52,14 @@ Branch: `revisao/estrutura-e-textos`. Critérios: skills `interactive-portfolio`
 
 ## 3. Lista de alterações
 
-- [ ] `refactor(home)`: juntar Impacto e Projetos, Percurso com os destaques da Eleven Systems, reordenar secções, reduzir "Como trabalho", âncora `#contacto`
+> **Ponto de retoma (sessão interrompida por limite de uso):** a parte estrutural está feita e verificada (`astro check` com 0 erros, lint e build OK). Falta tudo a partir de `refactor(projetos)`. Os testes Playwright ainda não foram corridos: o Node foi usado a partir de uma instalação portátil e os browsers do Playwright não estão instalados. Também não há `gh` nesta máquina, por isso o PR tem de ser aberto manualmente ou depois de instalar o `gh`.
+>
+> Notas para retomar:
+> - Mini Shell: o GitHub mostra um único contribuidor (`JuanLeiteDev`, 48 commits), o que permite escrever "O meu papel". PS2: duas contas (`JuanLeite16`, 56 commits; `JuanLeiteDev`, 21). Contribuição individual por confirmar.
+> - XI.Support: o mecanismo de autenticação está documentado (JWT, 2FA TOTP, passkeys). Usar no tagline.
+> - Ainda por reescrever: o tagline "Milhões de linhas, em minutos" (já não aparece no destaque, mas continua no menu e nos dados), a secção "Valor" do analisador, os textos do hero, contacto, Erasmus, PAP e EN.
+
+- [x] `refactor(home)`: juntar Impacto e Projetos, Percurso com os destaques da Eleven Systems, reordenar secções, reduzir "Como trabalho", âncora `#contacto`
 - [ ] `refactor(projetos)`: modelo único de case study, analisador em primeiro, links de código nos cartões
 - [ ] `content`: textos da homepage e dos case studies (PT-PT e EN nativo)
 - [ ] `content(skills)`: três níveis e reclassificação
