@@ -14,7 +14,7 @@ interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const legend: Evidence[] = ['work', 'project', 'academic', 'learning', 'practice'];
+const legend: Evidence[] = ['work', 'project', 'academic'];
 const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
 ---
 
@@ -50,7 +50,7 @@ const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
                 <li data-ev={it.ev}>
                   <span class="sw" aria-hidden="true" />
                   {name(it.name)}
-                  <span class="sr-only"> — {t(evidenceLabel[it.ev], lang)}</span>
+                  <span class="sr-only">, {t(evidenceLabel[it.ev], lang)}</span>
                 </li>
               ))}
             </ul>
@@ -92,13 +92,6 @@ const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
   }
   [data-ev='academic'] > .sw {
     background: linear-gradient(135deg, var(--c-fg-muted) 50%, transparent 50%);
-  }
-  [data-ev='learning'] > .sw {
-    border-style: dashed;
-  }
-  [data-ev='practice'] > .sw {
-    border-radius: 50%;
-    border-color: var(--c-signal);
   }
 
   .tiles {

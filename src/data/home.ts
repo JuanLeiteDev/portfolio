@@ -105,14 +105,12 @@ export const approach = {
 /* ----------------------------------------------------------------- skills */
 
 /** Where a skill is evidenced (doc 01 §6: keep these distinct). */
-export type Evidence = 'work' | 'project' | 'academic' | 'learning' | 'practice';
+export type Evidence = 'work' | 'project' | 'academic';
 
 export const evidenceLabel: Record<Evidence, L> = {
   work: { pt: 'profissional', en: 'professional' },
-  project: { pt: 'projeto', en: 'project' },
+  project: { pt: 'projetos', en: 'projects' },
   academic: { pt: 'académico', en: 'academic' },
-  learning: { pt: 'fundamentos', en: 'fundamentals' },
-  practice: { pt: 'prática declarada', en: 'stated practice' },
 };
 
 export interface SkillArea {
@@ -135,18 +133,16 @@ export const skills = {
         { name: 'Qt', ev: 'work' },
         { name: 'SQLite', ev: 'work' },
         { name: 'C', ev: 'academic' },
-        { name: 'C#', ev: 'learning' },
-        { name: 'HTML · CSS · JS', ev: 'learning' },
+        { name: 'HTML · CSS', ev: 'academic' },
       ],
     },
     {
       id: 'automation',
       title: { pt: 'Automação', en: 'Automation' },
-      hint: { pt: 'Do trabalho manual a ferramentas.', en: 'From manual work to tools.' },
+      hint: { pt: 'Formulários e tarefas repetitivas passados para Python.', en: 'Forms and repetitive tasks moved into Python.' },
       items: [
         { name: { pt: 'Scripts Python', en: 'Python scripts' }, ev: 'work' },
         { name: { pt: 'Plataformas web', en: 'Web platforms' }, ev: 'work' },
-        { name: 'Word · Excel', ev: 'work' },
       ],
     },
     {
@@ -154,15 +150,15 @@ export const skills = {
       title: { pt: 'IA aplicada', en: 'Applied AI' },
       hint: { pt: 'Agentes de código, com revisão e testes.', en: 'Coding agents, with review and tests.' },
       items: [
-        { name: { pt: 'Prompts & contexto', en: 'Prompts & context' }, ev: 'practice' },
-        { name: { pt: 'Agentes de código', en: 'Coding agents' }, ev: 'practice' },
-        { name: { pt: 'Multiagente', en: 'Multi-agent' }, ev: 'practice' },
+        { name: { pt: 'Prompts & contexto', en: 'Prompts & context' }, ev: 'project' },
+        { name: { pt: 'Agentes de código', en: 'Coding agents' }, ev: 'project' },
+        { name: { pt: 'Multiagente', en: 'Multi-agent' }, ev: 'project' },
       ],
     },
     {
       id: 'systems',
       title: { pt: 'Sistemas', en: 'Systems' },
-      hint: { pt: 'Incidentes, logs e causas na raiz.', en: 'Incidents, logs and root causes.' },
+      hint: { pt: 'Incidentes, logs e equipamentos Android em produção.', en: 'Incidents, logs and Android devices in production.' },
       items: [
         { name: 'Windows', ev: 'work' },
         { name: 'Linux', ev: 'academic' },
@@ -182,7 +178,7 @@ export const skills = {
         { name: 'PostgreSQL', ev: 'work' },
         { name: 'Redis', ev: 'work' },
         { name: 'MinIO', ev: 'work' },
-        { name: 'SQL', ev: 'learning' },
+        { name: 'SQL', ev: 'academic' },
       ],
     },
     {
