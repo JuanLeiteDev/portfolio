@@ -1,31 +1,90 @@
 ---
 /**
- * Project index — name + tagline + stack visible; the one-line summary
- * cascades in on hover/focus (desktop). On touch the row stays compact and
- * a tap opens the case study. Each row is a single link.
+ * Projects (former "Impact" + "Projects"). The featured log analyser carries
+ * its two documented figures and a screenshot; the other projects follow as
+ * rows: name + tagline + stack visible, the one-line summary cascades in on
+ * hover/focus (desktop). Each row is a single link; the code line sits
+ * outside it so links are never nested.
  */
 import Section from '@/components/ui/Section.astro';
 import Hint from '@/components/ui/Hint.astro';
 import { Image } from 'astro:assets';
 import { projectsSection } from '@/data/home';
-import { projects, kindLabel } from '@/data/projects';
-import { routes, t, type Lang } from '@/i18n';
+import { projects, kindLabel, getProject } from '@/data/projects';
+import { htmlLang, routes, ui, t, type Lang } from '@/i18n';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
+const fmt = new Intl.NumberFormat(htmlLang[lang]);
+const f = projectsSection.featured;
+const fp = getProject(f.slug)!;
+const fShot = fp.media?.[0];
+const rest = projects.map((p, i) => ({ p, n: i + 1 })).filter(({ p }) => p.slug !== f.slug);
+const code = projectsSection.code;
 ---
 
 <Section lang={lang} section="projects" title={t(projectsSection.title, lang)}>
   <div class="frame">
+    <article class="anchor paper spot" data-reveal aria-labelledby="featured-title">
+      <header class="anchor-head">
+        <h3 id="featured-title" class="anchor-title">{t(fp.name, lang)}</h3>
+        <span class="mono where">{t(f.where, lang)}</span>
+      </header>
+      <p class="anchor-sum">{t(fp.summary, lang)}</p>
+
+      <div class="stats">
+        {
+          f.stats.map((s) => {
+            const final = fmt.format(s.value) + s.suffix;
+            return (
+              <p class="stat">
+                <span class="count num" data-count={s.value} data-suffix={s.suffix} data-locale={htmlLang[lang]}>
+                  <span class="count-ghost" aria-hidden="true">{final}</span>
+                  <span class="count-live" aria-hidden="true">{final}</span>
+                  <span class="sr-only">{final}</span>
+                </span>
+                <span class="unit mono">{t(s.unit, lang)}</span>
+              </p>
+            );
+          })
+        }
+      </div>
+      <p class="timing mono"><span aria-hidden="true">→ </span>{t(f.timing, lang)}</p>
+
+      {
+        fShot && (
+          <a class="shot-link" href={routes.project(f.slug)[lang]} tabindex="-1" aria-hidden="true">
+            <Image
+              src={fShot.src}
+              alt=""
+              widths={[480, 720, 960]}
+              sizes="(min-width: 64rem) 60vw, 100vw"
+              format="webp"
+              loading="lazy"
+              decoding="async"
+              class="shot"
+            />
+          </a>
+        )
+      }
+      <p class="anchor-foot mono">
+        <a class="case-link link" href={routes.project(f.slug)[lang]}>
+          {t(ui.viewProject, lang)}
+          <span aria-hidden="true"> →</span>
+        </a>
+        <span class="code-line">{t(code.label, lang)}: {t(code.private, lang)}</span>
+      </p>
+    </article>
+
     <ol class="rows" role="list">
       {
-        projects.map((p, i) => (
+        rest.map(({ p, n }, i) => (
           <li data-intent data-reveal style={`--i:${i}`}>
             <a class="row" data-follow href={routes.project(p.slug)[lang]}>
               <span class="n mono num" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
+                {String(n).padStart(2, '0')}
               </span>
               <span class="main">
                 <span class="name">{t(p.name, lang)}</span>
@@ -46,6 +105,20 @@ const { lang } = Astro.props;
                 </span>
               )}
             </a>
+            <p class="code-line mono">
+              {t(code.label, lang)}:{' '}
+              {p.links[0] ? (
+                <a class="link" href={p.links[0].href} target="_blank" rel="noopener noreferrer">
+                  {t(code.public, lang)}
+                  <span aria-hidden="true"> ↗</span>
+                  <span class="sr-only">
+                    , {t(p.name, lang)} {t(ui.newTab, lang)}
+                  </span>
+                </a>
+              ) : (
+                t(code.private, lang)
+              )}
+            </p>
           </li>
         ))
       }
@@ -54,6 +127,134 @@ const { lang } = Astro.props;
 </Section>
 
 <style>
+  /* featured project (former Impact anchor) */
+  .anchor {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+    margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
+    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-l);
+    background-color: var(--c-bg-raised);
+    transition: border-color var(--dur-2) var(--ease-out);
+  }
+  .anchor:hover {
+    border-color: var(--c-line-strong);
+  }
+  @media (min-width: 64rem) {
+    .anchor {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      column-gap: 2.5rem;
+    }
+    .anchor > :not(.shot-link) {
+      grid-column: 1;
+    }
+    .anchor .shot-link {
+      grid-column: 2;
+      grid-row: 1 / span 5;
+      align-self: start;
+    }
+  }
+  .anchor-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+  }
+  .anchor-title {
+    font-size: var(--step-2);
+  }
+  .anchor-sum {
+    color: var(--c-fg-muted);
+    max-width: 52ch;
+  }
+  .where {
+    color: var(--c-fg-subtle);
+  }
+  .stats {
+    display: grid;
+    gap: 1rem;
+    container-type: inline-size;
+  }
+  @media (min-width: 36rem) {
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1.5rem;
+    }
+  }
+  .stat {
+    display: grid;
+    gap: 0.3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--c-line-strong);
+  }
+  .count {
+    position: relative;
+    display: inline-block;
+    justify-self: start;
+    font-size: clamp(2.4rem, 9.5cqi, 4.6rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+  }
+  .count-ghost {
+    visibility: hidden;
+  }
+  .count-live {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .unit {
+    color: var(--c-fg-muted);
+  }
+  .timing {
+    color: var(--c-signal);
+  }
+  .shot-link {
+    position: relative;
+    display: block;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-m);
+    overflow: hidden;
+  }
+  .shot-link :global(.shot) {
+    width: 100%;
+    height: auto;
+    filter: grayscale(0.35) brightness(0.92);
+    transition: filter var(--dur-3) var(--ease-out), scale var(--dur-3) var(--ease-out);
+  }
+  .shot-link:is(:hover, :focus-visible) :global(.shot) {
+    filter: none;
+    scale: 1.015;
+  }
+  .anchor-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+  .case-link {
+    color: var(--c-fg);
+  }
+  .code-line {
+    color: var(--c-fg-subtle);
+    font-size: 0.75rem;
+  }
+  .rows .code-line {
+    padding: 0 0.25rem 1rem 3.25rem;
+    margin-top: -0.6rem;
+  }
+  @media (min-width: 64rem) {
+    .rows .code-line {
+      padding: 0 0.75rem 1.25rem 5.75rem;
+      margin-top: -1.25rem;
+    }
+  }
+
   .rows {
     border-top: 1px solid var(--c-line-strong);
   }

@@ -74,7 +74,7 @@ test.describe('mobile navigation', () => {
 
   test('intent cards: summaries collapsed, a tap expands and updates aria-expanded', async ({ page }) => {
     await page.goto('/');
-    const card = page.locator('.step').nth(1);
+    const card = page.locator('.practice').nth(1);
     const btn = card.locator('[data-intent-btn]');
     const hint = card.locator('.hint-wrap');
     await expect(btn).toHaveAttribute('aria-expanded', 'false');
@@ -87,8 +87,8 @@ test.describe('mobile navigation', () => {
 
   test('dock shows the current section', async ({ page }) => {
     await page.goto('/');
-    await page.evaluate(() => document.getElementById('contato')?.scrollIntoView({ block: 'start', behavior: 'instant' }));
-    await expect(page.locator('[data-dock-n]')).toHaveText('06');
+    await page.evaluate(() => document.getElementById('contacto')?.scrollIntoView({ block: 'start', behavior: 'instant' }));
+    await expect(page.locator('[data-dock-n]')).toHaveText('05');
   });
 });
 

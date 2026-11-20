@@ -1,13 +1,13 @@
 ---
 /**
- * Case study page. Structure follows doc 01 §4: context, problem, solution,
- * contribution, technical decisions, stack, status and verified links —
- * sections without confirmed content are simply absent.
+ * Case study page. One model for every project: context → my role →
+ * solution → technical decisions → result, with stack, status and verified
+ * links in the facts sidebar. Blocks without confirmed content are absent.
  */
 import { ArrowLeft, ArrowUpRight } from '@lucide/astro';
 import { Picture } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
-import { projects, kindLabel, type Project } from '@/data/projects';
+import { projects, kindLabel, caseOrder, caseHeadings, type Project } from '@/data/projects';
 import { profile } from '@/data/profile';
 import { routes, sectionHref, ui, t, type Lang } from '@/i18n';
 
@@ -21,7 +21,11 @@ const next = projects[(idx + 1) % projects.length];
 const paths = routes.project(p.slug);
 const name = t(p.name, lang);
 const title = `${name} — ${lang === 'pt' ? 'Estudo de caso' : 'Case study'} · ${profile.name}`;
-const description = t(p.summary, lang);
+const description = t(p.description, lang);
+const blocks = caseOrder.flatMap((key) => {
+  const b = p.study[key];
+  return b ? [{ key, heading: t(caseHeadings[key], lang), ...b }] : [];
+});
 
 const labels = {
   stack: { pt: 'Tecnologias', en: 'Technologies' },
@@ -149,13 +153,13 @@ const jsonLd = [
 
       <div class="prose">
         {
-          p.sections.map((s, i) => (
-            <section class="block" aria-labelledby={`b-${i}`} data-reveal>
-              <h2 id={`b-${i}`} class="bh">
+          blocks.map((s, i) => (
+            <section class="block" aria-labelledby={`b-${s.key}`} data-reveal>
+              <h2 id={`b-${s.key}`} class="bh">
                 <span class="bn mono num" aria-hidden="true">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                {t(s.heading, lang)}
+                {s.heading}
               </h2>
               {s.body?.[lang].map((para) => <p>{para}</p>)}
               {s.points && (

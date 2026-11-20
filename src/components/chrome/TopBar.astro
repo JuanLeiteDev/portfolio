@@ -14,7 +14,7 @@ const { lang, paths } = Astro.props;
 <header class="topbar frame">
   <a class="brand" href={routes.home[lang]}>
     <span class="mark mono" aria-hidden="true">JL<span class="caret"></span></span>
-    <span class="name">Juan Leite<span class="sr-only"> — {lang === 'pt' ? 'página inicial' : 'home'}</span></span>
+    <span class="name">Juan Leite<span class="sr-only">, {lang === 'pt' ? 'página inicial' : 'home page'}</span></span>
   </a>
   <div class="tools">
     <LangSwitch lang={lang} paths={paths} />

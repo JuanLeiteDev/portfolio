@@ -1,7 +1,7 @@
 ---
 /**
- * Approach — five verbs as a pipeline; each one-line explanation is
- * revealed on intent. AI practice reduced to four keywords.
+ * Approach: the method condensed into the section intro (one line) and the
+ * AI practice as four keywords, each explained on intent.
  */
 import Section from '@/components/ui/Section.astro';
 import Hint from '@/components/ui/Hint.astro';
@@ -15,30 +15,10 @@ interface Props {
 const { lang } = Astro.props;
 ---
 
-<Section lang={lang} section="approach" title={t(approach.title, lang)}>
+<Section lang={lang} section="approach" title={t(approach.title, lang)} intro={t(approach.intro, lang)}>
   <div class="frame">
-    <ol class="pipeline" role="list">
-      {
-        approach.steps.map((s, i) => (
-          <li class="step" data-intent data-reveal style={`--i:${i}`}>
-            <span class="node" aria-hidden="true" />
-            <span class="k mono num" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
-            </span>
-            <IntentTitle controls={`step-${i}`} class="verb">
-              {t(s.title, lang)}
-            </IntentTitle>
-            <Hint text={t(s.hint, lang)} id={`step-${i}`} />
-          </li>
-        ))
-      }
-    </ol>
-
     <section class="ai" aria-labelledby="ai-title" data-reveal>
-      <h3 id="ai-title" class="ai-title">
-        <span class="mono label" aria-hidden="true">ai ·</span>
-        {t(approach.ai.title, lang)}
-      </h3>
+      <h3 id="ai-title" class="ai-title">{t(approach.ai.title, lang)}</h3>
       <ul class="practices" role="list">
         {
           approach.ai.practices.map((p, i) => (
@@ -59,100 +39,14 @@ const { lang } = Astro.props;
 </Section>
 
 <style>
-  .pipeline {
-    position: relative;
-    display: grid;
-    gap: 0.25rem;
-    padding-inline-start: 1.75rem;
-  }
-  .pipeline::before {
-    content: '';
-    position: absolute;
-    inset-block: 1.1rem;
-    inset-inline-start: 0.3rem;
-    width: 1px;
-    background: var(--c-line-strong);
-  }
-  .step {
-    position: relative;
-    display: grid;
-    gap: 0.35rem;
-    padding-block: 0.6rem;
-    cursor: pointer;
-  }
-  .node {
-    position: absolute;
-    inset-inline-start: calc(-1.75rem + 0.3rem - 4px);
-    top: 1.15rem;
-    width: 9px;
-    height: 9px;
-    border: 1px solid var(--c-signal);
-    background: var(--c-bg);
-    transition: background-color var(--dur-2) var(--ease-out), transform var(--dur-2) var(--ease-out);
-  }
-  .step:is(:hover, :focus-within, .is-open) .node {
-    background: var(--c-signal);
-    transform: scale(1.25);
-  }
-  .k {
-    display: none;
-  }
-  .step :global(.verb) {
-    font-size: var(--step-3);
-    letter-spacing: -0.035em;
-    transition: color var(--dur-1) linear;
-  }
-  .step:is(:hover, :focus-within, .is-open) :global(.verb) {
-    color: var(--c-signal);
-  }
-
-  @media (min-width: 64rem) {
-    .pipeline {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 1.5rem;
-      padding-inline-start: 0;
-      padding-top: 1.75rem;
-    }
-    .pipeline::before {
-      inset-block: 0.3rem auto;
-      inset-inline: 0;
-      width: auto;
-      height: 1px;
-    }
-    .node {
-      inset-inline-start: 0;
-      top: calc(-1.75rem + 0.3rem - 4px);
-    }
-    .k {
-      display: block;
-      color: var(--c-fg-subtle);
-    }
-    .step {
-      padding-block: 0.5rem 0;
-      min-height: 9rem;
-      align-content: start;
-    }
-    .step :global(.verb) {
-      font-size: var(--step-2);
-    }
-  }
-
   .ai {
     display: grid;
     gap: 1.75rem;
-    margin-top: clamp(3.5rem, 2rem + 5vw, 6rem);
     padding-top: 1.75rem;
     border-top: 1px solid var(--c-line-strong);
   }
   .ai-title {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.75rem;
     font-size: var(--step-2);
-  }
-  .ai-title .label {
-    color: var(--c-signal);
   }
   .practices {
     display: grid;

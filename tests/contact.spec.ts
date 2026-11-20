@@ -10,7 +10,7 @@ const EXPECTED = [
 for (const lang of ['pt', 'en'] as const) {
   test.describe(`contact actions (${lang})`, () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto(lang === 'pt' ? '/#contato' : '/en/#contact');
+      await page.goto(lang === 'pt' ? '/#contacto' : '/en/#contact');
     });
 
     test('four labelled actions with the right destinations', async ({ page }) => {
@@ -46,7 +46,7 @@ for (const lang of ['pt', 'en'] as const) {
 }
 
 test('CV download delivers a valid PDF', async ({ page, browserName }, info) => {
-  await page.goto('/#contato');
+  await page.goto('/#contacto');
   // WebKit/mobile emulation do not always surface the download event; verify the resource directly there.
   if (browserName === 'chromium' && !info.project.name.startsWith('mobile')) {
     const [download] = await Promise.all([page.waitForEvent('download'), page.locator('a[data-contact="cv"]').click()]);
@@ -62,7 +62,7 @@ test('CV download delivers a valid PDF', async ({ page, browserName }, info) => 
 test('contact actions are reachable by keyboard', async ({ page }, info) => {
   // WebKit keeps links out of the Tab order by default (Safari preference) — see a11y.spec.ts
   test.skip(info.project.name === 'webkit' || info.project.name.startsWith('mobile'), 'link tabbing: Chromium + Firefox');
-  await page.goto('/#contato');
+  await page.goto('/#contacto');
   const reached = new Set<string>();
   for (let i = 0; i < 80 && reached.size < 4; i += 1) {
     await page.keyboard.press('Tab');

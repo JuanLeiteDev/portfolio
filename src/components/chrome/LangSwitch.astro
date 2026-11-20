@@ -27,13 +27,13 @@ const { lang, paths, class: className = '' } = Astro.props;
           <span class="opt is-current" aria-current="true" lang={htmlLang[l]}>
             <span aria-hidden="true">{l.toUpperCase()}</span>
             <span class="sr-only">
-              {t(ui.langCurrent, lang)}: {t(ui.langName, l)}
+              {` ${t(ui.langCurrent, lang)}: ${t(ui.langName, l)}`}
             </span>
           </span>
         ) : (
           <a class="opt" href={paths[l]} hreflang={htmlLang[l]} lang={htmlLang[l]} data-lang-link={l}>
             <span aria-hidden="true">{l.toUpperCase()}</span>
-            <span class="sr-only">{t(ui.langName, l)}</span>
+            <span class="sr-only">{` ${t(ui.langName, l)}`}</span>
           </a>
         )}
       </>

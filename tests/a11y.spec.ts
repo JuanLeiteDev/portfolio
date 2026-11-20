@@ -47,7 +47,7 @@ test('heading outline: one h1, sections labelled by h2', async ({ page }) => {
   await expect(page.locator('h1')).toHaveCount(1);
   const sections = page.locator('main section[data-section][aria-labelledby]');
   const n = await sections.count();
-  expect(n).toBe(6);
+  expect(n).toBe(5);
   for (let i = 0; i < n; i += 1) {
     const id = await sections.nth(i).getAttribute('aria-labelledby');
     await expect(page.locator(`h2#${id}`)).toHaveCount(1);
