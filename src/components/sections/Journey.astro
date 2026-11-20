@@ -1,7 +1,9 @@
 ---
 /**
- * Journey — a compact dated log: year · title · organisation. One-line
- * details are revealed on intent; extra courses sit behind <details>.
+ * Journey — a compact dated log: year · title · organisation.
+ * Desktop: experience and education share the same grid rows (subgrid), so
+ * entries line up side by side; extra courses and languages sit in their own
+ * row below. One-line details are revealed on intent.
  */
 import Section from '@/components/ui/Section.astro';
 import Hint from '@/components/ui/Hint.astro';
@@ -18,102 +20,108 @@ const cols: { key: string; id: string; label: string; entries: JourneyEntry[] }[
   { key: 'exp', id: lang === 'pt' ? 'experiencia' : 'experience', label: t(journey.experienceLabel, lang), entries: journey.experience },
   { key: 'edu', id: lang === 'pt' ? 'formacoes' : 'education', label: t(journey.educationLabel, lang), entries: journey.education },
 ];
+const rows = Math.max(...cols.map((c) => c.entries.length));
 ---
 
 <Section lang={lang} section="journey" title={t(journey.title, lang)}>
-  <div class="frame cols">
-    {
-      cols.map((col) => (
-        <div class="col" id={col.id}>
-          <h3 class="col-label mono">{col.label}</h3>
-          <ol class="log" role="list">
-            {col.entries.map((e, i) => {
-              const hid = `${col.key}-${i}`;
-              return (
-                <li class:list={['entry', { upcoming: e.upcoming }]} data-intent data-reveal>
-                  <span class="period mono num">{t(e.period, lang)}</span>
-                  <div class="what">
-                    <IntentTitle level={4} controls={hid} class="et">
-                      {t(e.title, lang)}
-                    </IntentTitle>
-                    <p class="org">
-                      {t(e.org, lang)}
-                      {e.upcoming && <span class="badge mono">{upcoming}</span>}
-                    </p>
-                    {e.points && (
-                      <ul class="points" role="list">
-                        {e.points[lang].map((pt) => <li>{pt}</li>)}
-                      </ul>
-                    )}
-                    {e.hint && <Hint text={t(e.hint, lang)} id={hid} />}
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
+  <div class="frame">
+    <div class="cols" style={`--rows: ${rows}`}>
+      {
+        cols.map((col) => (
+          <div class="col" id={col.id} style={`--span: ${rows + 1}`}>
+            <h3 class="col-label mono">{col.label}</h3>
+            <ol class="log" role="list" style={`--span: ${rows}`}>
+              {col.entries.map((e, i) => {
+                const hid = `${col.key}-${i}`;
+                return (
+                  <li class:list={['entry', { upcoming: e.upcoming }]} data-intent data-reveal>
+                    <span class="period mono num">{t(e.period, lang)}</span>
+                    <div class="what">
+                      <IntentTitle level={4} controls={hid} class="et">
+                        {t(e.title, lang)}
+                      </IntentTitle>
+                      <p class="org">
+                        {t(e.org, lang)}
+                        {e.upcoming && <span class="badge mono">{upcoming}</span>}
+                      </p>
+                      {e.points && (
+                        <ul class="points" role="list">
+                          {e.points[lang].map((pt) => <li>{pt}</li>)}
+                        </ul>
+                      )}
+                      {e.hint && <Hint text={t(e.hint, lang)} id={hid} />}
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        ))
+      }
+    </div>
 
-          {col.key === 'edu' && (
-            <details class="more">
-              <summary>
-                <span>{t(journey.courses.label, lang)}</span>
-                <span class="cnt mono num">{String(journey.courses.items.length).padStart(2, '0')}</span>
-                <span class="chev" aria-hidden="true" />
-              </summary>
-              <ul class="courses" role="list">
-                {journey.courses.items.map((c) => (
-                  <li>
-                    <span>{typeof c.name === 'string' ? c.name : t(c.name, lang)}</span>
-                    <span class="cm mono num">
-                      {c.by} · {c.hours} h · {c.year}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </details>
-          )}
-          {col.key === 'exp' && (
-            <div class="langs">
-              <p class="col-label mono">{t(journey.languages.label, lang)}</p>
-              <ul role="list">
-                {journey.languages.items.map((l) => (
-                  <li>
-                    <span class="ln">{t(l.name, lang)}</span>
-                    <span class="lv">{t(l.level, lang)}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      ))
-    }
+    <div class="extras">
+      <div class="extra">
+        <h3 class="col-label mono">{t(journey.courses.label, lang)}</h3>
+        <ul class="list" role="list">
+          {
+            journey.courses.items.map((c) => (
+              <li>
+                <span>{typeof c.name === 'string' ? c.name : t(c.name, lang)}</span>
+                <span class="cm mono num">
+                  {c.by} · {c.hours} h · {c.year}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="extra">
+        <h3 class="col-label mono">{t(journey.languages.label, lang)}</h3>
+        <ul class="list" role="list">
+          {
+            journey.languages.items.map((l) => (
+              <li>
+                <span>{t(l.name, lang)}</span>
+                <span class="cm">{t(l.level, lang)}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
   </div>
 </Section>
 
 <style>
-  .points {
-    display: grid;
-    gap: 0.35rem;
-    margin-top: 0.6rem;
-    color: var(--c-fg-muted);
-    font-size: var(--step--1);
-  }
-  .points li {
-    padding-inline-start: 1rem;
-    text-indent: -1rem;
-  }
-  .points li::before {
-    content: '→ ';
-    color: var(--c-signal);
-  }
-  .cols {
+  .cols,
+  .extras {
     display: grid;
     gap: 3rem;
   }
+  .extras {
+    margin-top: 3rem;
+  }
   @media (min-width: 64rem) {
-    .cols {
+    .cols,
+    .extras {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 4rem;
+      column-gap: 4rem;
+    }
+    /* one shared row per entry: label row + N entry rows */
+    .cols {
+      grid-template-rows: auto repeat(var(--rows), auto);
+      row-gap: 0;
+    }
+    .col {
+      display: grid;
+      grid-row: span var(--span);
+      grid-template-rows: subgrid;
+    }
+    .log {
+      display: grid;
+      grid-row: span var(--span);
+      grid-template-rows: subgrid;
     }
   }
   .col {
@@ -122,6 +130,7 @@ const cols: { key: string; id: string; label: string; entries: JourneyEntry[] }[
   }
   .col-label {
     color: var(--c-fg-subtle);
+    font-size: var(--step--1);
     font-weight: 400;
     text-transform: lowercase;
     margin-bottom: 0.9rem;
@@ -132,6 +141,7 @@ const cols: { key: string; id: string; label: string; entries: JourneyEntry[] }[
   .entry {
     display: grid;
     grid-template-columns: 5.5rem minmax(0, 1fr);
+    align-content: start;
     gap: 1rem;
     padding-block: 1.25rem;
     border-bottom: 1px solid var(--c-line);
@@ -144,6 +154,7 @@ const cols: { key: string; id: string; label: string; entries: JourneyEntry[] }[
   .what {
     display: grid;
     gap: 0.3rem;
+    align-content: start;
   }
   .what :global(.et) {
     font-size: var(--step-1);
@@ -170,74 +181,34 @@ const cols: { key: string; id: string; label: string; entries: JourneyEntry[] }[
   .upcoming :global(.et) {
     color: var(--c-fg-muted);
   }
-
-  .more {
-    margin-top: 1.25rem;
-    border: 1px solid var(--c-line);
-    border-radius: var(--radius-m);
-  }
-  .more summary {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    min-height: 3rem;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    list-style: none;
+  .points {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 0.6rem;
     color: var(--c-fg-muted);
+    font-size: var(--step--1);
   }
-  .more summary::-webkit-details-marker {
-    display: none;
+  .points li {
+    padding-inline-start: 1rem;
+    text-indent: -1rem;
   }
-  .more summary > span:first-child {
-    flex: 1;
-  }
-  .cnt {
+  .points li::before {
+    content: '→ ';
     color: var(--c-signal);
   }
-  .chev {
-    width: 0.55rem;
-    height: 0.55rem;
-    border-right: 1.5px solid var(--c-fg-muted);
-    border-bottom: 1.5px solid var(--c-fg-muted);
-    rotate: 45deg;
-    translate: 0 -0.15rem;
-    transition: rotate var(--dur-2) var(--ease-out);
+
+  .list {
+    border-top: 1px solid var(--c-line-strong);
   }
-  .more[open] .chev {
-    rotate: 225deg;
-    translate: 0 0.1rem;
-  }
-  .courses {
-    padding: 0 1rem 0.5rem;
-  }
-  .courses li {
+  .list li {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.25rem 1rem;
-    padding-block: 0.6rem;
-    border-top: 1px solid var(--c-line);
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--c-line);
   }
   .cm {
     color: var(--c-fg-subtle);
-  }
-  .langs {
-    margin-top: 2rem;
-  }
-  .langs ul {
-    display: grid;
-    gap: 0.4rem;
-  }
-  .langs li {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
-  }
-  .ln {
-    min-width: 6.5rem;
-  }
-  .lv {
-    color: var(--c-fg-muted);
   }
 </style>

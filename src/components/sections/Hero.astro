@@ -3,9 +3,11 @@
  * Hero — identity, value proposition and the two primary paths
  * (projects / contact) in the first screen on every viewport.
  *
- * Desktop: monumental name + statement on the left, glyph portrait on the right.
+ * Desktop: monumental name + statement on the left, portrait on the right.
  * Mobile: name stacks over two lines, CTAs stay above the fold, the portrait
- * becomes a wide "scan" band below them.
+ * becomes a square frame centred on the face below them.
+ * Portrait effect: the photo "develops" once with a scan line (CSS); on
+ * hover it tilts, gains colour and a glare follows the cursor (portrait-fx.ts).
  */
 import { Picture } from 'astro:assets';
 import { ArrowUpRight } from '@lucide/astro';
@@ -55,7 +57,7 @@ const { lang } = Astro.props;
     </div>
 
     <figure class="portrait-wrap">
-      <div class="portrait" data-glyph-portrait>
+      <div class="portrait" data-portrait-fx>
         <Picture
           src={photo}
           alt={t(hero.photoAlt, lang)}
@@ -68,7 +70,8 @@ const { lang } = Astro.props;
           decoding="async"
           class="photo"
         />
-        <canvas aria-hidden="true"></canvas>
+        <span class="scan" aria-hidden="true"></span>
+        <span class="glare" aria-hidden="true"></span>
         <span class="corner tl" aria-hidden="true"></span>
         <span class="corner br" aria-hidden="true"></span>
       </div>
@@ -251,10 +254,6 @@ const { lang } = Astro.props;
     color: var(--c-fg-muted);
     font-size: 0.8rem;
   }
-  .kw li:first-child {
-    border-color: var(--c-signal);
-    color: var(--c-fg);
-  }
   .ctas {
     display: flex;
     flex-wrap: wrap;
@@ -269,22 +268,23 @@ const { lang } = Astro.props;
   }
 
   /* portrait */
+  /* below 64rem: a square frame centred on the face (the photo is 2:3, the
+     face sits between ~20% and ~58% of its height) */
   .portrait {
     position: relative;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 1 / 1;
+    max-width: 26rem;
     overflow: hidden;
     border-radius: var(--radius-m);
     background: var(--c-bg-sunken);
     isolation: isolate;
-  }
-  @media (min-width: 48rem) {
-    .portrait {
-      aspect-ratio: 16 / 10;
-    }
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.5s var(--ease-out);
   }
   @media (min-width: 64rem) {
     .portrait {
       aspect-ratio: 4 / 5;
+      max-width: none;
     }
   }
   .portrait :global(.photo),
@@ -292,16 +292,92 @@ const { lang } = Astro.props;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 20%;
+    object-position: 50% 37%;
     filter: grayscale(1) contrast(1.05);
+    transition: filter 0.7s var(--ease-out), scale 0.7s var(--ease-out);
   }
-  .portrait canvas {
+  @media (min-width: 64rem) {
+    .portrait :global(img) {
+      object-position: 50% 20%;
+    }
+  }
+
+  /* colour on hover (fine pointer) or after a tap (touch, via portrait-fx) */
+  @media (hover: hover) and (pointer: fine) {
+    .portrait:hover :global(img) {
+      filter: grayscale(0) contrast(1);
+      scale: 1.03;
+    }
+  }
+  .portrait:global(.is-color) :global(img) {
+    filter: grayscale(0) contrast(1);
+  }
+
+  /* glare that follows the cursor (position set by portrait-fx) */
+  .glare {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
     pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      circle at var(--gx, 50%) var(--gy, 30%),
+      rgb(255 255 255 / 0.22),
+      transparent 45%
+    );
+    mix-blend-mode: soft-light;
+    transition: opacity 0.4s var(--ease-out);
   }
+  .portrait:global(.has-fx):hover .glare {
+    opacity: 1;
+  }
+
+  /* scan line, hidden unless the develop animation runs */
+  .scan {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 2px;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--c-signal);
+    box-shadow: 0 0 18px 4px var(--c-signal-soft);
+  }
+
+  /* one-shot "develop": over-exposed and soft → sharp, while a scan line
+     crosses the frame. The photo is painted from the first frame (LCP). */
+  @media (prefers-reduced-motion: no-preference) {
+    .portrait :global(img) {
+      animation: develop 1.6s var(--ease-out) 0.15s backwards;
+    }
+    .scan {
+      animation: scan 1.5s var(--ease-out) 0.2s both;
+    }
+  }
+  @keyframes develop {
+    from {
+      filter: grayscale(1) contrast(1.6) brightness(1.7) blur(6px);
+    }
+    to {
+      filter: grayscale(1) contrast(1.05) brightness(1) blur(0);
+    }
+  }
+  @keyframes scan {
+    0% {
+      opacity: 0;
+      top: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      top: 100%;
+    }
+  }
+
   .corner {
     position: absolute;
     width: 14px;
@@ -309,6 +385,13 @@ const { lang } = Astro.props;
     border-color: var(--c-signal);
     border-style: solid;
     pointer-events: none;
+    transition: translate 0.4s var(--ease-out);
+  }
+  .portrait:hover .tl {
+    translate: -4px -4px;
+  }
+  .portrait:hover .br {
+    translate: 4px 4px;
   }
   .tl {
     top: 10px;

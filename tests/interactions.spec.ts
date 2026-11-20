@@ -102,7 +102,7 @@ test.describe('motion preferences', () => {
     await expect(page.locator('.dc-cell')).toHaveCount(0);
     await expect(page.locator('.count-live').first()).toHaveText(/10\s?000\+/);
     await page.waitForTimeout(1800);
-    expect(requests.some((u) => u.includes('glyph-portrait'))).toBe(false);
+    expect(requests.some((u) => u.includes('portrait-fx'))).toBe(false);
   });
 });
 

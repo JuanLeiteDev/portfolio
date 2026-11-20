@@ -39,7 +39,7 @@ Screenshots de revisão: `node scripts/shots.mjs [url] --pages=/,/en/ --widths=3
 | TypeScript 6 (strict/strictest) | Dados, componentes, scripts | TS 7 ainda não é suportado por `@astrojs/check`/`typescript-eslint` |
 | React 19 | **Uma** ilha: command palette / bottom sheet (`client:idle`) | Os gatilhos funcionam antes da hidratação (fallback `#menu`) |
 | Tailwind 4 + CSS custom properties | Tokens e estilos | Tokens em `src/styles/global.css` |
-| TS puro (sem framework) | Descodificação do nome, retrato em glifos, contadores, rail, revelação por intenção | Nenhum re-render por frame |
+| TS puro (sem framework) | Descodificação do nome, inclinação e reflexo do retrato, contadores, rail, revelação por intenção | Nenhum re-render por frame |
 | Lucide (`@lucide/astro`, `lucide-react`) | Ícones SVG, renderizados no servidor | ISC |
 | Playwright + axe-core, Lighthouse | QA, acessibilidade, performance | — |
 
@@ -61,7 +61,7 @@ src/
     sections/              # Hero, Impact, Projects, Approach, Skills, Journey, Contact
     pages/                 # HomePage, ProjectPage (estudos de caso)
     ui/                    # Section, Hint, IntentTitle
-  scripts/                 # main.ts (bootstrap), decode, counters, glyph-portrait, theme
+  scripts/                 # main.ts (bootstrap), decode, counters, portrait-fx, theme
   styles/global.css        # design tokens + primitivas
   pages/                   # /, /en/, /projetos/[slug]/, /en/projects/[slug]/, 404, sitemap.xml, robots.txt
 public/                    # fontes WOFF2 (OFL), CV, OG, ícones
@@ -84,7 +84,7 @@ tests/                     # Playwright (i18n/SEO, contacto, a11y, layout, no-JS
 - **Conceito:** o site como rasto de engenharia — secções indexadas (`§01`), réguas, coordenadas, colchetes, um único acento laranja-sinal. A estética hacker vive na notação, nunca sobre texto de leitura.
 - **Cor:** grafite quente `#0d0e0c`, osso `#ece9e1`, sinal `#ff6b2c` (tema escuro, primário); papel técnico `#f1eee6` / tinta `#141411` / sinal `#b03a09` (tema claro, segue o sistema ou a alternância). Todos os pares de texto ≥ 4,5:1.
 - **Tipografia:** Schibsted Grotesk (display/texto) + JetBrains Mono (metadados) — WOFF2 locais, subconjunto latin, OFL.
-- **Movimento:** 120/240/480/900 ms; `cubic-bezier(.2,.7,.1,1)`. Assinaturas: nome descodificado, retrato em glifos (scan + lente), rail com progresso. Secundárias: contadores reais, resumos em cascata, spotlight nos cartões, régua que se desenha. `prefers-reduced-motion` remove scrambles, scan, contadores e cascatas.
+- **Movimento:** 120/240/480/900 ms; `cubic-bezier(.2,.7,.1,1)`. Assinaturas: nome descodificado, retrato que se revela (scan) e reage ao cursor (inclinação, reflexo, cor), rail com progresso. Secundárias: contadores reais, resumos em cascata, spotlight nos cartões, régua que se desenha. `prefers-reduced-motion` remove scrambles, scan, contadores e cascatas.
 - **Mobile ≠ desktop encolhido:** doca inferior ao alcance do polegar + bottom sheet com arrastar para fechar (em vez de rail + palette); hero em duas linhas com CTAs acima da dobra; resumos por toque; galeria empilhada.
 
 ---
