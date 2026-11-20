@@ -1,28 +1,38 @@
-# deps & build
+# dependencies & build output
 node_modules/
 dist/
 .astro/
+.netlify/
+*.tsbuildinfo
 
-# test & audit output
+# tests & audits (regenerated locally)
 test-results/
 playwright-report/
 blob-report/
-reports/screenshots/
-reports/lighthouse/*.html
+reports/
 
-# env & os
+# environment & secrets
 .env
 .env.*
+
+# OS & editors
 .DS_Store
 Thumbs.db
+desktop.ini
+.vscode/
+.idea/
 *.log
-.claude/settings.local.json
 
-# internal working material — never published
+# AI assistants: local skills, settings and prompts
+.claude/
+.agents/
+CLAUDE.md
+PROMPT.md
+prompt-*.md
+
+# internal working material (never published)
 docs/
 assets/
-PROMPT.md
 PLAN.md
 DEPLOY.md
 QA.md
-reports/
