@@ -15,24 +15,24 @@ import type { L } from '@/i18n';
 
 export const hero = {
   eyebrow: {
-    pt: 'Software Engineering & Intelligent Automation',
-    en: 'Software Engineering & Intelligent Automation',
+    pt: 'Software · Automação · IA aplicada',
+    en: 'Software · Automation · Applied AI',
   },
   statement: {
-    pt: 'Transformo problemas em software útil.',
-    en: 'I turn problems into useful software.',
+    pt: 'Construo ferramentas em Python que automatizam processos e ajudam a diagnosticar incidentes.',
+    en: 'I build Python tools that automate processes and help diagnose incidents.',
   },
   keywords: [
     { pt: 'Python', en: 'Python' },
-    { pt: 'Automação', en: 'Automation' },
-    { pt: 'IA aplicada', en: 'Applied AI' },
+    { pt: 'Backend', en: 'Backend' },
+    { pt: 'Dados', en: 'Data' },
   ] satisfies L[],
   ctaPrimary: { pt: 'Ver projetos', en: 'See projects' },
-  ctaSecondary: { pt: 'Contactar', en: 'Get in touch' },
+  ctaSecondary: { pt: 'Vamos falar', en: "Let's talk" },
   meta: [
     { k: { pt: 'base', en: 'based' }, v: { pt: 'Barcelos, PT', en: 'Barcelos, PT' } },
     { k: { pt: 'estudo', en: 'study' }, v: { pt: 'Eng. Sistemas Informáticos · IPCA', en: 'Computer Systems Eng. · IPCA' } },
-    { k: { pt: 'agora', en: 'now' }, v: { pt: 'Suporte técnico N1 · Eleven Systems', en: 'L1 tech support · Eleven Systems' } },
+    { k: { pt: 'agora', en: 'now' }, v: { pt: 'Suporte Técnico N1 · Eleven Systems', en: 'L1 Technical Support · Eleven Systems' } },
   ] satisfies { k: L; v: L }[],
   photoAlt: {
     pt: 'Retrato de Juan Leite, de camisa azul-escura, a sorrir.',
@@ -84,19 +84,19 @@ export const approach = {
     practices: [
       {
         title: { pt: 'Contexto', en: 'Context' },
-        hint: { pt: 'Objetivos e restrições antes do código.', en: 'Goals and constraints before code.' },
+        hint: { pt: 'Defino objetivos e restrições antes de pedir código.', en: 'I set goals and constraints before asking for code.' },
       },
       {
         title: { pt: 'Agentes', en: 'Agents' },
-        hint: { pt: 'Tarefas decompostas e distribuídas.', en: 'Work broken down and delegated.' },
+        hint: { pt: 'Divido o trabalho em tarefas e distribuo-as por agentes.', en: 'I split the work into tasks and hand them to agents.' },
       },
       {
         title: { pt: 'Revisão', en: 'Review' },
-        hint: { pt: 'Propostas avaliadas, código revisto.', en: 'Proposals evaluated, code reviewed.' },
+        hint: { pt: 'Avalio cada proposta e revejo o código antes de o aceitar.', en: 'I weigh each proposal and review the code before I accept it.' },
       },
       {
         title: { pt: 'Testes', en: 'Tests' },
-        hint: { pt: 'Validado — e com responsabilidade minha.', en: 'Validated — and owned by me.' },
+        hint: { pt: 'Testo o resultado e assumo a responsabilidade por ele.', en: 'I test the result, and I own it.' },
       },
     ] satisfies RevealItem[],
   },
@@ -222,7 +222,10 @@ export const journey = {
       period: { pt: '2027', en: '2027' },
       title: { pt: 'Erasmus · Bélgica', en: 'Erasmus · Belgium' },
       org: { pt: '5 meses', en: '5 months' },
-      hint: { pt: 'Licenciatura + inglês.', en: 'Degree + English.' },
+      hint: {
+        pt: 'Cinco meses na Bélgica, em 2027, para continuar a licenciatura e melhorar o inglês.',
+        en: 'Five months in Belgium in 2027, continuing my degree and improving my English.',
+      },
       upcoming: true,
     },
     {
@@ -230,16 +233,16 @@ export const journey = {
       title: { pt: 'Suporte Técnico N1', en: 'L1 Technical Support' },
       org: { pt: 'Eleven Systems · Braga', en: 'Eleven Systems · Braga' },
       hint: {
-        pt: 'Incidentes de software e hardware; ferramentas internas em Python.',
-        en: 'Software and hardware incidents; internal Python tools.',
+        pt: 'Resolvo incidentes de software e hardware e desenvolvo ferramentas internas em Python.',
+        en: 'I resolve software and hardware incidents and build internal tools in Python.',
       },
       points: {
         pt: [
-          'Diagnostiquei crashes em equipamentos em produção: a causa era o armazenamento cheio.',
+          'Diagnostiquei crashes em produção causados por armazenamento cheio e resolvi o problema.',
           'Automatizei em Python o preenchimento de formulários e tarefas repetitivas numa plataforma web interna.',
         ],
         en: [
-          'Traced crashes on production equipment to full storage, and fixed them.',
+          'Traced production crashes to full storage and fixed the problem.',
           'Automated form filling and repetitive tasks on an internal web platform with Python.',
         ],
       },
@@ -249,14 +252,17 @@ export const journey = {
     {
       period: { pt: '2025—28', en: '2025—28' },
       title: { pt: 'Eng. de Sistemas Informáticos', en: 'Computer Systems Engineering' },
-      org: { pt: 'IPCA · licenciatura em curso', en: 'IPCA · BSc in progress' },
-      hint: { pt: 'Programação, bases de dados, sistemas operativos.', en: 'Programming, databases, operating systems.' },
+      org: { pt: 'IPCA · licenciatura em curso, pós-laboral', en: 'IPCA · BSc in progress, evening classes' },
+      hint: { pt: 'Disciplinas de programação, bases de dados e sistemas operativos.', en: 'Courses in programming, databases and operating systems.' },
     },
     {
       period: { pt: '2022—25', en: '2022—25' },
-      title: { pt: 'Eletrotecnia', en: 'Electrical Engineering' },
-      org: { pt: 'Curso profissional · 18/20 · PAP 20/20', en: 'Vocational diploma · 18/20 · final project 20/20' },
-      hint: { pt: 'A base do raciocínio técnico.', en: 'Where technical reasoning started.' },
+      title: { pt: 'Técnico de Eletrotecnia', en: 'Electrical Technician' },
+      org: { pt: 'Curso profissional · média final 18/20', en: 'Vocational diploma · final grade 18/20' },
+      hint: {
+        pt: 'PAP com 20/20 (junho de 2025): uma máquina automática de cocktails.',
+        en: 'Final project graded 20/20 (June 2025): an automatic cocktail machine.',
+      },
     },
   ] satisfies JourneyEntry[],
   courses: {
@@ -288,8 +294,8 @@ export const journey = {
 export const contact = {
   title: { pt: 'Vamos falar.', en: "Let's talk." },
   body: {
-    pt: 'Aberto a oportunidades em software e automação.',
-    en: 'Open to software and automation opportunities.',
+    pt: 'Procuro oportunidades em backend, dados e automação com Python.',
+    en: "I'm looking for opportunities in backend, data and automation with Python.",
   },
   emailLabel: { pt: 'email', en: 'email' },
 };
