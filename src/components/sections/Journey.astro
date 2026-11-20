@@ -1,0 +1,223 @@
+---
+/**
+ * Journey — a compact dated log: year · title · organisation. One-line
+ * details are revealed on intent; extra courses sit behind <details>.
+ */
+import Section from '@/components/ui/Section.astro';
+import Hint from '@/components/ui/Hint.astro';
+import IntentTitle from '@/components/ui/IntentTitle.astro';
+import { journey, type JourneyEntry } from '@/data/home';
+import { t, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const upcoming = lang === 'pt' ? 'próximo' : 'next';
+const cols: { key: string; id: string; label: string; entries: JourneyEntry[] }[] = [
+  { key: 'exp', id: lang === 'pt' ? 'experiencia' : 'experience', label: t(journey.experienceLabel, lang), entries: journey.experience },
+  { key: 'edu', id: lang === 'pt' ? 'formacoes' : 'education', label: t(journey.educationLabel, lang), entries: journey.education },
+];
+---
+
+<Section lang={lang} section="journey" title={t(journey.title, lang)}>
+  <div class="frame cols">
+    {
+      cols.map((col) => (
+        <div class="col" id={col.id}>
+          <h3 class="col-label mono">{col.label}</h3>
+          <ol class="log" role="list">
+            {col.entries.map((e, i) => {
+              const hid = `${col.key}-${i}`;
+              return (
+                <li class:list={['entry', { upcoming: e.upcoming }]} data-intent data-reveal>
+                  <span class="period mono num">{t(e.period, lang)}</span>
+                  <div class="what">
+                    <IntentTitle level={4} controls={hid} class="et">
+                      {t(e.title, lang)}
+                    </IntentTitle>
+                    <p class="org">
+                      {t(e.org, lang)}
+                      {e.upcoming && <span class="badge mono">{upcoming}</span>}
+                    </p>
+                    {e.hint && <Hint text={t(e.hint, lang)} id={hid} />}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+
+          {col.key === 'edu' && (
+            <details class="more">
+              <summary>
+                <span>{t(journey.courses.label, lang)}</span>
+                <span class="cnt mono num">{String(journey.courses.items.length).padStart(2, '0')}</span>
+                <span class="chev" aria-hidden="true" />
+              </summary>
+              <ul class="courses" role="list">
+                {journey.courses.items.map((c) => (
+                  <li>
+                    <span>{typeof c.name === 'string' ? c.name : t(c.name, lang)}</span>
+                    <span class="cm mono num">
+                      {c.by} · {c.hours} h · {c.year}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+          {col.key === 'exp' && (
+            <div class="langs">
+              <p class="col-label mono">{t(journey.languages.label, lang)}</p>
+              <ul role="list">
+                {journey.languages.items.map((l) => (
+                  <li>
+                    <span class="ln">{t(l.name, lang)}</span>
+                    <span class="lv">{t(l.level, lang)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      ))
+    }
+  </div>
+</Section>
+
+<style>
+  .cols {
+    display: grid;
+    gap: 3rem;
+  }
+  @media (min-width: 64rem) {
+    .cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4rem;
+    }
+  }
+  .col {
+    min-width: 0;
+    scroll-margin-top: 2rem;
+  }
+  .col-label {
+    color: var(--c-fg-subtle);
+    font-weight: 400;
+    text-transform: lowercase;
+    margin-bottom: 0.9rem;
+  }
+  .log {
+    border-top: 1px solid var(--c-line-strong);
+  }
+  .entry {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--c-line);
+    cursor: pointer;
+  }
+  .period {
+    color: var(--c-signal);
+    padding-top: 0.3rem;
+  }
+  .what {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .what :global(.et) {
+    font-size: var(--step-1);
+    line-height: 1.25;
+    transition: color var(--dur-1) linear;
+  }
+  .entry:is(:hover, :focus-within, .is-open) :global(.et) {
+    color: var(--c-signal);
+  }
+  .org {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--c-fg-muted);
+  }
+  .badge {
+    padding: 0 0.4rem;
+    border: 1px solid var(--c-signal);
+    border-radius: var(--radius-s);
+    color: var(--c-signal);
+    font-size: 0.68rem;
+  }
+  .upcoming :global(.et) {
+    color: var(--c-fg-muted);
+  }
+
+  .more {
+    margin-top: 1.25rem;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-m);
+  }
+  .more summary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    list-style: none;
+    color: var(--c-fg-muted);
+  }
+  .more summary::-webkit-details-marker {
+    display: none;
+  }
+  .more summary > span:first-child {
+    flex: 1;
+  }
+  .cnt {
+    color: var(--c-signal);
+  }
+  .chev {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-right: 1.5px solid var(--c-fg-muted);
+    border-bottom: 1.5px solid var(--c-fg-muted);
+    rotate: 45deg;
+    translate: 0 -0.15rem;
+    transition: rotate var(--dur-2) var(--ease-out);
+  }
+  .more[open] .chev {
+    rotate: 225deg;
+    translate: 0 0.1rem;
+  }
+  .courses {
+    padding: 0 1rem 0.5rem;
+  }
+  .courses li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding-block: 0.6rem;
+    border-top: 1px solid var(--c-line);
+  }
+  .cm {
+    color: var(--c-fg-subtle);
+  }
+  .langs {
+    margin-top: 2rem;
+  }
+  .langs ul {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .langs li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+  }
+  .ln {
+    min-width: 6.5rem;
+  }
+  .lv {
+    color: var(--c-fg-muted);
+  }
+</style>

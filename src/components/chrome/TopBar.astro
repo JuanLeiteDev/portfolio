@@ -1,0 +1,72 @@
+---
+/** Compact header for < 64rem. Not sticky: navigation lives in the bottom dock. */
+import { routes, type L, type Lang } from '@/i18n';
+import LangSwitch from './LangSwitch.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  lang: Lang;
+  paths: L;
+}
+const { lang, paths } = Astro.props;
+---
+
+<header class="topbar frame">
+  <a class="brand" href={routes.home[lang]}>
+    <span class="mark mono" aria-hidden="true">JL<span class="caret"></span></span>
+    <span class="name">Juan Leite<span class="sr-only"> — {lang === 'pt' ? 'página inicial' : 'home'}</span></span>
+  </a>
+  <div class="tools">
+    <LangSwitch lang={lang} paths={paths} />
+    <ThemeToggle lang={lang} />
+  </div>
+</header>
+
+<style>
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: max(0.75rem, env(safe-area-inset-top)) 0.25rem;
+  }
+  @media (min-width: 64rem) {
+    .topbar {
+      display: none;
+    }
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 2.75rem;
+  }
+  .mark {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-m);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: -0.04em;
+  }
+  .caret {
+    position: absolute;
+    right: 0.35rem;
+    bottom: 0.4rem;
+    width: 0.28rem;
+    height: 2px;
+    background: var(--c-signal);
+  }
+  .name {
+    font-weight: 600;
+  }
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-inline-end: -0.5rem;
+  }
+</style>

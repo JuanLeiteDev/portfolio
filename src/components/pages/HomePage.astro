@@ -1,0 +1,39 @@
+---
+import Base from '@/layouts/Base.astro';
+import Hero from '@/components/sections/Hero.astro';
+import Impact from '@/components/sections/Impact.astro';
+import Projects from '@/components/sections/Projects.astro';
+import Approach from '@/components/sections/Approach.astro';
+import Skills from '@/components/sections/Skills.astro';
+import Journey from '@/components/sections/Journey.astro';
+import Contact from '@/components/sections/Contact.astro';
+import { routes, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+const meta = {
+  pt: {
+    title: 'Juan Leite — Engenharia de software & automação inteligente',
+    description:
+      'Portfólio de Juan Leite: ferramentas internas, automação de processos, aplicações desktop e APIs em Python, com IA aplicada ao desenvolvimento. Estudante de Engenharia de Sistemas Informáticos no IPCA.',
+  },
+  en: {
+    title: 'Juan Leite — Software engineering & intelligent automation',
+    description:
+      'Portfolio of Juan Leite: internal tools, process automation, desktop applications and APIs in Python, with AI-assisted development. Computer Systems Engineering student at IPCA.',
+  },
+}[lang];
+---
+
+<Base lang={lang} title={meta.title} description={meta.description} paths={routes.home} onHome>
+  <Hero lang={lang} />
+  <Impact lang={lang} />
+  <Projects lang={lang} />
+  <Approach lang={lang} />
+  <Skills lang={lang} />
+  <Journey lang={lang} />
+  <Contact lang={lang} />
+</Base>

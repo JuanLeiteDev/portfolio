@@ -1,1 +1,27 @@
-tmp/
+# deps & build
+node_modules/
+dist/
+.astro/
+
+# test & audit output
+test-results/
+playwright-report/
+blob-report/
+reports/screenshots/
+reports/lighthouse/*.html
+
+# env & os
+.env
+.env.*
+.DS_Store
+Thumbs.db
+*.log
+.claude/settings.local.json
+
+# internal working material — never published
+docs/
+assets/
+PROMPT.md
+PLAN.md
+DEPLOY.md
+reports/

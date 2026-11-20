@@ -1,0 +1,13 @@
+{
+  "name": "Juan Leite",
+  "short_name": "Juan Leite",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0d0e0c",
+  "theme_color": "#0d0e0c",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}

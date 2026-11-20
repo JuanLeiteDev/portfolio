@@ -1,0 +1,218 @@
+---
+/**
+ * Desktop "trace" rail (≥ 64rem). The section index doubles as a reading
+ * progress line: the active section is tracked by main.ts (IntersectionObserver)
+ * and the progress fill uses a CSS scroll-driven animation where supported.
+ */
+import { sectionOrder, sectionLabels, sectionHref, routes, ui, t, type L, type Lang } from '@/i18n';
+import LangSwitch from './LangSwitch.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  lang: Lang;
+  paths: L;
+  onHome: boolean;
+}
+const { lang, paths, onHome } = Astro.props;
+---
+
+<header class="rail">
+  <a class="brand" href={routes.home[lang]}>
+    <span class="mark" aria-hidden="true">JL<span class="caret"></span></span>
+    <span class="name">Juan Leite<span class="sr-only"> — {lang === 'pt' ? 'página inicial' : 'home'}</span></span>
+  </a>
+
+  <nav class="index" aria-label={t(ui.primaryNav, lang)}>
+    <span class="track" aria-hidden="true"><span class="fill"></span></span>
+    <ol>
+      {
+        sectionOrder.map((key, i) => (
+          <li>
+            <a href={sectionHref(key, lang, onHome)} data-rail-link={key}>
+              <span class="n mono num" aria-hidden="true">
+                {String(i).padStart(2, '0')}
+              </span>
+              <span class="t">{t(sectionLabels[key], lang)}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </nav>
+
+  <div class="tools">
+    <button type="button" class="cmd mono" data-cmd-open data-needs-js aria-haspopup="dialog">
+      <span>{lang === 'pt' ? 'Ir para' : 'Go to'}</span>
+      <span class="keys" aria-hidden="true">
+        <kbd class="kbd" data-mod-key>Ctrl</kbd><kbd class="kbd">K</kbd>
+      </span>
+    </button>
+    <div class="row">
+      <LangSwitch lang={lang} paths={paths} />
+      <ThemeToggle lang={lang} />
+    </div>
+  </div>
+</header>
+
+<style>
+  .rail {
+    display: none;
+  }
+  @media (min-width: 64rem) {
+    .rail {
+      position: fixed;
+      inset-block: 0;
+      inset-inline-start: 0;
+      z-index: 40;
+      width: var(--rail-w);
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      padding: 1.75rem 1.25rem 1.25rem;
+      border-inline-end: 1px solid var(--c-line);
+      background: var(--c-bg);
+    }
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .mark {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-m);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: -0.04em;
+  }
+  .caret {
+    position: absolute;
+    right: 0.4rem;
+    bottom: 0.45rem;
+    width: 0.3rem;
+    height: 2px;
+    background: var(--c-signal);
+  }
+  .name {
+    font-weight: 600;
+  }
+  .brand:hover .mark {
+    border-color: var(--c-signal);
+  }
+
+  .index {
+    position: relative;
+    flex: 1;
+    padding-inline-start: 0.9rem;
+  }
+  .track {
+    position: absolute;
+    inset-block: 0.35rem;
+    inset-inline-start: 0;
+    width: 1px;
+    background: var(--c-line);
+  }
+  .fill {
+    position: absolute;
+    inset: 0;
+    background: var(--c-signal);
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .fill {
+        animation: rail-progress linear both;
+        animation-timeline: scroll(root block);
+      }
+    }
+  }
+  @keyframes rail-progress {
+    to {
+      transform: scaleY(1);
+    }
+  }
+  ol {
+    display: grid;
+    gap: 0.15rem;
+  }
+  ol a {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: var(--radius-s);
+    color: var(--c-fg-muted);
+    font-size: 0.95rem;
+    transition: color var(--dur-1) linear;
+  }
+  ol a::before {
+    /* tick on the track */
+    content: '';
+    position: absolute;
+    inset-inline-start: calc(-0.9rem - 3px);
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    translate: 0 -50%;
+    border: 1px solid var(--c-line-strong);
+    background: var(--c-bg);
+    transition: background-color var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
+  }
+  ol a:hover {
+    color: var(--c-fg);
+  }
+  .n {
+    font-size: 0.7rem;
+    color: var(--c-fg-subtle);
+  }
+  ol a[aria-current='true'] {
+    color: var(--c-fg);
+  }
+  ol a[aria-current='true']::before {
+    background: var(--c-signal);
+    border-color: var(--c-signal);
+  }
+  ol a[aria-current='true'] .n {
+    color: var(--c-signal);
+  }
+
+  .tools {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-inline: -0.5rem;
+  }
+  .cmd {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.4rem 0.6rem 0.4rem 0.75rem;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-m);
+    color: var(--c-fg-muted);
+    cursor: pointer;
+    transition: border-color var(--dur-1) linear, color var(--dur-1) linear;
+  }
+  .cmd:hover {
+    border-color: var(--c-line-strong);
+    color: var(--c-fg);
+  }
+  .keys {
+    display: inline-flex;
+    gap: 0.2rem;
+  }
+</style>

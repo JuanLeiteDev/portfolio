@@ -1,0 +1,128 @@
+---
+/**
+ * Bottom dock (< 64rem) — thumb-reachable navigation designed for mobile.
+ * Shows the current section (updated by main.ts), opens the command sheet,
+ * and keeps "Contact" one tap away. Without JS, "Menu" jumps to the footer
+ * navigation (#menu).
+ */
+import { sectionHref, sectionLabels, ui, t, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+  onHome: boolean;
+}
+const { lang, onHome } = Astro.props;
+---
+
+<nav class="dock" aria-label={t(ui.menu, lang)}>
+  <span class="where mono" aria-hidden="true">
+    <span class="n num" data-dock-n>00</span>
+    <span class="t" data-dock-t>{t(sectionLabels.about, lang)}</span>
+  </span>
+  <a class="btn-dock" href="#menu" data-cmd-open aria-haspopup="dialog">
+    <span class="burger" aria-hidden="true"><span></span><span></span></span>
+    <span>{t(ui.menu, lang)}</span>
+    <span class="sr-only">— {t(ui.openMenu, lang)}</span>
+  </a>
+  <a class="btn-dock is-cta" href={sectionHref('contact', lang, onHome)}>
+    {t(sectionLabels.contact, lang)}
+  </a>
+</nav>
+
+<style>
+  .dock {
+    position: fixed;
+    z-index: 50;
+    inset-inline: 0.75rem;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    max-width: 30rem;
+    margin-inline: auto;
+    padding: 0.35rem;
+    border: 1px solid var(--c-line-strong);
+    border-radius: 999px;
+    background: var(--c-bg-raised);
+    box-shadow: var(--shadow-pop);
+  }
+  @media (min-width: 64rem) {
+    .dock {
+      display: none;
+    }
+  }
+  .where {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding-inline: 0.85rem 0.25rem;
+    color: var(--c-fg-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .where .n {
+    color: var(--c-signal);
+  }
+  .where .t {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (max-width: 22.5rem) {
+    .where {
+      flex: none;
+      padding-inline: 0.75rem 0.1rem;
+    }
+    .where .t {
+      display: none;
+    }
+    .dock {
+      justify-content: space-between;
+    }
+  }
+  .btn-dock {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 2.9rem;
+    padding-inline: 1rem;
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    transition: background-color var(--dur-1) linear, color var(--dur-1) linear, transform var(--dur-1) var(--ease-out);
+  }
+  .btn-dock:active {
+    transform: scale(0.97);
+  }
+  .btn-dock:not(.is-cta) {
+    border: 1px solid var(--c-line-strong);
+  }
+  .is-cta {
+    background: var(--c-signal);
+    color: var(--c-signal-ink);
+  }
+  .burger {
+    display: grid;
+    gap: 4px;
+  }
+  .burger span {
+    display: block;
+    width: 14px;
+    height: 1.5px;
+    background: currentColor;
+  }
+  .burger span:last-child {
+    width: 9px;
+  }
+
+  /* keep page content clear of the dock */
+  @media (max-width: 63.999rem) {
+    :global(body) {
+      padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+    }
+  }
+</style>

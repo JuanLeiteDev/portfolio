@@ -1,0 +1,355 @@
+---
+/**
+ * Builds the command menu items on the server and hydrates the island when
+ * the browser is idle. Triggers work before hydration (fallback: #menu).
+ */
+import CommandMenu, { type CmdItem } from './CommandMenu';
+import { sectionOrder, sectionLabels, sectionHref, routes, otherLang, ui, t, type L, type Lang } from '@/i18n';
+import { projects, kindLabel } from '@/data/projects';
+import { contactActions, profile } from '@/data/profile';
+
+interface Props {
+  lang: Lang;
+  paths: L;
+  onHome: boolean;
+}
+const { lang, paths, onHome } = Astro.props;
+const other = otherLang(lang);
+
+const items: CmdItem[] = [
+  ...sectionOrder.map((key, i) => ({
+    id: `s-${key}`,
+    group: 'sections' as const,
+    label: t(sectionLabels[key], lang),
+    hint: String(i).padStart(2, '0'),
+    href: sectionHref(key, lang, onHome),
+  })),
+  ...projects.map((p) => ({
+    id: `p-${p.slug}`,
+    group: 'projects' as const,
+    label: t(p.name, lang),
+    hint: `${t(kindLabel[p.kind], lang)} · ${p.year}`,
+    href: routes.project(p.slug)[lang],
+    keywords: p.stack.join(' '),
+  })),
+  ...contactActions.map((a) => ({
+    id: `c-${a.key}`,
+    group: 'contact' as const,
+    label: t(a.label, lang),
+    hint: t(a.detail, lang),
+    href: a.href,
+    external: a.external,
+    ...(a.download ? { download: a.download } : {}),
+  })),
+  {
+    id: 'c-email',
+    group: 'contact',
+    label: 'Email',
+    hint: profile.email,
+    href: `mailto:${profile.email}`,
+    external: false,
+  },
+  {
+    id: 'x-lang',
+    group: 'settings',
+    label: t(ui.switchTo, lang),
+    hint: other.toUpperCase(),
+    href: paths[other],
+    keywords: 'language idioma english português',
+  },
+  {
+    id: 'x-theme',
+    group: 'settings',
+    label: t(ui.themeToggle, lang),
+    hint: lang === 'pt' ? 'tema' : 'theme',
+    action: 'theme',
+    keywords: 'dark light escuro claro',
+  },
+];
+
+const strings = {
+  label: t(ui.cmdLabel, lang),
+  placeholder: t(ui.cmdPlaceholder, lang),
+  empty: t(ui.cmdEmpty, lang),
+  close: t(ui.close, lang),
+  navigate: t(ui.cmdHint, lang),
+  select: t(ui.cmdSelect, lang),
+  dismiss: t(ui.cmdClose, lang),
+  groups: {
+    sections: t(ui.cmdSections, lang),
+    projects: t(ui.cmdProjects, lang),
+    contact: t(ui.cmdContact, lang),
+    settings: t(ui.cmdSettings, lang),
+  },
+};
+---
+
+<CommandMenu client:idle items={items} strings={strings} />
+
+<style is:global>
+  .cmdk {
+    --w: min(40rem, calc(100vw - 2rem));
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--c-fg);
+    overflow: hidden;
+  }
+  .cmdk::backdrop {
+    background: rgb(5 6 5 / 0.62);
+  }
+  :root[data-theme='light'] .cmdk::backdrop {
+    background: rgb(40 36 28 / 0.35);
+  }
+  .cmdk-panel {
+    position: absolute;
+    left: 50%;
+    top: 14vh;
+    width: var(--w);
+    max-height: min(34rem, 72vh);
+    display: flex;
+    flex-direction: column;
+    translate: -50% 0;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-l);
+    background: var(--c-bg-raised);
+    box-shadow: var(--shadow-pop);
+    outline: none;
+    overflow: hidden;
+  }
+  .cmdk-handle {
+    display: none;
+  }
+  .cmdk-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.6rem 0.5rem 1.1rem;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .cmdk-prompt {
+    font-family: var(--font-mono);
+    color: var(--c-signal);
+  }
+  .cmdk-input {
+    flex: 1;
+    min-width: 0;
+    min-height: 2.9rem;
+    background: transparent;
+    border: 0;
+    color: var(--c-fg);
+    font: inherit;
+    font-size: 1rem;
+    outline: none;
+  }
+  .cmdk-input::placeholder {
+    color: var(--c-fg-subtle);
+  }
+  .cmdk-close {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding-inline: 0.6rem;
+    border-radius: var(--radius-m);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--c-fg-subtle);
+    cursor: pointer;
+  }
+  .cmdk-close:hover {
+    color: var(--c-fg);
+    background: var(--c-bg);
+  }
+  .cmdk-list {
+    position: relative;
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0.4rem;
+  }
+  .cmdk-hl {
+    position: absolute;
+    inset-inline: 0.4rem;
+    top: 0;
+    border-radius: var(--radius-m);
+    background: var(--c-signal-soft);
+    box-shadow: inset 2px 0 0 var(--c-signal);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--dur-2) var(--ease-out),
+      height var(--dur-2) var(--ease-out),
+      opacity var(--dur-1) linear;
+  }
+  .cmdk-group + .cmdk-group {
+    margin-top: 0.4rem;
+  }
+  .cmdk-group-label {
+    padding: 0.6rem 0.75rem 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--c-fg-subtle);
+    text-transform: lowercase;
+  }
+  .cmdk-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.9rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-m);
+    cursor: pointer;
+    user-select: none;
+  }
+  .cmdk-label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cmdk-hint {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--c-fg-subtle);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 45%;
+  }
+  .cmdk-go {
+    width: 1rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    color: var(--c-fg-subtle);
+    transition: color var(--dur-1) linear, translate var(--dur-2) var(--ease-out);
+  }
+  .cmdk-item[aria-selected='true'] .cmdk-go {
+    color: var(--c-signal);
+    translate: 2px 0;
+  }
+  .cmdk-empty {
+    padding: 1.5rem 0.75rem;
+    color: var(--c-fg-muted);
+  }
+  .cmdk-foot {
+    display: flex;
+    gap: 1.25rem;
+    padding: 0.6rem 1rem;
+    border-top: 1px solid var(--c-line);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--c-fg-subtle);
+  }
+  .cmdk-foot span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  /* ---- mobile: bottom sheet ---- */
+  @media (max-width: 63.999rem) {
+    .cmdk-panel {
+      left: 0;
+      right: 0;
+      top: auto;
+      bottom: 0;
+      width: 100%;
+      max-height: 86svh;
+      translate: 0 0;
+      border-radius: var(--radius-l) var(--radius-l) 0 0;
+      border-bottom: 0;
+      padding-bottom: env(safe-area-inset-bottom);
+      transition: translate var(--dur-2) var(--ease-out);
+    }
+    .cmdk-panel[data-dragging] {
+      transition: none;
+    }
+    .cmdk-handle {
+      display: grid;
+      place-items: center;
+      height: 1.6rem;
+      touch-action: none;
+      cursor: grab;
+    }
+    .cmdk-handle span {
+      width: 2.5rem;
+      height: 4px;
+      border-radius: 4px;
+      background: var(--c-line-strong);
+    }
+    .cmdk-head {
+      order: 3;
+      border-bottom: 0;
+      border-top: 1px solid var(--c-line);
+    }
+    .cmdk-list {
+      order: 2;
+    }
+    .cmdk-foot {
+      display: none;
+    }
+    .cmdk-item {
+      min-height: 3.1rem;
+      font-size: 1.05rem;
+    }
+  }
+
+  /* ---- motion ---- */
+  @media (prefers-reduced-motion: no-preference) {
+    .cmdk[open] .cmdk-panel {
+      animation: cmdk-in var(--dur-2) var(--ease-out);
+    }
+    .cmdk[open]::backdrop {
+      animation: cmdk-fade var(--dur-2) linear;
+    }
+    .cmdk[data-closing] .cmdk-panel {
+      animation: cmdk-out 180ms var(--ease-io) forwards;
+    }
+    .cmdk[data-closing]::backdrop {
+      animation: cmdk-fade 180ms linear reverse forwards;
+    }
+    @media (max-width: 63.999rem) {
+      .cmdk[open] .cmdk-panel {
+        animation-name: sheet-in;
+      }
+      .cmdk[data-closing] .cmdk-panel {
+        animation-name: sheet-out;
+      }
+    }
+  }
+  @keyframes cmdk-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.985);
+    }
+  }
+  @keyframes cmdk-out {
+    to {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.985);
+    }
+  }
+  @keyframes cmdk-fade {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes sheet-in {
+    from {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes sheet-out {
+    to {
+      transform: translateY(100%);
+    }
+  }
+</style>

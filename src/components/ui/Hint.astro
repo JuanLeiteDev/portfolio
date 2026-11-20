@@ -1,0 +1,29 @@
+---
+/**
+ * One-line summary revealed on intent (hover/focus on fine pointers, tap on
+ * touch). Words are split at build time so they can cascade in with pure CSS
+ * (see "intent" rules in global.css). The text is always in the DOM — screen
+ * readers and search engines read it; without JS it is simply visible.
+ */
+interface Props {
+  text: string;
+  id?: string;
+  class?: string;
+}
+const { text, id, class: className = '' } = Astro.props;
+const words = text.split(/\s+/).filter(Boolean);
+---
+
+<div class:list={['hint-wrap', className]} id={id}>
+  <p class="hint">
+    {
+      words.map((w, i) => (
+        <>
+          <span class="w" style={`--w:${i}`}>
+            {w}
+          </span>{' '}
+        </>
+      ))
+    }
+  </p>
+</div>

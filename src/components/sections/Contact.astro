@@ -1,0 +1,205 @@
+---
+/**
+ * Contact — the four mandatory actions (WhatsApp, LinkedIn, GitHub, CV) as
+ * semantic links styled as large "keys", plus email as a complement.
+ * Desktop: four in a row. Mobile: 2×2 grid with ≥ 48px targets.
+ * Works without JS; only "copy email" is an enhancement.
+ */
+import { ArrowUpRight, Download, Copy } from '@lucide/astro';
+import Section from '@/components/ui/Section.astro';
+import { contact } from '@/data/home';
+import { contactActions, profile } from '@/data/profile';
+import { ui, t, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<Section lang={lang} section="contact" title={t(contact.title, lang)} intro={t(contact.body, lang)} headClass="contact-head">
+  <div class="frame">
+    <ul class="keys" role="list">
+      {
+        contactActions.map((a, i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <a
+              class="key spot"
+              data-contact={a.key}
+              href={a.href}
+              {...(a.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              {...(a.download ? { download: a.download, type: 'application/pdf' } : {})}
+            >
+              <span class="glyph mono" aria-hidden="true">
+                {a.glyph}
+              </span>
+              <span class="txt">
+                <span class="kl">{t(a.label, lang)}</span>
+                <span class="kd mono">{t(a.detail, lang)}</span>
+              </span>
+              {a.download ? (
+                <Download class="ico" size={20} stroke-width={1.6} aria-hidden="true" />
+              ) : (
+                <ArrowUpRight class="ico" size={20} stroke-width={1.6} aria-hidden="true" />
+              )}
+              {a.external && <span class="sr-only"> {t(ui.newTab, lang)}</span>}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="email">
+      <span class="label">{t(contact.emailLabel, lang)}</span>
+      <a class="addr link" href={`mailto:${profile.email}`}>{profile.email}</a>
+      <button
+        type="button"
+        class="copy"
+        data-copy={profile.email}
+        data-ok={t(ui.copied, lang)}
+        data-fail={t(ui.copyFailed, lang)}
+        data-needs-js
+      >
+        <Copy size={16} stroke-width={1.6} aria-hidden="true" />
+        <span>{t(ui.copyEmail, lang)}</span>
+      </button>
+      <span class="status mono" role="status" data-copy-status></span>
+    </div>
+  </div>
+</Section>
+
+<style>
+  :global(.contact-head .title) {
+    font-size: var(--step-display);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+  }
+  .keys {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  @media (min-width: 64rem) {
+    .keys {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+  .key {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    gap: 1.25rem 0.75rem;
+    height: 100%;
+    min-height: 9rem;
+    padding: 1rem;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-l);
+    background: var(--c-bg-raised);
+    transition:
+      border-color var(--dur-1) linear,
+      background-color var(--dur-2) var(--ease-out),
+      transform var(--dur-1) var(--ease-out);
+  }
+  @media (min-width: 48rem) {
+    .key {
+      min-height: 11rem;
+      padding: 1.4rem;
+    }
+  }
+  .glyph {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--c-line-strong);
+    border-bottom-width: 3px;
+    border-radius: var(--radius-m);
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: transform var(--dur-1) var(--ease-out), border-color var(--dur-1) linear, color var(--dur-1) linear;
+  }
+  .txt {
+    grid-column: 1 / -1;
+    align-self: end;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .kl {
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .kd {
+    color: var(--c-fg-subtle);
+    font-size: 0.72rem;
+  }
+  .key :global(.ico) {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: var(--c-fg-subtle);
+    transition: transform var(--dur-2) var(--ease-out), color var(--dur-1) linear;
+  }
+  .key:hover,
+  .key:focus-visible {
+    border-color: var(--c-signal);
+  }
+  .key:hover .glyph,
+  .key:focus-visible .glyph {
+    border-color: var(--c-signal);
+    color: var(--c-signal);
+    transform: translateY(1px);
+    border-bottom-width: 2px;
+  }
+  .key:hover :global(.ico),
+  .key:focus-visible :global(.ico) {
+    color: var(--c-signal);
+    transform: translate(2px, -2px);
+  }
+  .key[data-contact='cv']:hover :global(.ico),
+  .key[data-contact='cv']:focus-visible :global(.ico) {
+    transform: translateY(2px);
+  }
+  .key:active {
+    transform: scale(0.985);
+  }
+
+  .email {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.25rem;
+    margin-top: 2rem;
+  }
+  .addr {
+    font-size: var(--step-1);
+    overflow-wrap: anywhere;
+  }
+  .copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    padding-inline: 0.75rem;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-m);
+    color: var(--c-fg-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color var(--dur-1) linear, border-color var(--dur-1) linear;
+  }
+  .copy:hover {
+    color: var(--c-fg);
+    border-color: var(--c-line-strong);
+  }
+  .copy[data-state='done'] {
+    color: var(--c-signal);
+    border-color: var(--c-signal);
+  }
+  .status {
+    color: var(--c-signal);
+    min-width: 1px;
+  }
+</style>

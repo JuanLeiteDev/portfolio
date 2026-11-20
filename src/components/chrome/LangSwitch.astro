@@ -1,0 +1,80 @@
+---
+/**
+ * Language switch — plain links, works without JS (doc 03 §2).
+ * On the home page main.ts rewrites the hash so the reader lands on the
+ * equivalent section in the other language.
+ */
+import { LANGS, htmlLang, ui, t, type L, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+  paths: L;
+  class?: string;
+}
+const { lang, paths, class: className = '' } = Astro.props;
+---
+
+<div class:list={["lang-switch mono", className]} role="group" aria-label={t(ui.langSwitch, lang)}>
+  {
+    LANGS.map((l, i) => (
+      <>
+        {i > 0 && (
+          <span class="sep" aria-hidden="true">
+            /
+          </span>
+        )}
+        {l === lang ? (
+          <span class="opt is-current" aria-current="true" lang={htmlLang[l]}>
+            <span aria-hidden="true">{l.toUpperCase()}</span>
+            <span class="sr-only">
+              {t(ui.langCurrent, lang)}: {t(ui.langName, l)}
+            </span>
+          </span>
+        ) : (
+          <a class="opt" href={paths[l]} hreflang={htmlLang[l]} lang={htmlLang[l]} data-lang-link={l}>
+            <span aria-hidden="true">{l.toUpperCase()}</span>
+            <span class="sr-only">{t(ui.langName, l)}</span>
+          </a>
+        )}
+      </>
+    ))
+  }
+</div>
+
+<style>
+  .lang-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    color: var(--c-fg-subtle);
+  }
+  .opt {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    border-radius: var(--radius-m);
+    transition: color var(--dur-1) linear, background-color var(--dur-1) linear;
+  }
+  a.opt:hover {
+    color: var(--c-fg);
+    background: var(--c-bg-raised);
+  }
+  .is-current {
+    color: var(--c-fg);
+    position: relative;
+  }
+  .is-current::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0.55rem;
+    width: 0.9rem;
+    height: 2px;
+    translate: -50% 0;
+    background: var(--c-signal);
+  }
+  .sep {
+    opacity: 0.5;
+  }
+</style>

@@ -1,0 +1,209 @@
+---
+/**
+ * Project index — name + tagline + stack visible; the one-line summary
+ * cascades in on hover/focus (desktop). On touch the row stays compact and
+ * a tap opens the case study. Each row is a single link.
+ */
+import Section from '@/components/ui/Section.astro';
+import Hint from '@/components/ui/Hint.astro';
+import { Image } from 'astro:assets';
+import { projectsSection } from '@/data/home';
+import { projects, kindLabel } from '@/data/projects';
+import { routes, t, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<Section lang={lang} section="projects" title={t(projectsSection.title, lang)}>
+  <div class="frame">
+    <ol class="rows" role="list">
+      {
+        projects.map((p, i) => (
+          <li data-intent data-reveal style={`--i:${i}`}>
+            <a class="row" data-follow href={routes.project(p.slug)[lang]}>
+              <span class="n mono num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span class="main">
+                <span class="name">{t(p.name, lang)}</span>
+                <span class="tagline">{t(p.tagline, lang)}</span>
+              </span>
+              <Hint text={t(p.summary, lang)} class="summary" />
+              <span class="meta mono">
+                <span class="kind">{t(kindLabel[p.kind], lang)}</span>
+                <span class="stack">{p.stack.slice(0, 3).join(' · ')}</span>
+                <span class="year num">{p.year}</span>
+              </span>
+              <span class="go" aria-hidden="true">
+                →
+              </span>
+              {p.media?.[0] && (
+                <span class="preview" aria-hidden="true">
+                  <Image src={p.media[0].src} alt="" width={520} loading="lazy" decoding="async" format="webp" />
+                </span>
+              )}
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</Section>
+
+<style>
+  .rows {
+    border-top: 1px solid var(--c-line-strong);
+  }
+  .rows li {
+    border-bottom: 1px solid var(--c-line);
+  }
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'n main go'
+      'n meta meta';
+    gap: 0.6rem 0.75rem;
+    padding: 1.35rem 0.25rem;
+    transition: background-color var(--dur-2) var(--ease-out);
+  }
+  .n {
+    grid-area: n;
+    color: var(--c-fg-subtle);
+    padding-top: 0.55rem;
+  }
+  .main {
+    grid-area: main;
+    display: grid;
+    gap: 0.2rem;
+  }
+  .name {
+    font-size: var(--step-3);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    transition: color var(--dur-1) linear;
+  }
+  .tagline {
+    color: var(--c-fg-muted);
+  }
+  .row :global(.summary) {
+    display: none;
+  }
+  .meta {
+    grid-area: meta;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    color: var(--c-fg-subtle);
+  }
+  .kind {
+    color: var(--c-signal);
+  }
+  .go {
+    grid-area: go;
+    align-self: center;
+    font-family: var(--font-mono);
+    font-size: var(--step-1);
+    color: var(--c-fg-subtle);
+    transition: transform var(--dur-2) var(--ease-out), color var(--dur-1) linear;
+  }
+  .row::before {
+    content: '';
+    position: absolute;
+    inset-block: -1px;
+    inset-inline-start: 0;
+    width: 2px;
+    background: var(--c-signal);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .row:is(:hover, :focus-visible)::before {
+    transform: scaleY(1);
+  }
+  .row:is(:hover, :focus-visible) .go {
+    transform: translateX(6px);
+    color: var(--c-signal);
+  }
+  .row:is(:hover, :focus-visible) .name {
+    color: var(--c-signal);
+  }
+  .row:focus-visible {
+    outline-offset: -2px;
+  }
+
+  /* floating screenshot preview, follows the cursor (desktop only) */
+  .preview {
+    display: none;
+  }
+  @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
+    .preview {
+      position: absolute;
+      z-index: 5;
+      left: var(--mx, 50%);
+      top: var(--my, 50%);
+      display: block;
+      width: 22rem;
+      translate: -50% calc(-100% - 1.25rem);
+      opacity: 0;
+      scale: 0.92;
+      rotate: -2deg;
+      pointer-events: none;
+      border: 1px solid var(--c-line-strong);
+      border-radius: var(--radius-m);
+      overflow: hidden;
+      box-shadow: var(--shadow-pop);
+      transition:
+        opacity var(--dur-2) var(--ease-out),
+        scale var(--dur-3) var(--ease-out),
+        rotate var(--dur-3) var(--ease-out);
+    }
+    .preview :global(img) {
+      width: 100%;
+      height: auto;
+    }
+    .row:hover .preview {
+      opacity: 1;
+      scale: 1;
+      rotate: 0deg;
+    }
+  }
+
+  /* desktop: name | (reserved) summary | meta | arrow */
+  @media (min-width: 64rem) {
+    .row {
+      grid-template-columns: 3rem minmax(0, 1.25fr) minmax(0, 1fr) 13rem 2.5rem;
+      grid-template-areas: 'n main summary meta go';
+      column-gap: 2rem;
+      align-items: center;
+      padding: 2rem 0.75rem;
+    }
+    .n {
+      padding-top: 0;
+    }
+    .name {
+      font-size: var(--step-2);
+    }
+    .row :global(.summary) {
+      display: block;
+      grid-area: summary;
+    }
+    .meta {
+      display: grid;
+      gap: 0.15rem;
+      justify-items: end;
+      text-align: end;
+    }
+    .go {
+      justify-self: end;
+    }
+    .row:hover {
+      background: var(--c-bg-raised);
+    }
+  }
+</style>

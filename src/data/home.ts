@@ -1,0 +1,336 @@
+import type { L } from '@/i18n';
+
+/**
+ * Editorial content for the home page.
+ * Sources: docs/01-identidade-profissional.md, docs/cv.pdf.
+ *
+ * Content model (revised after Juan's review, 20/11/2026): little text on
+ * screen. Every item has a short visible keyword/title and, at most, a
+ * one-line summary (`hint`) that is revealed on hover/focus (desktop) or tap
+ * (touch). Depth lives in the case-study pages.
+ * Every number shown is a documented fact; nothing is decorative.
+ */
+
+/* ------------------------------------------------------------------- hero */
+
+export const hero = {
+  eyebrow: {
+    pt: 'Software Engineering & Intelligent Automation',
+    en: 'Software Engineering & Intelligent Automation',
+  },
+  statement: {
+    pt: 'Transformo problemas em software útil.',
+    en: 'I turn problems into useful software.',
+  },
+  keywords: [
+    { pt: 'Python', en: 'Python' },
+    { pt: 'Automação', en: 'Automation' },
+    { pt: 'IA aplicada', en: 'Applied AI' },
+  ] satisfies L[],
+  ctaPrimary: { pt: 'Ver projetos', en: 'See projects' },
+  ctaSecondary: { pt: 'Contactar', en: 'Get in touch' },
+  meta: [
+    { k: { pt: 'base', en: 'based' }, v: { pt: 'Barcelos, PT', en: 'Barcelos, PT' } },
+    { k: { pt: 'estudo', en: 'study' }, v: { pt: 'Eng. Sistemas Informáticos · IPCA', en: 'Computer Systems Eng. · IPCA' } },
+    { k: { pt: 'agora', en: 'now' }, v: { pt: 'Suporte técnico N1 · Eleven Systems', en: 'L1 tech support · Eleven Systems' } },
+  ] satisfies { k: L; v: L }[],
+  photoAlt: {
+    pt: 'Retrato de Juan Leite, de camisa azul-escura, a sorrir.',
+    en: 'Portrait of Juan Leite in a dark blue shirt, smiling.',
+  },
+};
+
+/* ----------------------------------------------------------------- impact */
+
+export interface RevealItem {
+  tag?: L;
+  title: L;
+  hint: L;
+  projectSlug?: string;
+}
+
+export const impact = {
+  title: { pt: 'Impacto real.', en: 'Real impact.' },
+  anchor: {
+    label: { pt: 'Analisador de logs', en: 'Log analyser' },
+    where: { pt: 'Python · Eleven Systems · 2026', en: 'Python · Eleven Systems · 2026' },
+    stats: [
+      { value: 10000, suffix: '+', unit: { pt: 'ficheiros', en: 'files' } },
+      { value: 5000000, suffix: '', unit: { pt: 'linhas', en: 'lines' } },
+    ],
+    timing: { pt: 'processados em minutos', en: 'processed in minutes' },
+  },
+  cases: [
+    {
+      tag: { pt: 'sistemas', en: 'systems' },
+      title: { pt: 'Falha em produção', en: 'Production failure' },
+      hint: {
+        pt: 'Crashes rastreados até ao armazenamento cheio — e resolvidos.',
+        en: 'Crashes traced to full storage — and fixed.',
+      },
+    },
+    {
+      tag: { pt: 'automação', en: 'automation' },
+      title: { pt: 'Processos web internos', en: 'Internal web processes' },
+      hint: {
+        pt: 'Formulários e tarefas repetitivas automatizados em Python.',
+        en: 'Forms and repetitive tasks automated in Python.',
+      },
+    },
+    {
+      tag: { pt: 'desktop', en: 'desktop' },
+      title: { pt: 'XI.Repair', en: 'XI.Repair' },
+      hint: {
+        pt: 'Reparações de equipamentos: do papel para uma app offline.',
+        en: 'Equipment repairs: from paper to an offline app.',
+      },
+      projectSlug: 'xi-repair',
+    },
+  ] satisfies RevealItem[],
+};
+
+/* --------------------------------------------------------------- projects */
+
+export const projectsSection = {
+  title: { pt: 'Projetos.', en: 'Projects.' },
+  hover: { pt: 'passe o cursor para o resumo', en: 'hover for a summary' },
+};
+
+/* --------------------------------------------------------------- approach */
+
+export const approach = {
+  title: { pt: 'Como trabalho.', en: 'How I work.' },
+  steps: [
+    {
+      title: { pt: 'Compreender', en: 'Understand' },
+      hint: { pt: 'O problema primeiro, a tecnologia depois.', en: 'The problem first, technology second.' },
+    },
+    {
+      title: { pt: 'Diagnosticar', en: 'Diagnose' },
+      hint: { pt: 'Causas com dados: logs, sistema, hardware.', en: 'Causes backed by data: logs, system, hardware.' },
+    },
+    {
+      title: { pt: 'Conceber', en: 'Design' },
+      hint: { pt: 'A solução mais simples que resolve.', en: 'The simplest solution that works.' },
+    },
+    {
+      title: { pt: 'Construir', en: 'Build' },
+      hint: { pt: 'Automatizar o repetitivo, código sustentável.', en: 'Automate the repetitive, keep code maintainable.' },
+    },
+    {
+      title: { pt: 'Verificar', en: 'Verify' },
+      hint: { pt: 'Testado e revisto no contexto real.', en: 'Tested and reviewed in the real context.' },
+    },
+  ] satisfies RevealItem[],
+  ai: {
+    title: { pt: 'IA como ferramenta de engenharia', en: 'AI as an engineering tool' },
+    practices: [
+      {
+        title: { pt: 'Contexto', en: 'Context' },
+        hint: { pt: 'Objetivos e restrições antes do código.', en: 'Goals and constraints before code.' },
+      },
+      {
+        title: { pt: 'Agentes', en: 'Agents' },
+        hint: { pt: 'Tarefas decompostas e distribuídas.', en: 'Work broken down and delegated.' },
+      },
+      {
+        title: { pt: 'Revisão', en: 'Review' },
+        hint: { pt: 'Propostas avaliadas, código revisto.', en: 'Proposals evaluated, code reviewed.' },
+      },
+      {
+        title: { pt: 'Testes', en: 'Tests' },
+        hint: { pt: 'Validado — e com responsabilidade minha.', en: 'Validated — and owned by me.' },
+      },
+    ] satisfies RevealItem[],
+  },
+};
+
+/* ----------------------------------------------------------------- skills */
+
+/** Where a skill is evidenced (doc 01 §6: keep these distinct). */
+export type Evidence = 'work' | 'project' | 'academic' | 'learning' | 'practice';
+
+export const evidenceLabel: Record<Evidence, L> = {
+  work: { pt: 'profissional', en: 'professional' },
+  project: { pt: 'projeto', en: 'project' },
+  academic: { pt: 'académico', en: 'academic' },
+  learning: { pt: 'fundamentos', en: 'fundamentals' },
+  practice: { pt: 'prática declarada', en: 'stated practice' },
+};
+
+export interface SkillArea {
+  id: string;
+  title: L;
+  hint: L;
+  items: { name: string | L; ev: Evidence }[];
+}
+
+export const skills = {
+  title: { pt: 'Competências.', en: 'Skills.' },
+  legend: { pt: 'Legenda', en: 'Legend' },
+  areas: [
+    {
+      id: 'software',
+      title: { pt: 'Software', en: 'Software' },
+      hint: { pt: 'Ferramentas internas, desktop, web e APIs.', en: 'Internal tools, desktop, web and APIs.' },
+      items: [
+        { name: 'Python', ev: 'work' },
+        { name: 'Qt', ev: 'work' },
+        { name: 'SQLite', ev: 'work' },
+        { name: 'C', ev: 'academic' },
+        { name: 'C#', ev: 'learning' },
+        { name: 'HTML · CSS · JS', ev: 'learning' },
+      ],
+    },
+    {
+      id: 'automation',
+      title: { pt: 'Automação', en: 'Automation' },
+      hint: { pt: 'Do trabalho manual a ferramentas.', en: 'From manual work to tools.' },
+      items: [
+        { name: { pt: 'Scripts Python', en: 'Python scripts' }, ev: 'work' },
+        { name: { pt: 'Plataformas web', en: 'Web platforms' }, ev: 'work' },
+        { name: 'Word · Excel', ev: 'work' },
+      ],
+    },
+    {
+      id: 'ai',
+      title: { pt: 'IA aplicada', en: 'Applied AI' },
+      hint: { pt: 'Agentes de código, com revisão e testes.', en: 'Coding agents, with review and tests.' },
+      items: [
+        { name: { pt: 'Prompts & contexto', en: 'Prompts & context' }, ev: 'practice' },
+        { name: { pt: 'Agentes de código', en: 'Coding agents' }, ev: 'practice' },
+        { name: { pt: 'Multiagente', en: 'Multi-agent' }, ev: 'practice' },
+      ],
+    },
+    {
+      id: 'systems',
+      title: { pt: 'Sistemas', en: 'Systems' },
+      hint: { pt: 'Incidentes, logs e causas na raiz.', en: 'Incidents, logs and root causes.' },
+      items: [
+        { name: 'Windows', ev: 'work' },
+        { name: 'Linux', ev: 'academic' },
+        { name: 'Android', ev: 'work' },
+        { name: { pt: 'Análise de logs', en: 'Log analysis' }, ev: 'work' },
+      ],
+    },
+    {
+      id: 'backend',
+      title: { pt: 'Backend & dados', en: 'Backend & data' },
+      hint: { pt: 'APIs, autenticação e modelação relacional.', en: 'APIs, authentication and relational modelling.' },
+      items: [
+        { name: 'FastAPI', ev: 'work' },
+        { name: 'SQLAlchemy', ev: 'work' },
+        { name: 'Pydantic', ev: 'work' },
+        { name: 'Alembic', ev: 'work' },
+        { name: 'PostgreSQL', ev: 'work' },
+        { name: 'Redis', ev: 'work' },
+        { name: 'MinIO', ev: 'work' },
+        { name: 'SQL', ev: 'learning' },
+      ],
+    },
+    {
+      id: 'tooling',
+      title: { pt: 'Qualidade', en: 'Quality' },
+      hint: { pt: 'Testes, lint, versões e contentores.', en: 'Tests, linting, versioning and containers.' },
+      items: [
+        { name: 'pytest', ev: 'work' },
+        { name: 'Ruff', ev: 'project' },
+        { name: 'uv', ev: 'project' },
+        { name: 'Git', ev: 'project' },
+        { name: 'Docker', ev: 'work' },
+      ],
+    },
+  ] satisfies SkillArea[],
+};
+
+/* ---------------------------------------------------------------- journey */
+
+export interface JourneyEntry {
+  period: L;
+  title: L;
+  org: L;
+  /** One-line detail revealed on hover/tap. */
+  hint?: L;
+  upcoming?: boolean;
+}
+
+export const journey = {
+  title: { pt: 'Percurso.', en: 'Journey.' },
+  experienceLabel: { pt: 'Experiência', en: 'Experience' },
+  educationLabel: { pt: 'Formação', en: 'Education' },
+  experience: [
+    {
+      period: { pt: '2027', en: '2027' },
+      title: { pt: 'Erasmus · Bélgica', en: 'Erasmus · Belgium' },
+      org: { pt: '5 meses', en: '5 months' },
+      hint: { pt: 'Licenciatura + inglês.', en: 'Degree + English.' },
+      upcoming: true,
+    },
+    {
+      period: { pt: '2026', en: '2026' },
+      title: { pt: 'Suporte Técnico N1', en: 'L1 Technical Support' },
+      org: { pt: 'Eleven Systems · Braga', en: 'Eleven Systems · Braga' },
+      hint: {
+        pt: 'Incidentes de software e hardware; ferramentas internas em Python.',
+        en: 'Software and hardware incidents; internal Python tools.',
+      },
+    },
+  ] satisfies JourneyEntry[],
+  education: [
+    {
+      period: { pt: '2025—28', en: '2025—28' },
+      title: { pt: 'Eng. de Sistemas Informáticos', en: 'Computer Systems Engineering' },
+      org: { pt: 'IPCA · licenciatura em curso', en: 'IPCA · BSc in progress' },
+      hint: { pt: 'Programação, bases de dados, sistemas operativos.', en: 'Programming, databases, operating systems.' },
+    },
+    {
+      period: { pt: '2022—25', en: '2022—25' },
+      title: { pt: 'Eletrotecnia', en: 'Electrical Engineering' },
+      org: { pt: 'Curso profissional · 18/20 · PAP 20/20', en: 'Vocational diploma · 18/20 · final project 20/20' },
+      hint: { pt: 'A base do raciocínio técnico.', en: 'Where technical reasoning started.' },
+    },
+  ] satisfies JourneyEntry[],
+  courses: {
+    label: { pt: 'Formação complementar', en: 'Additional courses' },
+    items: [
+      { name: 'HTML5 & CSS3', by: 'Curso em Vídeo', hours: 200, year: 2026 },
+      { name: 'Python 3+ POO', by: 'Udemy · Luiz Miranda', hours: 140, year: 2026 },
+      { name: 'Python', by: 'Curso em Vídeo', hours: 160, year: 2026 },
+      { name: { pt: 'Algoritmos', en: 'Algorithms' }, by: 'Curso em Vídeo', hours: 40, year: 2023 },
+    ] satisfies { name: string | L; by: string; hours: number; year: number }[],
+  },
+  languages: {
+    label: { pt: 'Idiomas', en: 'Languages' },
+    items: [
+      { name: { pt: 'Português', en: 'Portuguese' }, level: { pt: 'nativo', en: 'native' } },
+      {
+        name: { pt: 'Inglês', en: 'English' },
+        level: {
+          pt: 'leitura avançada · oral em desenvolvimento',
+          en: 'advanced reading · spoken in progress',
+        },
+      },
+    ] satisfies { name: L; level: L }[],
+  },
+};
+
+/* ---------------------------------------------------------------- contact */
+
+export const contact = {
+  title: { pt: 'Vamos falar.', en: "Let's talk." },
+  body: {
+    pt: 'Aberto a oportunidades em software e automação.',
+    en: 'Open to software and automation opportunities.',
+  },
+  emailLabel: { pt: 'email', en: 'email' },
+};
+
+/* --------------------------------------------------------------- colophon */
+
+export const colophon = {
+  built: {
+    pt: 'Desenhado e construído do zero com Astro, TypeScript e React.',
+    en: 'Designed and built from scratch with Astro, TypeScript and React.',
+  },
+  rights: { pt: 'Todos os direitos reservados.', en: 'All rights reserved.' },
+};
