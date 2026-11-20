@@ -36,9 +36,6 @@ const headingId = `${id}-title`;
   {
     title && (
       <header class:list={['section-head frame', headClass]} data-reveal>
-        <span class="ghost-n num" aria-hidden="true">
-          {index}
-        </span>
         <div class="meta" aria-hidden="true">
           <span class="idx mono num" data-scramble>
             §{index} / {label.toLowerCase()}
@@ -91,30 +88,6 @@ const headingId = `${id}-title`;
     }
     .meta .ruler {
       transition: transform 1.1s var(--ease-out) 0.15s;
-    }
-  }
-  /* monumental outlined index behind the title */
-  .ghost-n {
-    position: absolute;
-    z-index: -1;
-    inset-inline-end: var(--gutter);
-    bottom: -0.04em;
-    font-size: clamp(5rem, 2rem + 9vw, 11.5rem);
-    font-weight: 700;
-    line-height: 0.8;
-    letter-spacing: -0.06em;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--c-line-strong);
-    user-select: none;
-    pointer-events: none;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    :global(:root.js) .section-head:not(.is-in) .ghost-n {
-      opacity: 0;
-      transform: translateY(0.08em);
-    }
-    .ghost-n {
-      transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out);
     }
   }
   .title {

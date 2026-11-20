@@ -29,6 +29,8 @@ export const hero = {
   ] satisfies L[],
   ctaPrimary: { pt: 'Ver projetos', en: 'See projects' },
   ctaSecondary: { pt: 'Vamos falar', en: "Let's talk" },
+  /** Live local time in the hero metadata (useful for remote-work contacts). */
+  clockLabel: { pt: 'hora local', en: 'local time' },
   meta: [
     { k: { pt: 'base', en: 'based' }, v: { pt: 'Barcelos, PT', en: 'Barcelos, PT' } },
     { k: { pt: 'estudo', en: 'study' }, v: { pt: 'Eng. Sistemas Informáticos · UPCA', en: 'Computer Systems Eng. · UPCA' } },
@@ -67,6 +69,7 @@ export const projectsSection = {
     label: { pt: 'código', en: 'code' },
     public: { pt: 'GitHub', en: 'GitHub' },
     private: { pt: 'privado', en: 'private' },
+    ongoing: { pt: 'em desenvolvimento', en: 'in development' },
   },
 };
 
@@ -202,6 +205,8 @@ export interface JourneyEntry {
   hint?: L;
   /** Short facts shown under the entry (former "Impact" cases without a case study). */
   points?: L<string[]>;
+  /** Technologies used in this role, as evidenced by its projects. */
+  tags?: string[];
   upcoming?: boolean;
 }
 
@@ -238,6 +243,7 @@ export const journey = {
           'Automated form filling and repetitive tasks on an internal web platform with Python.',
         ],
       },
+      tags: ['Python', 'FastAPI', 'PostgreSQL', 'Qt', 'SQLite', 'Streamlit', 'Docker'],
     },
   ] satisfies JourneyEntry[],
   education: [

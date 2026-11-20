@@ -93,6 +93,12 @@ const code = projectsSection.code;
               <Hint text={t(p.summary, lang)} class="summary" />
               <span class="meta mono">
                 <span class="kind">{t(kindLabel[p.kind], lang)}</span>
+                {p.ongoing && (
+                  <span class="ongoing">
+                    <span class="pulse" aria-hidden="true" />
+                    {t(code.ongoing, lang)}
+                  </span>
+                )}
                 <span class="stack">{p.stack.slice(0, 3).join(' · ')}</span>
                 <span class="year num">{p.year}</span>
               </span>
@@ -405,6 +411,41 @@ const code = projectsSection.code;
     }
     .row:hover {
       background: var(--c-bg-raised);
+    }
+  }
+
+  /* live status for projects still in development */
+  .ongoing {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--c-fg-muted);
+  }
+  .pulse {
+    position: relative;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--c-signal);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .pulse::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--c-signal);
+      animation: pulse 2s var(--ease-out) infinite;
+    }
+  }
+  @keyframes pulse {
+    from {
+      opacity: 0.7;
+      scale: 1;
+    }
+    to {
+      opacity: 0;
+      scale: 3;
     }
   }
 </style>

@@ -3,7 +3,7 @@
  * Every feature is optional: the HTML is complete and usable without it.
  */
 import { decode, scrambleMono } from './decode';
-import { countUp } from './counters';
+import { countUp, primeCount } from './counters';
 import { applyTheme, currentTheme, toggleTheme } from './theme';
 
 const root = document.documentElement;
@@ -86,7 +86,10 @@ onceVisible(Array.from(document.querySelectorAll('[data-reveal]')), (el) => el.c
 if (!reduce.matches) {
   document.querySelectorAll<HTMLElement>('[data-decode]').forEach((el) => void decode(el));
   onceVisible(Array.from(document.querySelectorAll('[data-scramble]')), (el) => scrambleMono(el));
-  onceVisible(Array.from(document.querySelectorAll('[data-count]')), (el) => countUp(el), '0px 0px -20% 0px');
+  // same trigger as the reveal of the card, so the count starts as it appears
+  const counters = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
+  counters.forEach(primeCount);
+  onceVisible(counters, (el) => countUp(el));
 }
 
 /* ------------------------------------------------- portrait effect (lazy) */
@@ -180,3 +183,43 @@ document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
     }, 2200);
   });
 });
+
+/* ---------------------------------------------------- live local time */
+
+const clock = document.querySelector<HTMLTimeElement>('[data-clock]');
+const clockRow = document.querySelector<HTMLElement>('[data-clock-row]');
+if (clock && clockRow) {
+  const fmt = new Intl.DateTimeFormat(clock.dataset.locale ?? 'pt-PT', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: clock.dataset.tz ?? 'Europe/Lisbon',
+    timeZoneName: 'shortOffset',
+  });
+  const tick = () => {
+    const now = new Date();
+    clock.textContent = fmt.format(now);
+    clock.dateTime = now.toISOString();
+  };
+  tick();
+  clockRow.hidden = false;
+  window.setInterval(tick, 30_000);
+}
+
+/* ------------------------------------- case study: "on this page" spy */
+
+const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+if (tocLinks.length) {
+  const byId = new Map(tocLinks.map((a) => [a.dataset.tocLink ?? '', a]));
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        const id = (e.target as HTMLElement).querySelector('h2')?.id ?? '';
+        tocLinks.forEach((a) => a.removeAttribute('aria-current'));
+        byId.get(id)?.setAttribute('aria-current', 'true');
+      }
+    },
+    { rootMargin: '-30% 0px -60% 0px' },
+  );
+  document.querySelectorAll('.block').forEach((b) => io.observe(b));
+}

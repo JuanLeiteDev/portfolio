@@ -124,3 +124,12 @@ test('project pages: back link returns to the project index', async ({ page }) =
   await page.getByRole('link', { name: 'Back to projects' }).click();
   await expect(page).toHaveURL(/\/en\/#projects$/);
 });
+
+test('counters start from 0 when the card appears (no final value flashing first)', async ({ page }) => {
+  await page.goto('/');
+  const live = page.locator('.count-live').first();
+  // below the fold: primed to 0 while the card is still hidden
+  await expect(live).toHaveText(/^0\+?$/);
+  await page.locator('.count').first().scrollIntoViewIfNeeded();
+  await expect(live).toHaveText(/10\s?000\+/, { timeout: 4000 });
+});
