@@ -3,7 +3,7 @@
  * Every feature is optional: the HTML is complete and usable without it.
  */
 import { decode, scrambleMono } from './decode';
-import { countUp } from './counters';
+import { countUp, primeCount } from './counters';
 import { applyTheme, currentTheme, toggleTheme } from './theme';
 
 const root = document.documentElement;
@@ -86,7 +86,10 @@ onceVisible(Array.from(document.querySelectorAll('[data-reveal]')), (el) => el.c
 if (!reduce.matches) {
   document.querySelectorAll<HTMLElement>('[data-decode]').forEach((el) => void decode(el));
   onceVisible(Array.from(document.querySelectorAll('[data-scramble]')), (el) => scrambleMono(el));
-  onceVisible(Array.from(document.querySelectorAll('[data-count]')), (el) => countUp(el), '0px 0px -20% 0px');
+  // same trigger as the reveal of the card, so the count starts as it appears
+  const counters = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
+  counters.forEach(primeCount);
+  onceVisible(counters, (el) => countUp(el));
 }
 
 /* ------------------------------------------------- portrait effect (lazy) */
