@@ -3,19 +3,20 @@
  * Section wrapper + indexed header ("§02 / projetos").
  * Data attributes feed the rail/dock tracker and the language-switch hash.
  */
-import { sectionIds, sectionLabels, sectionOrder, otherLang, t, type Lang, type SectionKey } from '@/i18n';
+import { legacyIds, sectionIds, sectionLabels, sectionOrder, otherLang, t, type Lang, type SectionKey } from '@/i18n';
 
 interface Props {
   lang: Lang;
   section: SectionKey;
   title?: string;
   intro?: string;
-  /** Extra ids kept for old-site anchors (e.g. #skills). */
+  /** Extra ids kept for old anchors (merged with `legacyIds`). */
   aliases?: string[];
   class?: string;
   headClass?: string;
 }
-const { lang, section, title, intro, aliases = [], class: className = '', headClass = '' } = Astro.props;
+const { lang, section, title, intro, aliases: extra = [], class: className = '', headClass = '' } = Astro.props;
+const aliases = [...extra, ...(legacyIds[section]?.[lang] ?? [])];
 const index = String(sectionOrder.indexOf(section)).padStart(2, '0');
 const id = sectionIds[section][lang];
 const label = t(sectionLabels[section], lang);

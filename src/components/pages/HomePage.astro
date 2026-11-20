@@ -1,7 +1,6 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Hero from '@/components/sections/Hero.astro';
-import Impact from '@/components/sections/Impact.astro';
 import Projects from '@/components/sections/Projects.astro';
 import Approach from '@/components/sections/Approach.astro';
 import Skills from '@/components/sections/Skills.astro';
@@ -30,10 +29,9 @@ const meta = {
 
 <Base lang={lang} title={meta.title} description={meta.description} paths={routes.home} onHome>
   <Hero lang={lang} />
-  <Impact lang={lang} />
   <Projects lang={lang} />
-  <Approach lang={lang} />
-  <Skills lang={lang} />
   <Journey lang={lang} />
+  <Skills lang={lang} />
+  <Approach lang={lang} />
   <Contact lang={lang} />
 </Base>

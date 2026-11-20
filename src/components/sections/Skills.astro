@@ -18,7 +18,7 @@ const legend: Evidence[] = ['work', 'project', 'academic', 'learning', 'practice
 const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
 ---
 
-<Section lang={lang} section="skills" title={t(skills.title, lang)} aliases={lang === 'pt' ? ['skills'] : []}>
+<Section lang={lang} section="skills" title={t(skills.title, lang)}>
   <div class="frame">
     <p class="legend mono">
       <span class="sr-only">{t(skills.legend, lang)}:</span>

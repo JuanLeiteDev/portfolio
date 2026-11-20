@@ -40,88 +40,45 @@ export const hero = {
   },
 };
 
-/* ----------------------------------------------------------------- impact */
-
 export interface RevealItem {
-  tag?: L;
   title: L;
   hint: L;
-  projectSlug?: string;
 }
-
-export const impact = {
-  title: { pt: 'Impacto real.', en: 'Real impact.' },
-  anchor: {
-    label: { pt: 'Analisador de logs', en: 'Log analyser' },
-    where: { pt: 'Python · Eleven Systems · 2026', en: 'Python · Eleven Systems · 2026' },
-    stats: [
-      { value: 10000, suffix: '+', unit: { pt: 'ficheiros', en: 'files' } },
-      { value: 5000000, suffix: '', unit: { pt: 'linhas', en: 'lines' } },
-    ],
-    timing: { pt: 'processados em minutos', en: 'processed in minutes' },
-  },
-  cases: [
-    {
-      tag: { pt: 'sistemas', en: 'systems' },
-      title: { pt: 'Falha em produção', en: 'Production failure' },
-      hint: {
-        pt: 'Crashes rastreados até ao armazenamento cheio — e resolvidos.',
-        en: 'Crashes traced to full storage — and fixed.',
-      },
-    },
-    {
-      tag: { pt: 'automação', en: 'automation' },
-      title: { pt: 'Processos web internos', en: 'Internal web processes' },
-      hint: {
-        pt: 'Formulários e tarefas repetitivas automatizados em Python.',
-        en: 'Forms and repetitive tasks automated in Python.',
-      },
-    },
-    {
-      tag: { pt: 'desktop', en: 'desktop' },
-      title: { pt: 'XI.Repair', en: 'XI.Repair' },
-      hint: {
-        pt: 'Reparações de equipamentos: do papel para uma app offline.',
-        en: 'Equipment repairs: from paper to an offline app.',
-      },
-      projectSlug: 'xi-repair',
-    },
-  ] satisfies RevealItem[],
-};
 
 /* --------------------------------------------------------------- projects */
 
+/**
+ * Projects = the former "Impact" + "Projects" sections. The log analyser is
+ * the featured card (its two documented figures carry it); the other projects
+ * follow as rows.
+ */
 export const projectsSection = {
   title: { pt: 'Projetos.', en: 'Projects.' },
-  hover: { pt: 'passe o cursor para o resumo', en: 'hover for a summary' },
+  featured: {
+    slug: 'log-analyzer',
+    where: { pt: 'Python · Eleven Systems · 2026', en: 'Python · Eleven Systems · 2026' },
+    stats: [
+      { value: 10000, suffix: '+', unit: { pt: 'ficheiros', en: 'files' } },
+      { value: 5000000, suffix: '+', unit: { pt: 'linhas', en: 'lines' } },
+    ],
+    timing: { pt: 'processados em minutos', en: 'processed in minutes' },
+  },
+  code: {
+    label: { pt: 'código', en: 'code' },
+    public: { pt: 'GitHub', en: 'GitHub' },
+    private: { pt: 'privado', en: 'private' },
+  },
 };
 
 /* --------------------------------------------------------------- approach */
 
 export const approach = {
   title: { pt: 'Como trabalho.', en: 'How I work.' },
-  steps: [
-    {
-      title: { pt: 'Compreender', en: 'Understand' },
-      hint: { pt: 'O problema primeiro, a tecnologia depois.', en: 'The problem first, technology second.' },
-    },
-    {
-      title: { pt: 'Diagnosticar', en: 'Diagnose' },
-      hint: { pt: 'Causas com dados: logs, sistema, hardware.', en: 'Causes backed by data: logs, system, hardware.' },
-    },
-    {
-      title: { pt: 'Conceber', en: 'Design' },
-      hint: { pt: 'A solução mais simples que resolve.', en: 'The simplest solution that works.' },
-    },
-    {
-      title: { pt: 'Construir', en: 'Build' },
-      hint: { pt: 'Automatizar o repetitivo, código sustentável.', en: 'Automate the repetitive, keep code maintainable.' },
-    },
-    {
-      title: { pt: 'Verificar', en: 'Verify' },
-      hint: { pt: 'Testado e revisto no contexto real.', en: 'Tested and reviewed in the real context.' },
-    },
-  ] satisfies RevealItem[],
+  /** The former five-step pipeline, condensed into one line. */
+  intro: {
+    pt: 'Começo pelo problema, confirmo a causa com dados e escolho a solução mais simples que o resolve.',
+    en: 'I start from the problem, confirm the cause with data and pick the simplest solution that fixes it.',
+  },
   ai: {
     title: { pt: 'IA como ferramenta de engenharia', en: 'AI as an engineering tool' },
     practices: [
@@ -251,6 +208,8 @@ export interface JourneyEntry {
   org: L;
   /** One-line detail revealed on hover/tap. */
   hint?: L;
+  /** Short facts shown under the entry (former "Impact" cases without a case study). */
+  points?: L<string[]>;
   upcoming?: boolean;
 }
 
@@ -273,6 +232,16 @@ export const journey = {
       hint: {
         pt: 'Incidentes de software e hardware; ferramentas internas em Python.',
         en: 'Software and hardware incidents; internal Python tools.',
+      },
+      points: {
+        pt: [
+          'Diagnostiquei crashes em equipamentos em produção: a causa era o armazenamento cheio.',
+          'Automatizei em Python o preenchimento de formulários e tarefas repetitivas numa plataforma web interna.',
+        ],
+        en: [
+          'Traced crashes on production equipment to full storage, and fixed them.',
+          'Automated form filling and repetitive tasks on an internal web platform with Python.',
+        ],
       },
     },
   ] satisfies JourneyEntry[],

@@ -87,8 +87,8 @@ test.describe('mobile navigation', () => {
 
   test('dock shows the current section', async ({ page }) => {
     await page.goto('/');
-    await page.evaluate(() => document.getElementById('contato')?.scrollIntoView({ block: 'start', behavior: 'instant' }));
-    await expect(page.locator('[data-dock-n]')).toHaveText('06');
+    await page.evaluate(() => document.getElementById('contacto')?.scrollIntoView({ block: 'start', behavior: 'instant' }));
+    await expect(page.locator('[data-dock-n]')).toHaveText('05');
   });
 });
 

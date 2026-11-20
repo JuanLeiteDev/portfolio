@@ -25,38 +25,38 @@ export const routes = {
   project: (slug: string): L => ({ pt: `/projetos/${slug}/`, en: `/en/projects/${slug}/` }),
 };
 
-/** Anchor ids per language. Old-site PT anchors are kept where they map. */
+/** Anchor ids per language. */
 export const sectionIds = {
   about: { pt: 'sobre', en: 'about' },
-  impact: { pt: 'impacto', en: 'impact' },
   projects: { pt: 'projetos', en: 'projects' },
-  approach: { pt: 'abordagem', en: 'approach' },
-  skills: { pt: 'competencias', en: 'skills' },
   journey: { pt: 'percurso', en: 'journey' },
-  contact: { pt: 'contato', en: 'contact' },
+  skills: { pt: 'competencias', en: 'skills' },
+  approach: { pt: 'abordagem', en: 'approach' },
+  contact: { pt: 'contacto', en: 'contact' },
 } satisfies Record<string, L>;
+
+/**
+ * Retired anchors kept as invisible aliases so links already shared outside
+ * the site still land on the right section. Nothing on the site links to them.
+ */
+export const legacyIds: Partial<Record<SectionKey, L<string[]>>> = {
+  projects: { pt: ['impacto'], en: ['impact'] },
+  skills: { pt: ['skills'], en: [] },
+  contact: { pt: ['contato'], en: [] },
+};
 
 export type SectionKey = keyof typeof sectionIds;
 
 export const sectionLabels: Record<SectionKey, L> = {
   about: { pt: 'Início', en: 'Intro' },
-  impact: { pt: 'Impacto', en: 'Impact' },
   projects: { pt: 'Projetos', en: 'Projects' },
-  approach: { pt: 'Abordagem', en: 'Approach' },
-  skills: { pt: 'Competências', en: 'Skills' },
   journey: { pt: 'Percurso', en: 'Journey' },
+  skills: { pt: 'Competências', en: 'Skills' },
+  approach: { pt: 'Como trabalho', en: 'How I work' },
   contact: { pt: 'Contacto', en: 'Contact' },
 };
 
-export const sectionOrder: SectionKey[] = [
-  'about',
-  'impact',
-  'projects',
-  'approach',
-  'skills',
-  'journey',
-  'contact',
-];
+export const sectionOrder: SectionKey[] = ['about', 'projects', 'journey', 'skills', 'approach', 'contact'];
 
 export const sectionHref = (key: SectionKey, lang: Lang, onHome = true): string =>
   `${onHome ? '' : routes.home[lang]}#${sectionIds[key][lang]}`;

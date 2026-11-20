@@ -74,7 +74,7 @@ const H = {
   decisions: { pt: 'Decisões técnicas', en: 'Technical decisions' },
 } satisfies Record<string, L>;
 
-export const projects: Project[] = [
+const all: Project[] = [
   // Source: doc 01 §3–4 (most recent) + CV (context). Stack per doc 01.
   {
     slug: 'xi-repair',
@@ -539,5 +539,9 @@ export const projects: Project[] = [
     ],
   },
 ];
+
+/** Display order: the featured log analyser first, then by relevance. */
+const order = ['log-analyzer', 'xi-repair', 'xi-support', 'mini-shell', 'ps2'];
+export const projects: Project[] = order.map((slug) => all.find((p) => p.slug === slug)!);
 
 export const getProject = (slug: string): Project | undefined => projects.find((p) => p.slug === slug);
