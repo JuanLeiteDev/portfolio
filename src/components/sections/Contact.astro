@@ -3,11 +3,18 @@
  * Contact — the four mandatory actions (WhatsApp, LinkedIn, GitHub, CV) as
  * semantic links laid out as a list of rows, plus email as a complement.
  * Mobile: one column of rows (≥ 72px targets). From 48rem: two columns.
- * Works without JS; only "copy email" is an enhancement.
+ * Works without JS; "copy email" and the Stack frame are enhancements.
+ *
+ * Stack: a minimalist frame where the technologies, with their original
+ * logos, fall and pile up on the floor (stack-physics.ts). Press and drag
+ * moves an object and can throw the pile around; hovering does nothing.
+ * The objects are decorative (aria-hidden); assistive tech reads the list
+ * of names. Reduced motion: the objects rest in rows, nothing moves.
  */
-import { ArrowUpRight, Download, Copy } from '@lucide/astro';
+import { ArrowUpRight, Download, Copy, Database } from '@lucide/astro';
 import Section from '@/components/ui/Section.astro';
 import { contact } from '@/data/home';
+import { techLogos } from '@/data/tech-icons';
 import { contactActions, profile } from '@/data/profile';
 import { ui, t, type Lang } from '@/i18n';
 
@@ -15,6 +22,7 @@ interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
+const { stack } = contact;
 ---
 
 <Section lang={lang} section="contact" title={t(contact.title, lang)} intro={t(contact.body, lang)} headClass="contact-head">
@@ -64,6 +72,23 @@ const { lang } = Astro.props;
         <span>{t(ui.copyEmail, lang)}</span>
       </button>
       <span class="status mono" role="status" data-copy-status></span>
+    </div>
+
+    <div class="stackbox" data-stackbox data-needs-js data-reveal>
+      <p class="sb-label mono" aria-hidden="true">{t(stack.title, lang)}</p>
+      <p class="sr-only">{t(stack.title, lang)}: {stack.items.map((o) => o.name).join(', ')}.</p>
+      <div class="sb-world paper" data-physics aria-hidden="true">
+        {
+          stack.items.map((o) => (
+            <span class:list={['obj', `ink-${o.ink}`]} style={`--bg:${o.color}`}>
+              <span class="sb-badge">
+                {o.icon ? <span class="sb-ico" set:html={techLogos[o.icon]} /> : <Database class="sb-db" size={18} stroke-width={2} />}
+              </span>
+              <span class="sb-name">{o.name}</span>
+            </span>
+          ))
+        }
+      </div>
     </div>
   </div>
 </Section>
@@ -193,5 +218,117 @@ const { lang } = Astro.props;
   .status {
     color: var(--c-signal);
     min-width: 1px;
+  }
+
+  /* --------------------------------------------------------------- Stack */
+  .stackbox {
+    --o: clamp(2.2rem, 1.95rem + 0.7vw, 2.75rem); /* pill height */
+    position: relative;
+    max-width: 46rem; /* a shorter rectangle, centred */
+    margin: clamp(2.5rem, 2rem + 2vw, 4rem) auto 0;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+  }
+  .sb-label {
+    position: absolute;
+    z-index: 1;
+    top: 0.9rem;
+    left: 1.1rem;
+    color: var(--c-fg-subtle);
+    pointer-events: none;
+  }
+  /* the world: the frame itself; its bottom edge is the floor */
+  .sb-world {
+    position: relative;
+    height: clamp(13rem, 10rem + 5vw, 16rem);
+    overflow: hidden;
+    background-color: var(--c-bg);
+  }
+  /* objects: brand-coloured pills, the original logo on a white badge */
+  .obj {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--o) * 0.26);
+    height: var(--o);
+    padding-inline: calc(var(--o) * 0.17) calc(var(--o) * 0.38);
+    border-radius: calc(var(--o) * 0.3);
+    background: var(--bg);
+    color: #fff;
+    font-size: calc(var(--o) * 0.4);
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.18),
+      0 10px 22px -12px rgb(0 0 0 / 0.55);
+    opacity: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none; /* press and drag moves the object, not the page */
+    transform-origin: 50% 50%;
+    will-change: transform;
+    transition: opacity var(--dur-3) var(--ease-out);
+  }
+  .obj.ink-dark {
+    color: #141411;
+  }
+  .obj:global(.is-on) {
+    opacity: 1;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .obj {
+      cursor: grab;
+    }
+    .obj:global(.is-grab) {
+      cursor: grabbing;
+    }
+  }
+  .sb-badge {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: calc(var(--o) * 0.68);
+    height: calc(var(--o) * 0.68);
+    border-radius: calc(var(--o) * 0.2);
+    background: #fff;
+    color: #334155;
+    pointer-events: none;
+  }
+  .sb-ico {
+    display: block;
+    width: 70%;
+    height: 70%;
+  }
+  .sb-ico :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  .sb-badge :global(.sb-db) {
+    width: 62%;
+    height: 62%;
+  }
+  .sb-name {
+    pointer-events: none;
+  }
+
+  /* reduced motion (no simulation): the objects rest in rows on the floor */
+  .sb-world:global(.is-static) {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    align-content: flex-start;
+    align-items: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  .sb-world:global(.is-static) .obj {
+    position: relative;
+    opacity: 1;
+    touch-action: auto;
+    cursor: default;
   }
 </style>

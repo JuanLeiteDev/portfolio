@@ -340,7 +340,6 @@ const all: Project[] = [
       en: 'A support ticket system built backend-first: API, authentication, relational persistence and attachments.',
     },
     stack: ['Python', 'FastAPI', 'SQLAlchemy', 'Pydantic', 'Alembic', 'PostgreSQL', 'Redis', 'MinIO', 'Docker', 'pytest'],
-    ongoing: true,
     status: { pt: 'Em desenvolvimento na Eleven Systems. Código privado.', en: 'In development at Eleven Systems. Code is private.' },
     study: {
       role: {

@@ -8,8 +8,10 @@
  * becomes a square frame centred on the face below them.
  * Portrait effect: the photo "develops" once with a scan line (CSS); on
  * hover it tilts, gains colour and a glare follows the cursor (portrait-fx.ts).
+ * Flip card: a click (or Enter/Space) turns the photo over to a short
+ * "about me"; a hint under the photo says so (main.ts toggles .is-flipped).
  */
-import { Picture } from 'astro:assets';
+import { Image, Picture } from 'astro:assets';
 import { ArrowUpRight } from '@lucide/astro';
 import Section from '@/components/ui/Section.astro';
 import { hero } from '@/data/home';
@@ -57,24 +59,51 @@ const { lang } = Astro.props;
     </div>
 
     <figure class="portrait-wrap">
-      <div class="portrait" data-portrait-fx>
-        <Picture
-          src={photo}
-          alt={t(hero.photoAlt, lang)}
-          widths={[360, 540, 720, 960]}
-          sizes="(min-width: 64rem) 28vw, (min-width: 48rem) 60vw, 100vw"
-          formats={['avif']}
-          fallbackFormat="webp"
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-          class="photo"
-        />
-        <span class="scan" aria-hidden="true"></span>
-        <span class="glare" aria-hidden="true"></span>
-        <span class="corner tl" aria-hidden="true"></span>
-        <span class="corner br" aria-hidden="true"></span>
+      <div class="flip" data-portrait-fx data-flip>
+        <div class="flip-in">
+          <div class="face portrait">
+            <Picture
+              src={photo}
+              alt={t(hero.photoAlt, lang)}
+              widths={[360, 540, 720, 960]}
+              sizes="(min-width: 64rem) 28vw, (min-width: 48rem) 60vw, 100vw"
+              formats={['avif']}
+              fallbackFormat="webp"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="photo"
+            />
+            <span class="scan" aria-hidden="true"></span>
+            <span class="glare" aria-hidden="true"></span>
+            <span class="corner tl" aria-hidden="true"></span>
+            <span class="corner br" aria-hidden="true"></span>
+          </div>
+          <div class="face back" id={`about-${lang}`}>
+            <Image src={photo} alt="" width={360} format="webp" loading="lazy" decoding="async" class="back-photo" />
+            <h2 class="back-title">{t(hero.about.title, lang)}</h2>
+            <p class="back-text">{t(hero.about.text, lang)}</p>
+            <p class="back-foot mono">
+              <span>{t(hero.about.place, lang)}</span>
+              <span>{profile.name}</span>
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="flip-btn"
+          aria-pressed="false"
+          aria-controls={`about-${lang}`}
+          data-needs-js
+        >
+          <span class="sr-only">{t(hero.about.flip, lang)}</span>
+        </button>
       </div>
+      <p class="flip-hint mono" aria-hidden="true" data-needs-js>
+        <span class="flip-ico">↻</span>
+        <span class="hint-fine">{t(hero.about.hint, lang)}</span>
+        <span class="hint-touch">{t(hero.about.hintTouch, lang)}</span>
+      </p>
     </figure>
 
     <dl class="meta mono">
@@ -268,25 +297,46 @@ const { lang } = Astro.props;
     }
   }
 
-  /* portrait */
-  /* below 64rem: a square frame centred on the face (the photo is 2:3, the
-     face sits between ~20% and ~58% of its height) */
-  .portrait {
+  /* portrait: a flip card (after React Bits "Flip Card"). Front: the photo;
+     back: about me. The outer box carries the tilt (portrait-fx), the inner
+     one the flip, so both faces tilt together. Below 64rem: a square frame
+     centred on the face (the photo is 2:3, the face sits between ~20% and
+     ~58% of its height). */
+  .flip {
     position: relative;
     aspect-ratio: 1 / 1;
     max-width: 26rem;
-    overflow: hidden;
-    border-radius: var(--radius-m);
-    background: var(--c-bg-sunken);
-    isolation: isolate;
+    perspective: 1100px;
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     transition: transform 0.5s var(--ease-out);
   }
   @media (min-width: 64rem) {
-    .portrait {
+    .flip {
       aspect-ratio: 4 / 5;
       max-width: none;
     }
+  }
+  .flip-in {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    /* settles with a slight overshoot, like a spring */
+    transition: transform 0.95s cubic-bezier(0.34, 1.35, 0.5, 1);
+  }
+  .flip:global(.is-flipped) .flip-in {
+    transform: rotateY(180deg);
+  }
+  .face {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: var(--radius-m);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  .portrait {
+    background: var(--c-bg-sunken);
+    isolation: isolate;
   }
   .portrait :global(.photo),
   .portrait :global(img) {
@@ -303,15 +353,119 @@ const { lang } = Astro.props;
     }
   }
 
-  /* colour on hover (fine pointer) or after a tap (touch, via portrait-fx) */
+  /* colour on hover (fine pointer) */
   @media (hover: hover) and (pointer: fine) {
-    .portrait:hover :global(img) {
+    .flip:not(:global(.is-flipped)):hover .portrait :global(img) {
       filter: grayscale(0) contrast(1);
       scale: 1.03;
     }
   }
-  .portrait:global(.is-color) :global(img) {
-    filter: grayscale(0) contrast(1);
+
+  /* back: the photo, dark and blurred, under the text (same in both themes) */
+  .back {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 0.75rem;
+    padding: clamp(1.1rem, 0.9rem + 1.2vw, 1.75rem);
+    border: 1px solid rgb(236 233 225 / 0.14);
+    background: #0d0e0c;
+    color: #ece9e1;
+    isolation: isolate;
+    transform: rotateY(180deg);
+  }
+  .back :global(.back-photo) {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+    filter: grayscale(1) blur(16px) brightness(0.32);
+    scale: 1.2;
+  }
+  .back-title {
+    font-size: var(--step-3);
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .back-text {
+    align-self: center;
+    max-width: 38ch;
+    color: #d9d5cb;
+    font-size: clamp(0.92rem, 0.88rem + 0.25vw, 1.05rem);
+    line-height: 1.55;
+  }
+  .back-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: #a6a398;
+  }
+
+  /* the whole card is the toggle (keyboard: Tab, Enter/Space) */
+  .flip-btn {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: var(--radius-m);
+    background: transparent;
+    cursor: pointer;
+  }
+  .flip-btn:focus-visible {
+    outline-offset: 4px;
+  }
+  .flip-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+    color: var(--c-fg-subtle);
+    font-size: 0.72rem;
+  }
+  .flip-ico {
+    display: inline-block;
+    color: var(--c-signal);
+    font-size: 0.9rem;
+    transition: rotate 0.6s var(--ease-out);
+  }
+  .portrait-wrap:has(:global(.is-flipped)) .flip-ico {
+    rotate: 180deg;
+  }
+  .hint-touch {
+    display: none;
+  }
+  @media (hover: none), (pointer: coarse) {
+    .hint-fine {
+      display: none;
+    }
+    .hint-touch {
+      display: inline;
+    }
+  }
+  /* reduced motion: no rotation, the faces cross-fade */
+  @media (prefers-reduced-motion: reduce) {
+    .flip-in {
+      transition: none;
+    }
+    .flip:global(.is-flipped) .flip-in {
+      transform: none;
+    }
+    .face {
+      -webkit-backface-visibility: visible;
+      backface-visibility: visible;
+    }
+    .back {
+      transform: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s linear, visibility 0s 0.2s;
+    }
+    .flip:global(.is-flipped) .back {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.2s linear;
+    }
   }
 
   /* glare that follows the cursor (position set by portrait-fx) */
@@ -328,7 +482,7 @@ const { lang } = Astro.props;
     mix-blend-mode: soft-light;
     transition: opacity 0.4s var(--ease-out);
   }
-  .portrait:global(.has-fx):hover .glare {
+  .flip:global(.has-fx):not(:global(.is-flipped)):hover .glare {
     opacity: 1;
   }
 
@@ -388,10 +542,10 @@ const { lang } = Astro.props;
     pointer-events: none;
     transition: translate 0.4s var(--ease-out);
   }
-  .portrait:hover .tl {
+  .flip:hover .tl {
     translate: -4px -4px;
   }
-  .portrait:hover .br {
+  .flip:hover .br {
     translate: 4px 4px;
   }
   .tl {

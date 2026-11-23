@@ -539,6 +539,52 @@
     }
   }
 
+  /* -----------------------------------------------------------------
+     Odometer (components/ui/Odometer.astro + scripts/odometer.ts).
+     Every column is 1 cell tall; only the strip's transform moves.
+     ----------------------------------------------------------------- */
+  .odo {
+    --cell: 1.08em;
+    display: inline-flex;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .odo-vis {
+    display: inline-flex;
+    align-items: flex-start;
+  }
+  .odo-col,
+  .odo-abbr,
+  .odo-plus {
+    display: inline-block;
+    height: var(--cell);
+    line-height: var(--cell);
+  }
+  .odo-col {
+    overflow: hidden;
+  }
+  .odo-strip {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(calc(var(--d, 0) * -1 * var(--cell)));
+  }
+  .odo-strip > span {
+    height: var(--cell);
+    text-align: center;
+  }
+  .odo[data-odo='rolling'] .odo-col {
+    -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+    mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+  }
+  .odo-abbr {
+    margin-inline-start: 0.03em;
+  }
+  .odo-plus {
+    margin-inline-start: 0.04em;
+    color: var(--c-signal);
+    font-weight: 500;
+  }
+
   /* Reveal-on-scroll: content is visible by default; only enhanced when JS
      marks the document ready and motion is allowed. */
   @media (prefers-reduced-motion: no-preference) {

@@ -8,6 +8,7 @@
  */
 import Section from '@/components/ui/Section.astro';
 import Hint from '@/components/ui/Hint.astro';
+import Odometer from '@/components/ui/Odometer.astro';
 import { Image } from 'astro:assets';
 import { projectsSection } from '@/data/home';
 import { projects, kindLabel, getProject } from '@/data/projects';
@@ -36,19 +37,12 @@ const code = projectsSection.code;
 
       <div class="stats">
         {
-          f.stats.map((s) => {
-            const final = fmt.format(s.value) + s.suffix;
-            return (
-              <p class="stat">
-                <span class="count num" data-count={s.value} data-suffix={s.suffix} data-locale={htmlLang[lang]}>
-                  <span class="count-ghost" aria-hidden="true">{final}</span>
-                  <span class="count-live" aria-hidden="true">{final}</span>
-                  <span class="sr-only">{final}</span>
-                </span>
-                <span class="unit mono">{t(s.unit, lang)}</span>
-              </p>
-            );
-          })
+          f.stats.map((s) => (
+          <p class="stat">
+            <Odometer class="count" value={s.compact} abbr={s.abbr} plus label={`${fmt.format(s.value)}+`} />
+            <span class="unit mono">{t(s.unit, lang)}</span>
+          </p>
+        ))
         }
       </div>
       <p class="timing mono"><span aria-hidden="true">→ </span>{t(f.timing, lang)}</p>
@@ -196,23 +190,11 @@ const code = projectsSection.code;
     padding-top: 1rem;
     border-top: 1px solid var(--c-line-strong);
   }
-  .count {
-    position: relative;
-    display: inline-block;
+  .stat :global(.count) {
     justify-self: start;
-    font-size: clamp(2.4rem, 9.5cqi, 4.6rem);
+    font-size: clamp(2.6rem, 11cqi, 4.4rem);
     font-weight: 600;
-    line-height: 1;
     letter-spacing: -0.04em;
-    white-space: nowrap;
-  }
-  .count-ghost {
-    visibility: hidden;
-  }
-  .count-live {
-    position: absolute;
-    left: 0;
-    top: 0;
   }
   .unit {
     color: var(--c-fg-muted);
@@ -251,6 +233,13 @@ const code = projectsSection.code;
     font-size: 0.75rem;
   }
   .rows .code-line {
+    /* it overlaps the bottom of the (positioned) row link: stay above it, so
+       the line remains visible and its GitHub link clickable on hover, but
+       below the floating preview of the next row (z-index 5) */
+    position: relative;
+    z-index: 1;
+    justify-self: start;
+    width: fit-content;
     padding: 0 0.25rem 1rem 3.25rem;
     margin-top: -0.6rem;
   }
@@ -355,7 +344,7 @@ const code = projectsSection.code;
       left: var(--mx, 50%);
       top: var(--my, 50%);
       display: block;
-      width: 22rem;
+      width: 18.7rem; /* 15% smaller than the original 22rem */
       translate: -50% calc(-100% - 1.25rem);
       opacity: 0;
       scale: 0.92;
