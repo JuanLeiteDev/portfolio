@@ -1,0 +1,45 @@
+---
+/**
+ * Odometer counter (after React Bits "Counter", without React/motion):
+ * one column per digit, each a vertical strip 0–9 (+ a closing 0 so the
+ * units can roll 9 → 0 seamlessly). The server renders the final digits
+ * (`--d`), so the figure is right without JS or with reduced motion;
+ * odometer.ts primes it to zero and rolls it when it enters the viewport.
+ *
+ * The visual layer is aria-hidden; `label` is the stable accessible text
+ * (e.g. "10 000+"), so screen readers never hear the strips.
+ */
+interface Props {
+  /** Number drawn by the columns (e.g. 10 for "10K+"). */
+  value: number;
+  /** Abbreviation after the digits: K = thousands, M = millions. */
+  abbr?: string;
+  /** Draw a trailing "+" (more than). */
+  plus?: boolean;
+  /** Accessible text, usually the full figure. */
+  label: string;
+  class?: string;
+}
+const { value, abbr = '', plus = false, label, class: className = '' } = Astro.props;
+const digits = String(Math.max(0, Math.round(value))).split('').map(Number);
+const strip = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+---
+
+<span class:list={['odo num', className]} data-odometer data-value={value}>
+  <span class="odo-vis" aria-hidden="true">
+    {
+      digits.map((d) => (
+        <span class="odo-col" style={`--d:${d}`}>
+          <span class="odo-strip">
+            {strip.map((n) => (
+              <span>{n}</span>
+            ))}
+          </span>
+        </span>
+      ))
+    }
+    {abbr && <span class="odo-abbr">{abbr}</span>}
+    {plus && <span class="odo-plus">+</span>}
+  </span>
+  <span class="sr-only">{label}</span>
+</span>

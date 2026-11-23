@@ -1,41 +1,41 @@
 ---
 /**
- * Skills — six capability tiles, keywords only (no percentages, no logos).
- * Each chip carries where it is evidenced (doc 01 §6) via a small swatch
- * + accessible text. The tile's one-line summary is revealed on intent.
+ * Skills — a bento of the six capability areas (after React Bits "Magic
+ * Bento"). Keywords only (no percentages). Tile size follows weight: the
+ * area with the most evidenced tools gets the large tile.
+ *
+ * Chips are plain keywords; where each one is evidenced (doc 01 §6:
+ * professional / projects / academic) stays in the accessible text of the
+ * chip. Each tile ends with its tool count. The one-line summary is
+ * revealed on intent.
+ *
+ * Light: on fine pointers the borders of every tile near the cursor glow
+ * (main.ts writes --mx/--my on all tiles) and the hovered one lights from
+ * inside; on touch the light blooms from the point of contact. Nothing
+ * here depends on hover: all content is in the tiles, summaries open on tap.
  */
 import Section from '@/components/ui/Section.astro';
 import Hint from '@/components/ui/Hint.astro';
 import IntentTitle from '@/components/ui/IntentTitle.astro';
-import { skills, evidenceLabel, type Evidence } from '@/data/home';
+import { skills, evidenceLabel } from '@/data/home';
 import { t, type L, type Lang } from '@/i18n';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const legend: Evidence[] = ['work', 'project', 'academic'];
 const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
+// reading order of the bento (matches the visual order on every layout)
+const order = ['software', 'automation', 'systems', 'backend', 'ai', 'tooling'];
+const areas = order.map((id) => skills.areas.find((a) => a.id === id)!).filter(Boolean);
 ---
 
 <Section lang={lang} section="skills" title={t(skills.title, lang)}>
   <div class="frame">
-    <p class="legend mono">
-      <span class="sr-only">{t(skills.legend, lang)}:</span>
+    <ul class="bento" role="list" data-bento>
       {
-        legend.map((e) => (
-          <span class="ev" data-ev={e}>
-            <span class="sw" aria-hidden="true" />
-            {t(evidenceLabel[e], lang)}
-          </span>
-        ))
-      }
-    </p>
-
-    <ul class="tiles" role="list">
-      {
-        skills.areas.map((area, i) => (
-          <li class="tile spot" data-intent data-reveal style={`--i:${i}`}>
+        areas.map((area, i) => (
+          <li class:list={['tile spot', `a-${area.id}`]} data-intent data-reveal style={`--i:${i}`}>
             <div class="head">
               <span class="ai mono num" aria-hidden="true">
                 {String(i + 1).padStart(2, '0')}
@@ -48,12 +48,14 @@ const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
             <ul class="chips" role="list">
               {area.items.map((it) => (
                 <li data-ev={it.ev}>
-                  <span class="sw" aria-hidden="true" />
                   {name(it.name)}
                   <span class="sr-only">, {t(evidenceLabel[it.ev], lang)}</span>
                 </li>
               ))}
             </ul>
+            <span class="cnt mono num" aria-hidden="true">
+              {String(area.items.length).padStart(2, '0')}
+            </span>
           </li>
         ))
       }
@@ -62,67 +64,107 @@ const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
 </Section>
 
 <style>
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.25rem;
-    margin-bottom: 1.5rem;
-    color: var(--c-fg-subtle);
-    font-size: 0.72rem;
-  }
-  .ev {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-  }
-  /* evidence swatches: shape + tone, never colour alone */
-  .sw {
-    flex: none;
-    width: 7px;
-    height: 7px;
-    border: 1px solid var(--c-fg-muted);
-  }
-  [data-ev='work'] > .sw {
-    background: var(--c-signal);
-    border-color: var(--c-signal);
-  }
-  [data-ev='project'] > .sw {
-    background: var(--c-fg);
-    border-color: var(--c-fg);
-  }
-  [data-ev='academic'] > .sw {
-    background: linear-gradient(135deg, var(--c-fg-muted) 50%, transparent 50%);
-  }
-
-  .tiles {
+  /* ------------------------------------------------------------ layout */
+  /* phones: two columns, the light areas side by side, the rest full width */
+  .bento {
     display: grid;
-    gap: 0.75rem;
+    gap: 0.65rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      'software software'
+      'automation systems'
+      'backend backend'
+      'ai ai'
+      'tooling tooling';
   }
   @media (min-width: 40rem) {
-    .tiles {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+    .bento {
+      gap: 0.85rem;
+      grid-template-areas:
+        'software software'
+        'automation systems'
+        'backend backend'
+        'ai tooling';
     }
   }
   @media (min-width: 64rem) {
-    .tiles {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .bento {
       gap: 1rem;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-areas:
+        'software software automation automation systems systems'
+        'backend backend backend ai ai ai'
+        'backend backend backend tooling tooling tooling';
     }
   }
+  .a-software {
+    grid-area: software;
+  }
+  .a-automation {
+    grid-area: automation;
+  }
+  .a-systems {
+    grid-area: systems;
+  }
+  .a-backend {
+    grid-area: backend;
+  }
+  .a-ai {
+    grid-area: ai;
+  }
+  .a-tooling {
+    grid-area: tooling;
+  }
+
+  /* -------------------------------------------------------------- tile */
   .tile {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: 0.9rem;
-    align-content: start;
-    padding: 1.4rem;
+    min-width: 0;
+    padding: clamp(0.95rem, 0.8rem + 0.8vw, 1.5rem);
     border: 1px solid var(--c-line);
     border-radius: var(--radius-l);
+    background-color: var(--c-bg);
     cursor: pointer;
-    transition: border-color var(--dur-2) var(--ease-out), background-color var(--dur-2) var(--ease-out);
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      background-color var(--dur-2) var(--ease-out),
+      translate var(--dur-3) var(--ease-out);
   }
   .tile:is(:hover, :focus-within, .is-open) {
     border-color: var(--c-line-strong);
-    background: var(--c-bg-raised);
+    background-color: var(--c-bg-raised);
   }
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover {
+      translate: 0 -2px;
+    }
+    /* Magic Bento border glow: tiles near the pointer light their border */
+    .bento:global(.is-near) .tile::after {
+      opacity: 1;
+    }
+    .tile::after {
+      background: radial-gradient(260px circle at var(--mx, -999px) var(--my, -999px), var(--c-signal), transparent 70%);
+    }
+  }
+  .a-backend {
+    background-image: radial-gradient(var(--c-grid) 1px, transparent 1.2px);
+    background-size: 22px 22px;
+  }
+  @media (min-width: 64rem) {
+    .a-backend {
+      padding: clamp(1.5rem, 1rem + 1.2vw, 2.25rem);
+    }
+    .a-backend :global(.at) {
+      font-size: var(--step-4);
+    }
+    .a-backend .chips li {
+      font-size: 1rem;
+      padding: 0.4rem 0.75rem;
+    }
+  }
+
   .head {
     display: flex;
     align-items: baseline;
@@ -135,6 +177,18 @@ const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
     font-size: var(--step-2);
     letter-spacing: -0.025em;
   }
+  /* the two small tiles share a phone row: smaller titles */
+  @media (max-width: 39.999rem) {
+    .a-automation :global(.at),
+    .a-systems :global(.at) {
+      font-size: var(--step-1);
+    }
+    .a-automation .head,
+    .a-systems .head {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+  }
   .chips {
     display: flex;
     flex-wrap: wrap;
@@ -144,13 +198,75 @@ const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+    min-width: 0;
     padding: 0.28rem 0.6rem;
     border: 1px solid var(--c-line);
     border-radius: var(--radius-s);
     font-size: 0.85rem;
-    transition: border-color var(--dur-2) var(--ease-out);
+    background: var(--c-bg-raised);
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      translate var(--dur-2) var(--ease-out);
   }
   .tile:hover .chips li {
     border-color: var(--c-line-strong);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .chips li:hover {
+      border-color: var(--c-fg-subtle);
+      translate: 0 -1px;
+    }
+  }
+
+  /* tool count, bottom-right of the tile */
+  .cnt {
+    margin-top: auto;
+    align-self: flex-end;
+    padding-top: 0.35rem;
+    color: var(--c-fg-subtle);
+  }
+
+  /* touch: light blooms from the tap point (main.ts sets --mx/--my) */
+  @media (hover: none), (pointer: coarse) {
+    /* the summary is collapsed until tapped: don't leave a double gap for it */
+    :global(:root.enhanced) .tile :global(.hint-wrap) {
+      transition:
+        grid-template-rows var(--dur-3) var(--ease-out),
+        margin-top var(--dur-3) var(--ease-out);
+    }
+    :global(:root.enhanced) .tile:not(:global(.is-open)) :global(.hint-wrap) {
+      margin-top: -0.9rem;
+    }
+    .tile::before,
+    .tile::after {
+      content: '';
+      position: absolute;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 520ms var(--ease-out);
+    }
+    .tile::before {
+      inset: 0;
+      z-index: -1;
+      background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), var(--c-signal-soft), transparent 55%);
+    }
+    .tile::after {
+      inset: -1px;
+      padding: 1px;
+      background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), var(--c-signal), transparent 70%);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask:
+        linear-gradient(#000 0 0) content-box exclude,
+        linear-gradient(#000 0 0);
+    }
+    .tile:global(.is-lit)::before,
+    .tile:global(.is-lit)::after {
+      opacity: 1;
+      transition-duration: 90ms;
+    }
   }
 </style>

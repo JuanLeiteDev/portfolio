@@ -6,7 +6,7 @@
  * pointer layer:
  *   - fine pointers: a light 3D tilt and a glare that follow the cursor
  *     (CSS custom properties, one write per animation frame);
- *   - touch: a tap toggles between black-and-white and colour.
+ * (A tap or click flips the card instead: see the flip toggle in main.ts.)
  * Not loaded with prefers-reduced-motion.
  */
 export function initPortraitFx(root: HTMLElement): () => void {
@@ -37,21 +37,15 @@ export function initPortraitFx(root: HTMLElement): () => void {
     py = 0.5;
     schedule();
   };
-  const onTap = (e: PointerEvent) => {
-    if (e.pointerType === 'mouse') return;
-    root.classList.toggle('is-color');
-  };
 
   root.classList.add('has-fx');
   root.addEventListener('pointermove', onMove);
   root.addEventListener('pointerleave', onLeave);
-  root.addEventListener('pointerup', onTap);
 
   return () => {
     cancelAnimationFrame(raf);
-    root.classList.remove('has-fx', 'is-color');
+    root.classList.remove('has-fx');
     root.removeEventListener('pointermove', onMove);
     root.removeEventListener('pointerleave', onLeave);
-    root.removeEventListener('pointerup', onTap);
   };
 }

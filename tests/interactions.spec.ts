@@ -95,14 +95,27 @@ test.describe('mobile navigation', () => {
 test.describe('motion preferences', () => {
   test.use({ reducedMotion: 'reduce' });
 
-  test('reduced motion: no decode, figures shown final, portrait effect not loaded', async ({ page }) => {
+  test('reduced motion: no decode, figures shown final, no physics or portrait effect', async ({ page }) => {
     const requests: string[] = [];
     page.on('request', (r) => requests.push(r.url()));
     await page.goto('/');
     await expect(page.locator('.dc-cell')).toHaveCount(0);
-    await expect(page.locator('.count-live').first()).toHaveText(/10\s?000\+/);
+    const odo = page.locator('[data-odometer]').first();
+    await expect(odo.locator('.sr-only')).toHaveText(/10\s?000\+/);
+    // never primed: the server-rendered final digits stay (1, 0 → "10K+")
+    await expect(odo).not.toHaveAttribute('data-odo', /.+/);
+    await expect(odo.locator('.odo-col').first()).toHaveAttribute('style', /--d:1/);
+    // the Stack: no simulation, the objects rest in rows
+    await page.evaluate(() => document.querySelector('[data-stackbox]')?.scrollIntoView({ block: 'center', behavior: 'instant' }));
+    const world = page.locator('[data-stackbox] .sb-world');
+    await expect(world).toHaveClass(/is-static/);
+    await expect(world.locator('.obj').first()).toBeVisible();
+    // the journey trace is complete, no timeline script
+    await expect(page.locator('[data-timeline]').first()).not.toHaveClass(/is-ready/);
     await page.waitForTimeout(1800);
-    expect(requests.some((u) => u.includes('portrait-fx'))).toBe(false);
+    for (const chunk of ['portrait-fx', 'matter', 'smooth-scroll', 'timeline']) {
+      expect(requests.some((u) => u.includes(chunk)), chunk).toBe(false);
+    }
   });
 });
 
@@ -125,11 +138,21 @@ test('project pages: back link returns to the project index', async ({ page }) =
   await expect(page).toHaveURL(/\/en\/#projects$/);
 });
 
-test('counters start from 0 when the card appears (no final value flashing first)', async ({ page }) => {
+test('odometers start from 0 when the card appears and settle on the compact figure', async ({ page }) => {
   await page.goto('/');
-  const live = page.locator('.count-live').first();
+  const odo = page.locator('[data-odometer]').first();
+  const cols = odo.locator('.odo-col');
   // below the fold: primed to 0 while the card is still hidden
-  await expect(live).toHaveText(/^0\+?$/);
-  await page.locator('.count').first().scrollIntoViewIfNeeded();
-  await expect(live).toHaveText(/10\s?000\+/, { timeout: 4000 });
+  await expect(odo).toHaveAttribute('data-odo', 'primed');
+  await expect(cols.first()).toHaveAttribute('style', /--d:\s*0/);
+  await odo.scrollIntoViewIfNeeded();
+  await expect(odo).toHaveAttribute('data-odo', 'done', { timeout: 4000 });
+  // 10K+ and 5M+: digits, abbreviation, then "+"
+  const read = (i: number) =>
+    page.locator('[data-odometer]').nth(i).evaluate((el) => {
+      const digits = Array.from(el.querySelectorAll<HTMLElement>('.odo-col')).map((c) => Number(c.style.getPropertyValue('--d')));
+      return `${digits.join('')}${el.querySelector('.odo-abbr')?.textContent ?? ''}${el.querySelector('.odo-plus')?.textContent ?? ''}`;
+    });
+  expect(await read(0)).toBe('10K+');
+  expect(await read(1)).toBe('5M+');
 });

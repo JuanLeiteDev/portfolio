@@ -1,8 +1,9 @@
 ---
 /**
  * Desktop "trace" rail (≥ 64rem). The section index doubles as a reading
- * progress line: the active section is tracked by main.ts (IntersectionObserver)
- * and the progress fill uses a CSS scroll-driven animation where supported.
+ * progress line. On the home page main.ts derives the active section and the
+ * fill from one measure, so the line reaches each square exactly as it lights
+ * up; elsewhere the fill follows the page scroll (CSS scroll-driven animation).
  */
 import { sectionOrder, sectionLabels, sectionHref, routes, ui, t, type L, type Lang } from '@/i18n';
 import LangSwitch from './LangSwitch.astro';
@@ -127,9 +128,12 @@ const { lang, paths, onHome } = Astro.props;
     transform-origin: top;
     transform: scaleY(0);
   }
+  /* pages without tracked sections (case studies): the line follows the
+     page's scroll. On the home page main.ts drives it section by section,
+     in step with the active square (.is-synced). */
   @supports (animation-timeline: scroll()) {
     @media (prefers-reduced-motion: no-preference) {
-      .fill {
+      .index:not(:global(.is-synced)) .fill {
         animation: rail-progress linear both;
         animation-timeline: scroll(root block);
       }

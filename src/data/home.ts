@@ -1,4 +1,5 @@
 import type { L } from '@/i18n';
+import type { TechLogoKey } from './tech-icons';
 
 /**
  * Editorial content for the home page.
@@ -40,6 +41,18 @@ export const hero = {
     pt: 'Retrato de Juan Leite, de camisa azul-escura, a sorrir.',
     en: 'Portrait of Juan Leite in a dark blue shirt, smiling.',
   },
+  /** Back of the portrait (flip card). Facts only: doc 01, journey, projects. */
+  about: {
+    title: { pt: 'Sobre mim', en: 'About me' },
+    text: {
+      pt: 'Estudo Engenharia de Sistemas Informáticos na UPCA e trabalho no suporte técnico da Eleven Systems, onde resolvo incidentes e construo ferramentas internas em Python. Venho da eletrotecnia (PAP com 20/20) e em 2027 faço Erasmus na Bélgica.',
+      en: 'I study Computer Systems Engineering at UPCA and work in technical support at Eleven Systems, where I resolve incidents and build internal tools in Python. I come from electrical engineering (final project graded 20/20), and in 2027 I am off to Belgium on Erasmus.',
+    },
+    place: { pt: 'Barcelos, PT', en: 'Barcelos, PT' },
+    flip: { pt: 'Ver sobre mim', en: 'Show about me' },
+    hint: { pt: 'Clica na foto para saber mais sobre mim', en: 'Click the photo to read about me' },
+    hintTouch: { pt: 'Toca na foto para saber mais sobre mim', en: 'Tap the photo to read about me' },
+  },
 };
 
 export interface RevealItem {
@@ -59,9 +72,14 @@ export const projectsSection = {
   featured: {
     slug: 'log-analyzer',
     where: { pt: 'Python · Eleven Systems · 2026', en: 'Python · Eleven Systems · 2026' },
+    /**
+     * Documented figures (case study + CV: "more than 10 000 files and
+     * 5 million lines"). `value` is the real figure (read by screen readers);
+     * `compact` + `abbr` is how it is drawn: 10K+, 5M+.
+     */
     stats: [
-      { value: 10000, suffix: '+', unit: { pt: 'ficheiros', en: 'files' } },
-      { value: 5000000, suffix: '+', unit: { pt: 'linhas', en: 'lines' } },
+      { value: 10_000, compact: 10, abbr: 'K', unit: { pt: 'ficheiros', en: 'files' } },
+      { value: 5_000_000, compact: 5, abbr: 'M', unit: { pt: 'linhas', en: 'lines' } },
     ],
     timing: { pt: 'processados em menos de 3 minutos', en: 'processed in under 3 minutes' },
   },
@@ -75,6 +93,19 @@ export const projectsSection = {
 
 /* --------------------------------------------------------------- approach */
 
+export interface ApproachStep {
+  id: 'problem' | 'diagnosis' | 'build' | 'test';
+  title: L;
+  /** The general practice (one line). */
+  body: L;
+  /** Small technical indicator shown as a mono tag. */
+  tag: L;
+  /** What the step was in the log analyser. */
+  case: L;
+  /** Labels used by the step's diagram (comma-separated lists where it draws several). */
+  viz: L;
+}
+
 export const approach = {
   title: { pt: 'Como trabalho.', en: 'How I work.' },
   /** The former five-step pipeline, condensed into one line. */
@@ -82,6 +113,75 @@ export const approach = {
     pt: 'Começo pelo problema, confirmo a causa com dados e escolho a solução mais simples que o resolve.',
     en: 'I start from the problem, confirm the cause with data and pick the simplest solution that fixes it.',
   },
+  /**
+   * The method as four stacked cards (scroll stack). Each step pairs the
+   * general practice with what it was in a real project: the log analyser.
+   * Case lines only restate facts from its case study (data/projects.ts).
+   */
+  caseLabel: { pt: 'No analisador de logs', en: 'In the log analyser' },
+  caseLink: { pt: 'Ver o estudo de caso', en: 'Read the case study' },
+  caseSlug: 'log-analyzer',
+  steps: [
+    {
+      id: 'problem',
+      title: { pt: 'Problema', en: 'Problem' },
+      body: {
+        pt: 'Percebo o problema, e o que custa, antes de escrever código.',
+        en: 'I make sure I understand the problem, and what it costs, before I write code.',
+      },
+      tag: { pt: 'entrada: logs', en: 'input: logs' },
+      case: {
+        pt: 'No suporte técnico, investigar um incidente obrigava a percorrer volumes elevados de logs.',
+        en: 'In technical support, investigating an incident meant going through large volumes of logs.',
+      },
+      viz: { pt: 'logs/ · 10K+ ficheiros', en: 'logs/ · 10K+ files' },
+    },
+    {
+      id: 'diagnosis',
+      title: { pt: 'Diagnóstico', en: 'Diagnosis' },
+      body: {
+        pt: 'Confirmo a causa com dados e defino o que a solução tem de mostrar.',
+        en: 'I confirm the cause with data and define what the solution has to show.',
+      },
+      tag: { pt: 'agrupar: dispositivo · motorista', en: 'group by: device · driver' },
+      case: {
+        pt: 'O que importava era ver onde os problemas se repetem: por dispositivo e por motorista.',
+        en: 'What mattered was seeing where problems recur: per device and per driver.',
+      },
+      viz: { pt: 'padrões que se repetem', en: 'recurring patterns' },
+    },
+    {
+      id: 'build',
+      title: { pt: 'Implementação', en: 'Implementation' },
+      body: {
+        pt: 'Escolho a solução mais simples que resolve o problema e construo-a por partes.',
+        en: 'I pick the simplest solution that solves the problem and build it in parts.',
+      },
+      tag: { pt: 'python · streamlit', en: 'python · streamlit' },
+      case: {
+        pt: 'O Python processa os ficheiros e guarda cada análise. Uma dashboard em Streamlit, no mesmo Python, mostra as vistas.',
+        en: 'Python processes the files and stores each analysis. A Streamlit dashboard, in the same Python, shows the views.',
+      },
+      viz: { pt: 'logs,Python,análises,Streamlit', en: 'logs,Python,analyses,Streamlit' },
+    },
+    {
+      id: 'test',
+      title: { pt: 'Testes', en: 'Testing' },
+      body: {
+        pt: 'Valido o resultado antes de confiar nele e corrijo o que falha.',
+        en: 'I validate the result before I trust it, and fix what fails.',
+      },
+      tag: { pt: 'qualidade por importação', en: 'quality per import' },
+      case: {
+        pt: 'Cada importação mostra que parte dos logs entrou na análise. Resultado: mais de 10 000 ficheiros em menos de 3 minutos.',
+        en: 'Every import shows how much of the logs made it into the analysis. Result: more than 10,000 files in under 3 minutes.',
+      },
+      viz: {
+        pt: 'ficheiros incluídos,ficheiros falhados,linhas lidas,linhas reconhecidas',
+        en: 'files included,files failed,lines read,lines recognised',
+      },
+    },
+  ] satisfies ApproachStep[],
   ai: {
     title: { pt: 'IA como ferramenta de engenharia', en: 'AI as an engineering tool' },
     practices: [
@@ -125,7 +225,6 @@ export interface SkillArea {
 
 export const skills = {
   title: { pt: 'Competências.', en: 'Skills.' },
-  legend: { pt: 'Legenda', en: 'Legend' },
   areas: [
     {
       id: 'software',
@@ -208,23 +307,17 @@ export interface JourneyEntry {
   /** Technologies used in this role, as evidenced by its projects. */
   tags?: string[];
   upcoming?: boolean;
+  /** What Juan is doing now (the hero's "agora"; the degree in progress). */
+  current?: boolean;
 }
 
 export const journey = {
   title: { pt: 'Percurso.', en: 'Journey.' },
   experienceLabel: { pt: 'Experiência', en: 'Experience' },
   educationLabel: { pt: 'Formação', en: 'Education' },
+  upcomingLabel: { pt: 'próximo', en: 'next' },
+  currentLabel: { pt: 'atual', en: 'current' },
   experience: [
-    {
-      period: { pt: '2027', en: '2027' },
-      title: { pt: 'Erasmus · Bélgica', en: 'Erasmus · Belgium' },
-      org: { pt: '5 meses', en: '5 months' },
-      hint: {
-        pt: 'Cinco meses na Bélgica, em 2027, para continuar a licenciatura e melhorar o inglês.',
-        en: 'Five months in Belgium in 2027, continuing my degree and improving my English.',
-      },
-      upcoming: true,
-    },
     {
       period: { pt: '2026', en: '2026' },
       title: { pt: 'Suporte Técnico N1', en: 'L1 Technical Support' },
@@ -244,15 +337,10 @@ export const journey = {
         ],
       },
       tags: ['Python', 'FastAPI', 'PostgreSQL', 'Qt', 'SQLite', 'Streamlit', 'Docker'],
+      current: true,
     },
   ] satisfies JourneyEntry[],
   education: [
-    {
-      period: { pt: '2025—28', en: '2025—28' },
-      title: { pt: 'Eng. de Sistemas Informáticos', en: 'Computer Systems Engineering' },
-      org: { pt: 'UPCA · licenciatura em curso, pós-laboral', en: 'UPCA · BSc in progress, evening classes' },
-      hint: { pt: 'Disciplinas de programação, bases de dados e sistemas operativos.', en: 'Courses in programming, databases and operating systems.' },
-    },
     {
       period: { pt: '2022—25', en: '2022—25' },
       title: { pt: 'Técnico de Eletrotecnia', en: 'Electrical Technician' },
@@ -262,29 +350,24 @@ export const journey = {
         en: 'Final project graded 20/20 (June 2025): an automatic cocktail machine.',
       },
     },
-  ] satisfies JourneyEntry[],
-  courses: {
-    label: { pt: 'Formação complementar', en: 'Additional courses' },
-    items: [
-      { name: 'HTML5 & CSS3', by: 'Curso em Vídeo', hours: 200, year: 2026 },
-      { name: 'Python 3+ POO', by: 'Udemy · Luiz Miranda', hours: 140, year: 2026 },
-      { name: 'Python', by: 'Curso em Vídeo', hours: 160, year: 2026 },
-      { name: { pt: 'Algoritmos', en: 'Algorithms' }, by: 'Curso em Vídeo', hours: 40, year: 2023 },
-    ] satisfies { name: string | L; by: string; hours: number; year: number }[],
-  },
-  languages: {
-    label: { pt: 'Idiomas', en: 'Languages' },
-    items: [
-      { name: { pt: 'Português', en: 'Portuguese' }, level: { pt: 'nativo', en: 'native' } },
-      {
-        name: { pt: 'Inglês', en: 'English' },
-        level: {
-          pt: 'leitura avançada · oral em desenvolvimento',
-          en: 'advanced reading · spoken in progress',
-        },
+    {
+      period: { pt: '2025—28', en: '2025—28' },
+      title: { pt: 'Eng. de Sistemas Informáticos', en: 'Computer Systems Engineering' },
+      org: { pt: 'UPCA · licenciatura em curso, pós-laboral', en: 'UPCA · BSc in progress, evening classes' },
+      hint: { pt: 'Disciplinas de programação, bases de dados e sistemas operativos.', en: 'Courses in programming, databases and operating systems.' },
+      current: true,
+    },
+    {
+      period: { pt: '2027', en: '2027' },
+      title: { pt: 'Erasmus · Bélgica', en: 'Erasmus · Belgium' },
+      org: { pt: '5 meses', en: '5 months' },
+      hint: {
+        pt: 'Cinco meses na Bélgica, em 2027, para continuar a licenciatura e melhorar o inglês.',
+        en: 'Five months in Belgium in 2027, continuing my degree and improving my English.',
       },
-    ] satisfies { name: L; level: L }[],
-  },
+      upcoming: true,
+    },
+  ] satisfies JourneyEntry[],
 };
 
 /* ---------------------------------------------------------------- contact */
@@ -296,7 +379,40 @@ export const contact = {
     en: "I'm looking for remote work in software development and programming.",
   },
   emailLabel: { pt: 'email', en: 'email' },
+  /**
+   * "Stack": the technologies as physical objects in a minimalist frame
+   * (stack-physics.ts): brand-coloured pills with the original logo. Only tools that appear in
+   * `skills`, the journey, the projects or this site's own stack.
+   */
+  stack: {
+    title: { pt: 'Stack', en: 'Stack' },
+    items: [
+      { name: 'Python', icon: 'python', color: '#3776AB', ink: 'light' },
+      { name: 'FastAPI', icon: 'fastapi', color: '#009688', ink: 'light' },
+      { name: 'PostgreSQL', icon: 'postgresql', color: '#336791', ink: 'light' },
+      { name: 'Docker', icon: 'docker', color: '#2496ED', ink: 'light' },
+      { name: 'Git', icon: 'git', color: '#F05032', ink: 'light' },
+      { name: 'SQL', color: '#334155', ink: 'light' },
+      { name: 'Linux', icon: 'linux', color: '#FCC624', ink: 'dark' },
+      { name: 'C', icon: 'c', color: '#A8B9CC', ink: 'dark' },
+      { name: 'HTML5', icon: 'html5', color: '#E34F26', ink: 'light' },
+      { name: 'CSS', icon: 'css', color: '#1572B6', ink: 'light' },
+      { name: 'TypeScript', icon: 'typescript', color: '#3178C6', ink: 'light' },
+      { name: 'Redis', icon: 'redis', color: '#DC382D', ink: 'light' },
+    ] satisfies StackItem[],
+  },
 };
+
+export interface StackItem {
+  /** Technology name (not translated): the label of the pill. */
+  name: string;
+  /** Logo; without one (SQL) a generic database glyph is drawn. */
+  icon?: TechLogoKey;
+  /** Brand colour of the pill. */
+  color: string;
+  /** Text colour on that brand colour: light (white) or dark. */
+  ink: 'light' | 'dark';
+}
 
 /* --------------------------------------------------------------- colophon */
 
