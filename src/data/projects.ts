@@ -94,8 +94,8 @@ export interface Project {
 }
 
 const ROLE_ELEVEN: L<string[]> = {
-  pt: ['Desenvolvi a ferramenta na Eleven Systems, em paralelo com as funções de Suporte Técnico N1.'],
-  en: ['I built it at Eleven Systems alongside my L1 Technical Support duties.'],
+  pt: ['Desenvolvi a ferramenta na Eleven Systems, onde trabalho como Desenvolvedor de Software & Suporte de TI.'],
+  en: ['I built it at Eleven Systems, where I work as a Software Developer & IT Support.'],
 };
 
 const all: Project[] = [
@@ -231,8 +231,8 @@ const all: Project[] = [
       },
       role: {
         body: {
-          pt: ['Desenvolvi a aplicação na Eleven Systems, em paralelo com as funções de Suporte Técnico N1.'],
-          en: ['I built the application at Eleven Systems alongside my L1 Technical Support duties.'],
+          pt: ['Desenvolvi a aplicação na Eleven Systems, onde trabalho como Desenvolvedor de Software & Suporte de TI.'],
+          en: ['I built the application at Eleven Systems, where I work as a Software Developer & IT Support.'],
         },
       },
       solution: {

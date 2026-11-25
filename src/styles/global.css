@@ -414,6 +414,21 @@
   .btn:focus-visible .arrow {
     transform: translate(2px, -2px);
   }
+  /* theme switch: the new theme's snapshot is revealed by a growing circle
+     (clip-path animated in theme.ts); the default cross-fade is disabled */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  :root.theme-vt::view-transition-new(root) {
+    clip-path: circle(0 at 50% 50%);
+  }
+  /* a downward arrow (in-page jump) moves the way it points */
+  .btn:hover .arrow-down,
+  .btn:focus-visible .arrow-down {
+    transform: translateY(3px);
+  }
 
   .kbd {
     display: inline-grid;

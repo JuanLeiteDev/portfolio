@@ -1,91 +1,65 @@
 ---
 /**
- * Projects (former "Impact" + "Projects"). The featured log analyser carries
- * its two documented figures and a screenshot; the other projects follow as
- * rows: name + tagline + stack visible, the one-line summary cascades in on
- * hover/focus (desktop). Each row is a single link; the code line sits
- * outside it so links are never nested.
+ * Projects: every project, the log analyser included, in one accordion
+ * gallery (after React Bits "Accordion Gallery", rebuilt in CSS + a few
+ * lines of TS, no GSAP): one panel is open at a time. The log analyser opens
+ * first. Its figures (projectsSection.featured.stats) and the Odometer
+ * component are kept, unused for now, to be reused elsewhere.
+ * Desktop: a row of panels; hover or keyboard focus opens one, the others
+ * narrow, tilt slightly and go grey. Below 48rem: a vertical stack, a tap
+ * on a closed panel opens it, a tap on the open one follows its link.
+ * Each panel is one link (stretched over the panel); the GitHub link sits
+ * above it, so links are never nested.
+ * Previous list layout: Projects.list.astro (backup).
  */
 import Section from '@/components/ui/Section.astro';
-import Hint from '@/components/ui/Hint.astro';
-import Odometer from '@/components/ui/Odometer.astro';
 import { Image } from 'astro:assets';
 import { projectsSection } from '@/data/home';
-import { projects, kindLabel, getProject } from '@/data/projects';
-import { htmlLang, routes, ui, t, type Lang } from '@/i18n';
+import { projects, kindLabel } from '@/data/projects';
+import { routes, ui, t, type Lang } from '@/i18n';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const fmt = new Intl.NumberFormat(htmlLang[lang]);
 const f = projectsSection.featured;
-const fp = getProject(f.slug)!;
-const fShot = fp.media?.[0];
-const rest = projects.map((p, i) => ({ p, n: i + 1 })).filter(({ p }) => p.slug !== f.slug);
+// the featured project (log analyser) opens first
+const all = projects
+  .map((p, i) => ({ p, n: i + 1 }))
+  .sort((a, b) => Number(b.p.slug === f.slug) - Number(a.p.slug === f.slug));
 const code = projectsSection.code;
 ---
 
 <Section lang={lang} section="projects" title={t(projectsSection.title, lang)}>
   <div class="frame">
-    <article class="anchor paper spot" data-reveal aria-labelledby="featured-title">
-      <header class="anchor-head">
-        <h3 id="featured-title" class="anchor-title">{t(fp.name, lang)}</h3>
-        <span class="mono where">{t(f.where, lang)}</span>
-      </header>
-      <p class="anchor-sum">{t(fp.summary, lang)}</p>
-
-      <div class="stats">
-        {
-          f.stats.map((s) => (
-          <p class="stat">
-            <Odometer class="count" value={s.compact} abbr={s.abbr} plus label={`${fmt.format(s.value)}+`} />
-            <span class="unit mono">{t(s.unit, lang)}</span>
-          </p>
-        ))
-        }
-      </div>
-      <p class="timing mono"><span aria-hidden="true">→ </span>{t(f.timing, lang)}</p>
-
+    <ol class="acc" role="list" data-acc data-reveal>
       {
-        fShot && (
-          <a class="shot-link" href={routes.project(f.slug)[lang]} tabindex="-1" aria-hidden="true">
-            <Image
-              src={fShot.src}
-              alt=""
-              widths={[480, 720, 960]}
-              sizes="(min-width: 64rem) 60vw, 100vw"
-              format="webp"
-              loading="lazy"
-              decoding="async"
-              class="shot"
-            />
-          </a>
-        )
-      }
-      <p class="anchor-foot mono">
-        <a class="case-link link" href={routes.project(f.slug)[lang]}>
-          {t(ui.viewProject, lang)}
-          <span aria-hidden="true"> →</span>
-        </a>
-        <span class="code-line">{t(code.label, lang)}: {t(code.private, lang)}</span>
-      </p>
-    </article>
-
-    <ol class="rows" role="list">
-      {
-        rest.map(({ p, n }, i) => (
-          <li data-intent data-reveal style={`--i:${i}`}>
-            <a class="row" data-follow href={routes.project(p.slug)[lang]}>
-              <span class="n mono num" aria-hidden="true">
-                {String(n).padStart(2, '0')}
-              </span>
-              <span class="main">
-                <span class="name">{t(p.name, lang)}</span>
-                <span class="tagline">{t(p.tagline, lang)}</span>
-              </span>
-              <Hint text={t(p.summary, lang)} class="summary" />
-              <span class="meta mono">
+        all.map(({ p, n }, i) => (
+          <li class="panel" data-acc-panel data-active={i === 0 ? '' : undefined} data-side={i === 0 ? undefined : 'after'}>
+            {p.media?.[0] && (
+              <Image
+                src={p.media[0].src}
+                alt=""
+                widths={[480, 720, 960]}
+                sizes="(min-width: 64rem) 55vw, 100vw"
+                format="webp"
+                loading="lazy"
+                decoding="async"
+                class="media"
+              />
+            )}
+            <span class="shade" aria-hidden="true" />
+            <a class="hit" data-acc-link href={routes.project(p.slug)[lang]}>
+              <span class="sr-only">{t(p.name, lang)}</span>
+            </a>
+            <span class="n mono num" aria-hidden="true">
+              {String(n).padStart(2, '0')}
+            </span>
+            <span class="closed-name" aria-hidden="true">
+              {t(p.name, lang)}
+            </span>
+            <div class="body">
+              <p class="meta mono">
                 <span class="kind">{t(kindLabel[p.kind], lang)}</span>
                 {p.ongoing && (
                   <span class="ongoing">
@@ -93,32 +67,33 @@ const code = projectsSection.code;
                     {t(code.ongoing, lang)}
                   </span>
                 )}
-                <span class="stack">{p.stack.slice(0, 3).join(' · ')}</span>
                 <span class="year num">{p.year}</span>
-              </span>
-              <span class="go" aria-hidden="true">
-                →
-              </span>
-              {p.media?.[0] && (
-                <span class="preview" aria-hidden="true">
-                  <Image src={p.media[0].src} alt="" width={520} loading="lazy" decoding="async" format="webp" />
+              </p>
+              <h3 class="name" id={`acc-${p.slug}`}>
+                {t(p.name, lang)}
+              </h3>
+              <p class="tagline">{t(p.tagline, lang)}</p>
+              <p class="stack mono">{p.stack.slice(0, 4).join(' · ')}</p>
+              <p class="foot mono">
+                <span class="see" aria-hidden="true">
+                  {t(ui.viewProject, lang)} →
                 </span>
-              )}
-            </a>
-            <p class="code-line mono">
-              {t(code.label, lang)}:{' '}
-              {p.links[0] ? (
-                <a class="link" href={p.links[0].href} target="_blank" rel="noopener noreferrer">
-                  {t(code.public, lang)}
-                  <span aria-hidden="true"> ↗</span>
-                  <span class="sr-only">
-                    , {t(p.name, lang)} {t(ui.newTab, lang)}
-                  </span>
-                </a>
-              ) : (
-                t(code.private, lang)
-              )}
-            </p>
+                <span class="code-line">
+                  {t(code.label, lang)}:{' '}
+                  {p.links[0] ? (
+                    <a class="link" href={p.links[0].href} target="_blank" rel="noopener noreferrer">
+                      {t(code.public, lang)}
+                      <span aria-hidden="true"> ↗</span>
+                      <span class="sr-only">
+                        , {t(p.name, lang)} {t(ui.newTab, lang)}
+                      </span>
+                    </a>
+                  ) : (
+                    t(code.private, lang)
+                  )}
+                </span>
+              </p>
+            </div>
           </li>
         ))
       }
@@ -126,280 +101,324 @@ const code = projectsSection.code;
   </div>
 </Section>
 
+<script>
+  /* one open panel per gallery: mouse hover or keyboard focus opens it; a
+     tap/click on a closed panel opens it instead of following the link */
+  document.querySelectorAll<HTMLElement>('[data-acc]').forEach((acc) => {
+    const panels = Array.from(acc.querySelectorAll<HTMLElement>('[data-acc-panel]'));
+    const open = (k: number) =>
+      panels.forEach((p, i) => {
+        p.toggleAttribute('data-active', i === k);
+        if (i === k) delete p.dataset.side;
+        else p.dataset.side = i < k ? 'before' : 'after';
+      });
+    panels.forEach((p, i) => {
+      p.addEventListener('pointerenter', (e) => {
+        if (e.pointerType === 'mouse') open(i);
+      });
+      p.addEventListener('focusin', (e) => {
+        if ((e.target as Element).matches(':focus-visible')) open(i);
+      });
+      p.querySelector('[data-acc-link]')?.addEventListener('click', (e) => {
+        if (!p.hasAttribute('data-active')) {
+          e.preventDefault();
+          open(i);
+        }
+      });
+    });
+  });
+</script>
+
 <style>
-  /* featured project (former Impact anchor) */
-  .anchor {
-    display: grid;
-    gap: 1.5rem;
-    align-content: start;
-    margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
-    padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
-    border: 1px solid var(--c-line);
+  .code-line {
+    font-size: 0.75rem;
+  }
+  /* ------------------------------------------------ accordion gallery
+     Panels always sit on a dark image, so their colours are fixed (same in
+     both themes, like the back of the hero portrait). */
+  .acc {
+    --acc-ease: cubic-bezier(0.215, 0.61, 0.355, 1); /* ≈ GSAP power3.out */
+    --acc-dur: 0.6s;
+    --acc-tilt: 6deg;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .panel {
+    position: relative;
+    overflow: hidden;
+    height: 5.5rem;
+    border: 1px solid rgb(236 233 225 / 0.12);
     border-radius: var(--radius-l);
-    background-color: var(--c-bg-raised);
-    transition: border-color var(--dur-2) var(--ease-out);
+    background: #0d0e0c;
+    color: #ece9e1;
+    isolation: isolate;
+    cursor: pointer;
+    box-shadow: 0 10px 30px -18px rgb(0 0 0 / 0.8);
+    transition:
+      height var(--acc-dur) var(--acc-ease),
+      flex-grow var(--acc-dur) var(--acc-ease),
+      transform var(--acc-dur) var(--acc-ease),
+      border-color var(--dur-2) var(--ease-out);
   }
-  .anchor:hover {
-    border-color: var(--c-line-strong);
+  .panel[data-active] {
+    height: 25rem;
+    border-color: rgb(236 233 225 / 0.22);
   }
-  @media (min-width: 64rem) {
-    .anchor {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-      column-gap: 2.5rem;
+  .panel:has(:focus-visible) {
+    outline: 2px solid var(--c-signal);
+    outline-offset: 3px;
+  }
+
+  /* screenshot: grey and dimmed when closed, in colour when open */
+  .panel :global(.media) {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left top;
+    filter: grayscale(1) brightness(0.32);
+    scale: 1.06;
+    transition:
+      filter var(--acc-dur) var(--acc-ease),
+      scale var(--acc-dur) var(--acc-ease);
+  }
+  .panel[data-active] :global(.media) {
+    filter: none;
+    scale: 1;
+  }
+  .shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgb(13 14 12 / 0.55) 0%,
+      rgb(13 14 12 / 0.1) 22%,
+      rgb(13 14 12 / 0.75) 32%,
+      rgb(13 14 12 / 0.95) 48%,
+      rgb(13 14 12 / 0.97) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* closed: number + name */
+  .n {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.9rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radius-s, 4px);
+    background: rgb(13 14 12 / 0.85);
+    color: var(--c-signal);
+    font-size: 0.75rem;
+  }
+  .closed-name {
+    position: absolute;
+    left: 1.1rem;
+    right: 1.1rem;
+    bottom: 1rem;
+    overflow: hidden;
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition:
+      opacity calc(var(--acc-dur) * 0.6) var(--acc-ease),
+      translate calc(var(--acc-dur) * 0.6) var(--acc-ease);
+  }
+  .panel[data-active] .closed-name {
+    opacity: 0;
+    translate: -14px 0;
+  }
+
+  /* below desktop: closed panels are a slim bar (number + name on one
+     line), so the open one gets the room; no tech list in the open one */
+  @media (max-width: 63.999rem) {
+    .panel {
+      height: 2.85rem;
     }
-    .anchor > :not(.shot-link) {
-      grid-column: 1;
+    .panel[data-active] {
+      height: 24rem;
     }
-    .anchor .shot-link {
-      grid-column: 2;
-      grid-row: 1 / span 5;
-      align-self: start;
+    .n,
+    .closed-name {
+      top: 50%;
+      translate: 0 -50%;
+      transition:
+        top var(--acc-dur) var(--acc-ease),
+        translate var(--acc-dur) var(--acc-ease),
+        opacity calc(var(--acc-dur) * 0.6) var(--acc-ease);
+    }
+    .closed-name {
+      left: 3.5rem;
+      bottom: auto;
+      font-size: 1.05rem;
+    }
+    .panel[data-active] .n {
+      top: 0.85rem;
+      translate: 0 0;
+    }
+    .panel[data-active] .closed-name {
+      translate: -14px -50%;
+    }
+    .stack {
+      display: none;
     }
   }
-  .anchor-head {
+
+  /* open: the details, cascading in */
+  /* the project link covers the whole panel (always focusable/clickable);
+     the details sit above it but let clicks through, except the GitHub link */
+  .hit {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .hit:focus-visible {
+    outline: none; /* the panel shows the focus ring */
+  }
+  .body {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    gap: 0.45rem;
+    padding: clamp(1.1rem, 0.9rem + 1vw, 1.75rem);
+    pointer-events: none;
+  }
+  .panel[data-active] .body .link {
+    pointer-events: auto;
+  }
+  .body > * {
+    opacity: 0;
+    translate: -14px 0;
+    transition:
+      opacity calc(var(--acc-dur) * 0.6) var(--acc-ease),
+      translate calc(var(--acc-dur) * 0.6) var(--acc-ease);
+  }
+  .panel[data-active] .body > * {
+    opacity: 1;
+    translate: 0 0;
+    transition-duration: var(--acc-dur);
+  }
+  .panel[data-active] .body > :nth-child(1) {
+    transition-delay: 0.12s;
+  }
+  .panel[data-active] .body > :nth-child(2) {
+    transition-delay: 0.18s;
+  }
+  .panel[data-active] .body > :nth-child(3) {
+    transition-delay: 0.24s;
+  }
+  .panel[data-active] .body > :nth-child(4) {
+    transition-delay: 0.3s;
+  }
+  .panel[data-active] .body > :nth-child(5) {
+    transition-delay: 0.36s;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    color: #a6a398;
+    font-size: 0.78rem;
+  }
+  .kind {
+    color: var(--c-signal);
+  }
+  .name {
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  .tagline {
+    max-width: 46ch;
+    color: #d9d5cb;
+  }
+  .stack {
+    color: #a6a398;
+    font-size: 0.78rem;
+  }
+  .foot {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: baseline;
     gap: 0.5rem 1rem;
+    margin-top: 0.35rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgb(236 233 225 / 0.16);
   }
-  .anchor-title {
-    font-size: var(--step-2);
-  }
-  .anchor-sum {
-    color: var(--c-fg-muted);
-    max-width: 52ch;
-  }
-  .where {
-    color: var(--c-fg-subtle);
-  }
-  .stats {
-    display: grid;
-    gap: 1rem;
-    container-type: inline-size;
-  }
-  @media (min-width: 36rem) {
-    .stats {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: 1.5rem;
-    }
-  }
-  .stat {
-    display: grid;
-    gap: 0.3rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--c-line-strong);
-  }
-  .stat :global(.count) {
-    justify-self: start;
-    font-size: clamp(2.6rem, 11cqi, 4.4rem);
-    font-weight: 600;
-    letter-spacing: -0.04em;
-  }
-  .unit {
-    color: var(--c-fg-muted);
-  }
-  .timing {
+  .see {
     color: var(--c-signal);
   }
-  .shot-link {
-    position: relative;
-    display: block;
-    border: 1px solid var(--c-line-strong);
-    border-radius: var(--radius-m);
-    overflow: hidden;
+  .foot .code-line {
+    color: #a6a398;
   }
-  .shot-link :global(.shot) {
-    width: 100%;
-    height: auto;
-    filter: grayscale(0.35) brightness(0.92);
-    transition: filter var(--dur-3) var(--ease-out), scale var(--dur-3) var(--ease-out);
+  .foot .code-line .link {
+    color: #ece9e1;
   }
-  .shot-link:is(:hover, :focus-visible) :global(.shot) {
-    filter: none;
-    scale: 1.015;
-  }
-  .anchor-foot {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.5rem 1rem;
-  }
-  .case-link {
-    color: var(--c-fg);
-  }
-  .code-line {
-    color: var(--c-fg-subtle);
-    font-size: 0.75rem;
-  }
-  .rows .code-line {
-    /* it overlaps the bottom of the (positioned) row link: stay above it, so
-       the line remains visible and its GitHub link clickable on hover, but
-       below the floating preview of the next row (z-index 5) */
-    position: relative;
-    z-index: 1;
-    justify-self: start;
-    width: fit-content;
-    padding: 0 0.25rem 1rem 3.25rem;
-    margin-top: -0.6rem;
-  }
+
+  /* desktop: a row of panels; the open one takes ~57% of the width, the
+     closed ones tilt away from it and show the name vertically */
   @media (min-width: 64rem) {
-    .rows .code-line {
-      padding: 0 0.75rem 1.25rem 5.75rem;
-      margin-top: -1.25rem;
+    .acc {
+      flex-direction: row;
+      height: clamp(26rem, 20rem + 12vw, 32rem);
+      perspective: 1400px;
     }
-  }
-
-  .rows {
-    border-top: 1px solid var(--c-line-strong);
-  }
-  .rows li {
-    border-bottom: 1px solid var(--c-line);
-  }
-  .row {
-    position: relative;
-    display: grid;
-    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
-    grid-template-areas:
-      'n main go'
-      'n meta meta';
-    gap: 0.6rem 0.75rem;
-    padding: 1.35rem 0.25rem;
-    transition: background-color var(--dur-2) var(--ease-out);
-  }
-  .n {
-    grid-area: n;
-    color: var(--c-fg-subtle);
-    padding-top: 0.55rem;
-  }
-  .main {
-    grid-area: main;
-    display: grid;
-    gap: 0.2rem;
-  }
-  .name {
-    font-size: var(--step-3);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    transition: color var(--dur-1) linear;
-  }
-  .tagline {
-    color: var(--c-fg-muted);
-  }
-  .row :global(.summary) {
-    display: none;
-  }
-  .meta {
-    grid-area: meta;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
-    color: var(--c-fg-subtle);
-  }
-  .kind {
-    color: var(--c-signal);
-  }
-  .go {
-    grid-area: go;
-    align-self: center;
-    font-family: var(--font-mono);
-    font-size: var(--step-1);
-    color: var(--c-fg-subtle);
-    transition: transform var(--dur-2) var(--ease-out), color var(--dur-1) linear;
-  }
-  .row::before {
-    content: '';
-    position: absolute;
-    inset-block: -1px;
-    inset-inline-start: 0;
-    width: 2px;
-    background: var(--c-signal);
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform var(--dur-2) var(--ease-out);
-  }
-  .row:is(:hover, :focus-visible)::before {
-    transform: scaleY(1);
-  }
-  .row:is(:hover, :focus-visible) .go {
-    transform: translateX(6px);
-    color: var(--c-signal);
-  }
-  .row:is(:hover, :focus-visible) .name {
-    color: var(--c-signal);
-  }
-  .row:focus-visible {
-    outline-offset: -2px;
-  }
-
-  /* floating screenshot preview, follows the cursor (desktop only) */
-  .preview {
-    display: none;
-  }
-  @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
-    .preview {
-      position: absolute;
-      z-index: 5;
-      left: var(--mx, 50%);
-      top: var(--my, 50%);
-      display: block;
-      width: 18.7rem; /* 15% smaller than the original 22rem */
-      translate: -50% calc(-100% - 1.25rem);
-      opacity: 0;
-      scale: 0.92;
-      rotate: -2deg;
-      pointer-events: none;
-      border: 1px solid var(--c-line-strong);
-      border-radius: var(--radius-m);
-      overflow: hidden;
-      box-shadow: var(--shadow-pop);
-      transition:
-        opacity var(--dur-2) var(--ease-out),
-        scale var(--dur-3) var(--ease-out),
-        rotate var(--dur-3) var(--ease-out);
-    }
-    .preview :global(img) {
-      width: 100%;
+    .panel,
+    .panel[data-active] {
+      flex: 1 1 0;
+      min-width: 0;
       height: auto;
     }
-    .row:hover .preview {
-      opacity: 1;
-      scale: 1;
-      rotate: 0deg;
+    .panel[data-active] {
+      flex-grow: 9;
+    }
+    .panel[data-side='before'] {
+      transform: rotateY(var(--acc-tilt));
+    }
+    .panel[data-side='after'] {
+      transform: rotateY(calc(var(--acc-tilt) * -1));
+    }
+    .closed-name {
+      left: 50%;
+      right: auto;
+      bottom: 1.25rem;
+      max-height: calc(100% - 4rem);
+      writing-mode: vertical-rl;
+      rotate: 180deg;
+      translate: -50% 0;
+      text-overflow: ellipsis;
+    }
+    .panel[data-active] .closed-name {
+      translate: -50% 14px;
+    }
+    .panel:not([data-active]):hover {
+      border-color: rgb(236 233 225 / 0.3);
+    }
+    .body {
+      min-width: 26rem; /* text doesn't reflow while the panel grows */
     }
   }
 
-  /* desktop: name | (reserved) summary | meta | arrow */
-  @media (min-width: 64rem) {
-    .row {
-      grid-template-columns: 3rem minmax(0, 1.25fr) minmax(0, 1fr) 13rem 2.5rem;
-      grid-template-areas: 'n main summary meta go';
-      column-gap: 2rem;
-      align-items: center;
-      padding: 2rem 0.75rem;
+  @media (prefers-reduced-motion: reduce) {
+    .acc {
+      --acc-dur: 0s;
     }
-    .n {
-      padding-top: 0;
+    .panel[data-side] {
+      transform: none;
     }
-    .name {
-      font-size: var(--step-2);
-    }
-    .row :global(.summary) {
-      display: block;
-      grid-area: summary;
-    }
-    .meta {
-      display: grid;
-      gap: 0.15rem;
-      justify-items: end;
-      text-align: end;
-    }
-    .go {
-      justify-self: end;
-    }
-    .row:hover {
-      background: var(--c-bg-raised);
+    .panel[data-active] .body > * {
+      transition-delay: 0s;
     }
   }
 

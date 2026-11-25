@@ -10,7 +10,7 @@
  * observers and the rail keep working unchanged. Not loaded with reduced
  * motion or on touch-only devices.
  */
-const DAMP_MS = 120; // higher = heavier
+const DAMP_MS = 180; // higher = heavier
 const LINE = 16;
 
 /** True if `el` (or an ancestor up to the page) can still scroll in that direction. */

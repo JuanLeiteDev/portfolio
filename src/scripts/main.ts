@@ -14,7 +14,10 @@ root.classList.add('enhanced');
 
 document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((btn) => {
   btn.setAttribute('aria-pressed', String(currentTheme() === 'light'));
-  btn.addEventListener('click', () => toggleTheme());
+  btn.addEventListener('click', () => {
+    const b = btn.getBoundingClientRect();
+    toggleTheme({ x: b.left + b.width / 2, y: b.top + b.height / 2 });
+  });
 });
 if (root.hasAttribute('data-theme')) applyTheme(currentTheme());
 
@@ -328,27 +331,6 @@ document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
     }, 2200);
   });
 });
-
-/* ---------------------------------------------------- live local time */
-
-const clock = document.querySelector<HTMLTimeElement>('[data-clock]');
-const clockRow = document.querySelector<HTMLElement>('[data-clock-row]');
-if (clock && clockRow) {
-  const fmt = new Intl.DateTimeFormat(clock.dataset.locale ?? 'pt-PT', {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: clock.dataset.tz ?? 'Europe/Lisbon',
-    timeZoneName: 'shortOffset',
-  });
-  const tick = () => {
-    const now = new Date();
-    clock.textContent = fmt.format(now);
-    clock.dateTime = now.toISOString();
-  };
-  tick();
-  clockRow.hidden = false;
-  window.setInterval(tick, 30_000);
-}
 
 /* ------------------------------------- case study: "on this page" spy */
 

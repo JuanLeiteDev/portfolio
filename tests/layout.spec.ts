@@ -15,10 +15,11 @@ test.describe('responsive layout', () => {
         await page.goto(path, { waitUntil: 'networkidle' });
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
         expect(overflow, `${path} overflows by ${overflow}px`).toBeLessThanOrEqual(0);
-        // text never clipped by its own box (headings and buttons)
+        // text never clipped by its own box (headings and buttons); 1px boxes
+        // are the screen-reader-only pattern, clipped on purpose
         const clipped = await page.evaluate(() =>
           Array.from(document.querySelectorAll<HTMLElement>('h1, h2, h3, .btn, .key, .btn-dock'))
-            .filter((el) => el.offsetParent !== null && el.scrollWidth > el.clientWidth + 1)
+            .filter((el) => el.offsetParent !== null && el.clientWidth > 1 && el.scrollWidth > el.clientWidth + 1)
             .map((el) => el.textContent?.trim().slice(0, 40)),
         );
         expect(clipped, `${path} clipped: ${clipped.join(' | ')}`).toEqual([]);

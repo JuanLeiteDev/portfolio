@@ -1,13 +1,11 @@
 ---
 /**
- * Journey — two clearly separate blocks.
+ * Journey — education and experience in one timeline, no sub-headings.
+ * Every entry is the same size (period, title, place), so the section stays
+ * light; the details live in the CV and the projects.
  *
- * Experience: the one professional role (Eleven Systems) as a single card:
- * period, role and company on one side, what was done and the stack on the
- * other. Nothing hidden behind intent: it is the most important entry.
- *
- * Education: a timeline on a centre spine (after React Bits Pro "Timeline 1"):
- * oldest first, the entries alternate sides, the year set large on one side
+ * A timeline on a centre spine (after React Bits Pro "Timeline 1"):
+ * oldest first (by the start year of each period), the entries alternate sides, the year set large on one side
  * and what it was on the other. The spine draws itself as the page scrolls
  * and lights each dot as it passes (timeline.ts); it follows the page's own
  * scroll, nothing scrolls inside it. On phones the spine moves to the left
@@ -15,212 +13,50 @@
  * Without JS or with reduced motion the spine is simply complete.
  */
 import Section from '@/components/ui/Section.astro';
-import { journey } from '@/data/home';
+import { journey, type JourneyEntry } from '@/data/home';
 import { t, type Lang } from '@/i18n';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const expId = lang === 'pt' ? 'experiencia' : 'experience';
-const eduId = lang === 'pt' ? 'formacoes' : 'education';
-const jobs = journey.experience;
+const startYear = (e: JourneyEntry) => Number(/\d{4}/.exec(e.period.pt)?.[0] ?? 0);
+// same start year: the job first (stable sort keeps this order on ties)
+const entries = [...journey.experience, ...journey.education].sort((a, b) => startYear(a) - startYear(b));
 ---
 
 <Section lang={lang} section="journey" title={t(journey.title, lang)}>
   <div class="frame">
-    <!-- ------------------------------------------------------ experience -->
-    <div class="block" id={expId}>
-      <div class="blk-head">
-        <h3 class="blk-title">{t(journey.experienceLabel, lang)}</h3>
-        <span class="ruler" aria-hidden="true"></span>
-      </div>
-      {
-        jobs.map((e) => (
-          <article class="job paper" data-reveal aria-labelledby="job-title">
-            <div class="job-main">
-              <p class="period mono num">
-                {t(e.period, lang)}
-                {e.current && <span class="badge now mono">{t(journey.currentLabel, lang)}</span>}
-              </p>
-              <h4 id="job-title" class="job-title">
-                {t(e.title, lang)}
-              </h4>
-              <p class="org">{t(e.org, lang)}</p>
-              {e.hint && <p class="job-sum">{t(e.hint, lang)}</p>}
-            </div>
-            <div class="job-detail">
-              {e.points && (
-                <ul class="points" role="list">
-                  {e.points[lang].map((pt) => (
-                    <li>{pt}</li>
-                  ))}
-                </ul>
-              )}
-              {e.tags && (
-                <ul class="tags mono" role="list" aria-label={lang === 'pt' ? 'Tecnologias' : 'Technologies'}>
-                  {e.tags.map((tag) => (
-                    <li>{tag}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </article>
-        ))
-      }
-    </div>
-
-    <!-- ------------------------------------------------------- education -->
-    <div class="block" id={eduId}>
-      <div class="blk-head">
-        <h3 class="blk-title">{t(journey.educationLabel, lang)}</h3>
-        <span class="ruler" aria-hidden="true"></span>
-      </div>
-      <div class="edu">
-        <div class="tl" data-timeline>
-          <span class="tl-track" aria-hidden="true">
-            <span class="tl-fill"></span>
-          </span>
-          <ol class="tl-items" role="list">
-            {
-              journey.education.map((e, i) => (
-                <li
-                  class:list={['entry', { flip: i % 2 === 1, upcoming: e.upcoming, current: e.current }]}
-                  data-reveal
-                  data-tl-item
-                  style={`--i:${i}`}
-                >
-                  <p class="yr num">{t(e.period, lang)}</p>
-                  <span class="node" aria-hidden="true" />
-                  <div class="what">
-                    <h4 class="et">
-                      {t(e.title, lang)}
-                      {e.upcoming && <span class="badge mono">{t(journey.upcomingLabel, lang)}</span>}
-                      {e.current && <span class="badge now mono">{t(journey.currentLabel, lang)}</span>}
-                    </h4>
-                    <p class="org">{t(e.org, lang)}</p>
-                    {e.hint && <p class="desc">{t(e.hint, lang)}</p>}
-                  </div>
-                </li>
-              ))
-            }
-          </ol>
-        </div>
-      </div>
+    <div class="tl" data-timeline>
+      <span class="tl-track" aria-hidden="true">
+        <span class="tl-fill"></span>
+      </span>
+      <ol class="tl-items" role="list">
+        {
+          entries.map((e, i) => (
+            <li
+              class:list={['entry', { flip: i % 2 === 1, upcoming: 'upcoming' in e && e.upcoming, current: 'current' in e && e.current }]}
+              data-reveal
+              data-tl-item
+              style={`--i:${i}`}
+            >
+              <p class="yr num">{t(e.period, lang)}</p>
+              <span class="node" aria-hidden="true" />
+              <div class="what">
+                <h3 class="et">{t(e.title, lang)}</h3>
+                <p class="org">{t(e.org, lang)}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
     </div>
   </div>
 </Section>
 
 <style>
-  .block {
-    scroll-margin-top: 2rem;
-  }
-  .block + .block {
-    margin-top: clamp(4rem, 3rem + 4vw, 6.5rem);
-  }
-  /* block heading: a title and a ruler, the language of the section heads */
-  .blk-head {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin-bottom: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
-  }
-  .blk-title {
-    flex: none;
-    font-size: var(--step-3);
-    letter-spacing: -0.035em;
-  }
-  .blk-head .ruler {
-    flex: 1;
-  }
-
-  .period {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.6rem;
-    color: var(--c-signal);
-  }
-  .badge {
-    padding: 0 0.4rem;
-    border: 1px solid var(--c-line-strong);
-    border-radius: var(--radius-s);
-    color: var(--c-fg-muted);
-    font-size: 0.68rem;
-  }
-  .badge.now {
-    border-color: var(--c-signal);
-    color: var(--c-signal);
-  }
   .org {
     color: var(--c-fg-muted);
-  }
-
-  /* -------------------------------------------------------- experience */
-  .job {
-    display: grid;
-    gap: 1.75rem;
-    padding: clamp(1.25rem, 1rem + 1.6vw, 2.25rem);
-    border: 1px solid var(--c-line-strong);
-    border-radius: var(--radius-l);
-    background-color: var(--c-bg-raised);
-  }
-  @media (min-width: 56rem) {
-    .job {
-      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-      column-gap: clamp(2rem, 5vw, 4.5rem);
-    }
-  }
-  .job-main {
-    display: grid;
-    align-content: start;
-    gap: 0.45rem;
-  }
-  .job-title {
-    margin-top: 0.2rem;
-    font-size: var(--step-3);
-    letter-spacing: -0.035em;
-    line-height: 1.05;
-  }
-  .job-sum {
-    margin-top: 0.6rem;
-    max-width: 40ch;
-    color: var(--c-fg-muted);
-  }
-  .job-detail {
-    display: grid;
-    align-content: start;
-    gap: 1.25rem;
-  }
-  .points {
-    display: grid;
-    gap: 0.6rem;
-  }
-  .points li {
-    padding-inline-start: 1.1rem;
-    text-indent: -1.1rem;
-  }
-  .points li::before {
-    content: '→ ';
-    color: var(--c-signal);
-  }
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-  .tags li {
-    padding: 0.15rem 0.5rem;
-    border: 1px solid var(--c-line);
-    border-radius: var(--radius-s);
-    color: var(--c-fg-muted);
-    font-size: 0.72rem;
-  }
-
-  /* --------------------------------------------------------- education */
-  .edu {
-    display: grid;
-    gap: clamp(3.5rem, 2.5rem + 3vw, 5rem);
   }
 
   /* timeline on a spine: left on phones, centred from 48rem */
@@ -256,7 +92,7 @@ const jobs = journey.experience;
       'node yr'
       'node what';
     row-gap: 0.5rem;
-    padding-bottom: 2.75rem;
+    padding-bottom: 4rem;
   }
   .entry:last-child {
     padding-bottom: 0;
@@ -268,7 +104,7 @@ const jobs = journey.experience;
     .entry {
       grid-template-columns: minmax(0, 1fr) clamp(4rem, 8vw, 7rem) minmax(0, 1fr);
       grid-template-areas: 'yr node what';
-      padding-bottom: clamp(3rem, 2rem + 3vw, 4.5rem);
+      padding-bottom: clamp(4.5rem, 3rem + 4vw, 6.5rem);
     }
     .entry.flip {
       grid-template-areas: 'what node yr';
@@ -364,29 +200,8 @@ const jobs = journey.experience;
     }
   }
   .et {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem 0.6rem;
     font-size: var(--step-2);
     letter-spacing: -0.025em;
     line-height: 1.15;
-  }
-  .entry.flip .et {
-    justify-content: flex-end;
-  }
-  @media (max-width: 47.999rem) {
-    .entry.flip .et {
-      justify-content: flex-start;
-    }
-  }
-  .et .badge {
-    letter-spacing: 0;
-  }
-  .desc {
-    max-width: 38ch;
-    color: var(--c-fg-subtle);
-    font-size: var(--step--1);
-    line-height: 1.55;
   }
 </style>
