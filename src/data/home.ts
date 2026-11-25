@@ -85,86 +85,69 @@ export interface ApproachStep {
   body: L;
   /** Small technical indicator shown as a mono tag. */
   tag: L;
-  /** What the step was in the log analyser. */
-  case: L;
-  /** Labels used by the step's diagram (comma-separated lists where it draws several). */
-  viz: L;
 }
 
 export const approach = {
   title: { pt: 'Como trabalho.', en: 'How I work.' },
-  /** The former five-step pipeline, condensed into one line. */
+  /** Overview of the four stages. */
   intro: {
-    pt: 'Começo pelo problema, confirmo a causa com dados e escolho a solução mais simples que o resolve.',
-    en: 'I start from the problem, confirm the cause with data and pick the simplest solution that fixes it.',
+    pt: 'Identifico a necessidade, avalio possibilidades e desenvolvo soluções práticas, com foco na resolução do problema.',
+    en: 'I identify the need, assess possibilities and develop practical solutions, focusing on solving the problem.',
   },
   /**
-   * The method as four stacked cards (scroll stack). Each step pairs the
-   * general practice with what it was in a real project: the log analyser.
-   * Case lines only restate facts from its case study (data/projects.ts).
+   * Beside each step, one blueprint that evolves card by card (rev. A → D):
+   * the need, the plan, the built solution, the delivery. Schematic only.
    */
-  caseLabel: { pt: 'No analisador de logs', en: 'In the log analyser' },
-  caseLink: { pt: 'Ver o estudo de caso', en: 'Read the case study' },
-  caseSlug: 'log-analyzer',
+  blueprint: {
+    name: { pt: 'blueprint', en: 'blueprint' },
+    labels: {
+      context: { pt: 'contexto', en: 'context' },
+      problem: { pt: 'problema', en: 'problem' },
+      plan: { pt: 'plano', en: 'plan' },
+      solution: { pt: 'solução', en: 'solution' },
+    },
+    /** What a click switches to. */
+    toPlan: { pt: 'planta', en: 'plan' },
+    to3d: { pt: '3D', en: '3D' },
+    /** Read before it by screen readers: "… para planta" / "… to plan". */
+    switchTo: { pt: 'Mudar o blueprint para ', en: 'Switch the blueprint to ' },
+  },
   steps: [
     {
       id: 'problem',
-      title: { pt: 'Problema', en: 'Problem' },
+      title: { pt: 'Necessidade', en: 'Need' },
       body: {
-        pt: 'Percebo o problema, e o que custa, antes de escrever código.',
-        en: 'I make sure I understand the problem, and what it costs, before I write code.',
+        pt: 'Identifico o problema e procuro compreender o contexto e as necessidades reais.',
+        en: 'I identify the problem and seek to understand the context and the real needs.',
       },
-      tag: { pt: 'entrada: logs', en: 'input: logs' },
-      case: {
-        pt: 'No suporte técnico, investigar um incidente obrigava a percorrer volumes elevados de logs.',
-        en: 'In technical support, investigating an incident meant going through large volumes of logs.',
-      },
-      viz: { pt: 'logs/ · 10K+ ficheiros', en: 'logs/ · 10K+ files' },
+      tag: { pt: 'contexto · requisitos', en: 'context · requirements' },
     },
     {
       id: 'diagnosis',
-      title: { pt: 'Diagnóstico', en: 'Diagnosis' },
+      title: { pt: 'Planeamento', en: 'Planning' },
       body: {
-        pt: 'Confirmo a causa com dados e defino o que a solução tem de mostrar.',
-        en: 'I confirm the cause with data and define what the solution has to show.',
+        pt: 'Analiso as possibilidades, avalio a viabilidade e defino a abordagem mais adequada.',
+        en: 'I analyse the possibilities, assess feasibility and define the most suitable approach.',
       },
-      tag: { pt: 'agrupar: dispositivo · motorista', en: 'group by: device · driver' },
-      case: {
-        pt: 'O que importava era ver onde os problemas se repetem: por dispositivo e por motorista.',
-        en: 'What mattered was seeing where problems recur: per device and per driver.',
-      },
-      viz: { pt: 'padrões que se repetem', en: 'recurring patterns' },
+      tag: { pt: 'opções · viabilidade', en: 'options · feasibility' },
     },
     {
       id: 'build',
-      title: { pt: 'Implementação', en: 'Implementation' },
+      title: { pt: 'Solução', en: 'Solution' },
       body: {
-        pt: 'Escolho a solução mais simples que resolve o problema e construo-a por partes.',
-        en: 'I pick the simplest solution that solves the problem and build it in parts.',
+        pt: 'Desenvolvo a solução escolhida, privilegiando a simplicidade, a eficiência e a qualidade.',
+        en: 'I develop the chosen solution, prioritising simplicity, efficiency and quality.',
       },
-      tag: { pt: 'python · streamlit', en: 'python · streamlit' },
-      case: {
-        pt: 'O Python processa os ficheiros e guarda cada análise. Uma dashboard em Streamlit, no mesmo Python, mostra as vistas.',
-        en: 'Python processes the files and stores each analysis. A Streamlit dashboard, in the same Python, shows the views.',
-      },
-      viz: { pt: 'logs,Python,análises,Streamlit', en: 'logs,Python,analyses,Streamlit' },
+      tag: { pt: 'implementação', en: 'implementation' },
     },
     {
       id: 'test',
-      title: { pt: 'Testes', en: 'Testing' },
+      title: { pt: 'Entrega', en: 'Delivery' },
       body: {
-        pt: 'Valido o resultado antes de confiar nele e corrijo o que falha.',
-        en: 'I validate the result before I trust it, and fix what fails.',
+        pt: 'Valido o resultado e garanto que a solução responde à necessidade inicial.',
+        en: 'I validate the result and ensure the solution meets the original need.',
       },
-      tag: { pt: 'qualidade por importação', en: 'quality per import' },
-      case: {
-        pt: 'Cada importação mostra que parte dos logs entrou na análise. Resultado: mais de 10 000 ficheiros em menos de 3 minutos.',
-        en: 'Every import shows how much of the logs made it into the analysis. Result: more than 10,000 files in under 3 minutes.',
-      },
-      viz: {
-        pt: 'ficheiros incluídos,ficheiros falhados,linhas lidas,linhas reconhecidas',
-        en: 'files included,files failed,lines read,lines recognised',
-      },
+      tag: { pt: 'testes · validação', en: 'tests · validation' },
     },
   ] satisfies ApproachStep[],
   ai: {
@@ -205,32 +188,37 @@ export const skills = {
     {
       id: 'software',
       title: { pt: 'Software', en: 'Software' },
-      hint: { pt: 'Ferramentas internas, desktop, web e APIs.', en: 'Internal tools, desktop, web and APIs.' },
+      hint: { pt: 'Desenvolvimento de aplicações desktop, web e soluções empresariais.', en: 'Development of desktop and web applications and business software solutions.' },
     },
     {
       id: 'automation',
       title: { pt: 'Automação', en: 'Automation' },
-      hint: { pt: 'Formulários e tarefas repetitivas passados para Python.', en: 'Forms and repetitive tasks moved into Python.' },
+      hint: { pt: 'Simplificação de processos e redução de tarefas manuais através de engenharia de software.', en: 'Simplifying processes and reducing manual tasks through software engineering.' },
+    },
+    {
+      id: 'quality',
+      title: { pt: 'Qualidade', en: 'Quality' },
+      hint: { pt: 'Estruturação, validação e manutenção de soluções de software.', en: 'Structuring, validating and maintaining software solutions.' },
     },
     {
       id: 'ai',
       title: { pt: 'IA aplicada', en: 'Applied AI' },
-      hint: { pt: 'Agentes de código, com revisão e testes.', en: 'Coding agents, with review and tests.' },
+      hint: { pt: 'Utilização de IA para acelerar o desenvolvimento, estruturar soluções e elevar a qualidade do código.', en: 'Using AI to accelerate development, structure solutions and improve code quality.' },
     },
     {
-      id: 'systems',
-      title: { pt: 'Sistemas', en: 'Systems' },
-      hint: { pt: 'Diagnóstico de incidentes de software e hardware.', en: 'Diagnosing software and hardware incidents.' },
+      id: 'autonomy',
+      title: { pt: 'Autonomia', en: 'Autonomy' },
+      hint: { pt: 'Capacidade de trabalhar de forma independente, tomar decisões e procurar soluções por iniciativa própria.', en: 'The ability to work independently, make decisions and take the initiative to find solutions.' },
     },
     {
-      id: 'backend',
-      title: { pt: 'Backend & dados', en: 'Backend & data' },
-      hint: { pt: 'APIs, autenticação e modelação relacional.', en: 'APIs, authentication and relational modelling.' },
+      id: 'communication',
+      title: { pt: 'Comunicação', en: 'Communication' },
+      hint: { pt: 'Facilidade em partilhar ideias, ouvir diferentes perspetivas e trabalhar em equipa.', en: 'Being comfortable sharing ideas, listening to different perspectives and working in a team.' },
     },
     {
-      id: 'tooling',
-      title: { pt: 'Qualidade', en: 'Quality' },
-      hint: { pt: 'Testes, lint, versões e contentores.', en: 'Tests, linting, versioning and containers.' },
+      id: 'adaptability',
+      title: { pt: 'Adaptabilidade', en: 'Adaptability' },
+      hint: { pt: 'Facilidade em aprender, lidar com mudanças e adaptar-me a novos ambientes e desafios.', en: 'Being comfortable learning, handling change and adapting to new environments and challenges.' },
     },
   ] satisfies SkillArea[],
 };

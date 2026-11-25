@@ -1,6 +1,6 @@
 ---
 /**
- * Skills — the six capability areas on an option wheel (after React Bits
+ * Skills — the capability areas on an option wheel (after React Bits
  * "Option Wheel", rebuilt in plain TS + CSS, no React): the titles sit on a
  * curved arc on the left, the selected one at the apex; the right side shows
  * that area's text.
@@ -21,9 +21,7 @@ interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-// reading order
-const order = ['software', 'automation', 'systems', 'backend', 'ai', 'tooling'];
-const areas = order.map((id) => skills.areas.find((a) => a.id === id)!).filter(Boolean);
+const areas = skills.areas;
 const total = String(areas.length).padStart(2, '0');
 ---
 
@@ -184,20 +182,48 @@ const total = String(areas.length).padStart(2, '0');
     root.addEventListener('pointerleave', () => root.classList.remove('is-over-wheel'));
 
     /* ------------------------------------ below desktop: a native strip */
+    // a tap or a key scrolls the strip to a title: until that scroll settles
+    // the selection stays on it (otherwise the titles it passes on the way —
+    // the previous one first — would be selected in turn and the text and
+    // underline would flicker)
+    let lock = -1;
+    let lockTimer = 0;
+    const unlock = () => {
+      clearTimeout(lockTimer);
+      lock = -1;
+    };
+    const holdLock = (ms: number) => {
+      clearTimeout(lockTimer);
+      lockTimer = window.setTimeout(unlock, ms);
+    };
     const centre = (i: number, smooth = true) => {
       const o = opts[i]!;
+      const smoothly = smooth && !reduce.matches;
+      if (smoothly) {
+        lock = i;
+        holdLock(250); // released sooner by scrollend, or kept by each scroll event
+      }
       wheel.scrollTo({
         left: o.offsetLeft - (wheel.clientWidth - o.offsetWidth) / 2,
-        behavior: smooth && !reduce.matches ? 'smooth' : 'instant',
+        behavior: smoothly ? 'smooth' : 'instant',
       });
     };
+    wheel.addEventListener('scrollend', unlock);
+    // a new swipe takes over at once
+    wheel.addEventListener('pointerdown', unlock, { passive: true });
     let scrollFrame = 0;
     wheel.addEventListener(
       'scroll',
       () => {
-        if (desktop.matches || scrollFrame) return;
+        if (desktop.matches) return;
+        if (lock >= 0) {
+          holdLock(150); // no scrollend (older Safari): released once scrolling stops
+          return;
+        }
+        if (scrollFrame) return;
         scrollFrame = requestAnimationFrame(() => {
           scrollFrame = 0;
+          if (lock >= 0) return;
           const mid = wheel.scrollLeft + wheel.clientWidth / 2;
           let best = 0;
           let bestD = Infinity;
@@ -361,10 +387,10 @@ const total = String(areas.length).padStart(2, '0');
     white-space: nowrap;
   }
   .text {
-    max-width: 32ch;
+    max-width: 38ch;
     color: var(--c-fg-muted);
     font-size: var(--step-2);
-    line-height: 1.3;
+    line-height: 1.4;
     letter-spacing: -0.015em;
   }
 
@@ -414,8 +440,8 @@ const total = String(areas.length).padStart(2, '0');
       background: var(--c-signal);
     }
     .text {
-      font-size: var(--step-3);
-      line-height: 1.2;
+      font-size: var(--step-2);
+      line-height: 1.4;
     }
   }
 

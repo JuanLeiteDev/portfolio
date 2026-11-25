@@ -2,14 +2,17 @@
 /**
  * Approach — the method as a scroll stack (after React Bits "Scroll Stack").
  *
- * Four cards (problem → diagnosis → implementation → testing) stick one over
+ * Four cards (need → planning → solution → delivery) stick one over
  * the other as the page scrolls: plain `position: sticky`, so the page
  * scrolls natively (no scroll-jacking, no smooth-scroll library) and the
  * stack works without JS. scroll-stack.ts adds depth (cards underneath
- * shrink and dim) and marks the step in view, which plays its diagram once.
- * Each card pairs the general practice with what it was in a real project,
- * the log analyser. If a card would not fit the viewport (short phones,
- * landscape) the cards fall back to a normal list.
+ * shrink and dim) and marks the step in view. If a card would not fit the
+ * viewport (short phones, landscape) the cards fall back to a normal list.
+ *
+ * Beside each step: one blueprint that evolves card by card (rev. A → D,
+ * blueprint-scene.ts). It is drawn here at build time, at each card's own
+ * stage, so it shows without JS; blueprint.ts then morphs it in from the
+ * previous step, tilts it under the mouse and switches 3D ⇄ plan on a click.
  *
  * Below: the AI practice as four keywords, each explained on intent.
  */
@@ -17,7 +20,8 @@ import Section from '@/components/ui/Section.astro';
 import Hint from '@/components/ui/Hint.astro';
 import IntentTitle from '@/components/ui/IntentTitle.astro';
 import { approach } from '@/data/home';
-import { routes, t, type Lang } from '@/i18n';
+import { t, type Lang } from '@/i18n';
+import { drawBlueprint, ISO, VB, type BpLabels } from '@/scripts/blueprint-scene';
 
 interface Props {
   lang: Lang;
@@ -25,18 +29,16 @@ interface Props {
 const { lang } = Astro.props;
 const steps = approach.steps;
 const total = String(steps.length).padStart(2, '0');
-const list = (s: string) => s.split(',');
-// schematic only: which cells/lines of the diagrams are highlighted
-const hotFiles = new Set([5, 18, 21, 26, 37, 42]);
-const logLines = [
-  { w: 78, hot: false },
-  { w: 54, hot: true },
-  { w: 66, hot: false },
-  { w: 48, hot: true },
-  { w: 84, hot: false },
-  { w: 52, hot: true },
-  { w: 70, hot: false },
-];
+const bp = approach.blueprint;
+const labels: BpLabels = {
+  context: t(bp.labels.context, lang),
+  problem: t(bp.labels.problem, lang),
+  plan: t(bp.labels.plan, lang),
+  solution: t(bp.labels.solution, lang),
+};
+const viewBox = `${VB.x} ${VB.y} ${VB.w} ${VB.h}`;
+// without JS: each card's blueprint at its own stage
+const still = (stage: number) => drawBlueprint(stage, { ...ISO, time: 0.3, u: 0.6 }, labels);
 ---
 
 <Section lang={lang} section="approach" title={t(approach.title, lang)} intro={t(approach.intro, lang)}>
@@ -71,55 +73,25 @@ const logLines = [
                   </p>
                 </div>
 
-                <div class="case">
-                  <p class="case-label mono">{t(approach.caseLabel, lang)}</p>
-                  <p class="case-text">{t(s.case, lang)}</p>
-
-                  {s.id === 'problem' && (
-                    <div class="viz viz-files" aria-hidden="true">
-                      <span class="files">
-                        {Array.from({ length: 48 }, (_, k) => (
-                          <span class:list={['f', { hot: hotFiles.has(k) }]} style={`--k:${k}`} />
-                        ))}
-                      </span>
-                      <span class="cap mono">{t(s.viz, lang)}</span>
-                    </div>
-                  )}
-                  {s.id === 'diagnosis' && (
-                    <div class="viz viz-lines" aria-hidden="true">
-                      <span class="lines">
-                        {logLines.map((l, k) => (
-                          <span class:list={['ln', { hot: l.hot }]} style={`--w:${l.w}%;--k:${k}`} />
-                        ))}
-                        <span class="scan" />
-                      </span>
-                      <span class="cap mono">{t(s.viz, lang)}</span>
-                    </div>
-                  )}
-                  {s.id === 'build' && (
-                    <ol class="viz viz-pipe mono" aria-hidden="true">
-                      {list(t(s.viz, lang)).map((label, k) => (
-                        <li style={`--k:${k}`}>{label}</li>
-                      ))}
-                    </ol>
-                  )}
-                  {s.id === 'test' && (
-                    <ul class="viz viz-checks mono" aria-hidden="true">
-                      {list(t(s.viz, lang)).map((label, k) => (
-                        <li style={`--k:${k}`}>
-                          <span class="box" />
-                          {label}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {i === steps.length - 1 && (
-                    <a class="stack-link link mono" href={routes.project(approach.caseSlug)[lang]}>
-                      {t(approach.caseLink, lang)}
-                      <span aria-hidden="true"> →</span>
-                    </a>
-                  )}
+                <div
+                  class="bp"
+                  data-bp
+                  data-stage={i}
+                  data-labels={JSON.stringify(labels)}
+                  data-to-plan={t(bp.toPlan, lang)}
+                  data-to3d={t(bp.to3d, lang)}
+                >
+                  <svg class="bp-svg" viewBox={viewBox} aria-hidden="true" focusable="false" set:html={still(i)} />
+                  <div class="bp-foot mono">
+                    <span aria-hidden="true">
+                      {t(bp.name, lang)} · rev. <span class="rev" data-bp-rev>{'ABCD'[i]}</span>
+                    </span>
+                    {/* the view switch: only with JS (blueprint.ts shows it); a
+                        click anywhere on the drawing does the same */}
+                    <button type="button" class="bp-hint mono" data-bp-btn hidden>
+                      <span class="ico" aria-hidden="true">⇄</span> <span class="sr-only">{t(bp.switchTo, lang)}</span><span data-bp-hint>{t(bp.toPlan, lang)}</span>
+                    </button>
+                  </div>
                 </div>
               </article>
             </li>
@@ -244,7 +216,8 @@ const logLines = [
   .ct {
     font-size: var(--step-3);
     letter-spacing: -0.04em;
-    line-height: 1;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
   }
   .body {
     max-width: 34ch;
@@ -252,7 +225,7 @@ const logLines = [
   }
   @media (min-width: 48rem) {
     .ct {
-      font-size: var(--step-4);
+      font-size: clamp(2rem, 1.5rem + 2vw, 3.5rem);
     }
     .body {
       font-size: var(--step-1);
@@ -267,14 +240,6 @@ const logLines = [
     .side {
       gap: 0.55rem;
     }
-    .case {
-      gap: 0.55rem;
-      padding: 0.85rem;
-    }
-    .case-text {
-      font-size: 0.92rem;
-      line-height: 1.5;
-    }
   }
   .tag {
     color: var(--c-fg-subtle);
@@ -285,190 +250,164 @@ const logLines = [
     }
   }
 
-  .case {
+  /* --------------------------------------------------------- blueprint */
+  .bp {
+    position: relative;
     display: grid;
-    align-content: start;
-    gap: 0.8rem;
-    padding: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+    align-content: center;
+    gap: 0.4rem;
+    padding: clamp(0.6rem, 0.4rem + 1vw, 1.1rem);
     border: 1px solid var(--c-line);
     border-radius: var(--radius-m);
-    background: var(--c-bg);
+    background-color: var(--c-bg);
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color var(--dur-2) var(--ease-out);
   }
-  .case-label {
+  .bp:global(.is-live) {
+    cursor: pointer;
+  }
+  .bp:global(.is-live):hover {
+    border-color: var(--c-line-strong);
+  }
+  .bp-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    /* redrawn every frame while data flows: clicks land on the stable
+       container instead (Firefox drops a click whose target was replaced
+       between press and release) */
+    pointer-events: none;
+  }
+  .bp-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--c-fg-subtle);
+  }
+  .rev {
     color: var(--c-signal);
   }
-  .case-text {
-    color: var(--c-fg-muted);
-    max-width: 48ch;
+  /* the view switch (shown by blueprint.ts) */
+  .bp-hint {
+    margin: -0.35rem -0.5rem;
+    padding: 0.35rem 0.5rem;
+    border: 0;
+    border-radius: var(--radius-s);
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    transition: color var(--dur-2) var(--ease-out);
   }
-  .stack-link {
-    justify-self: start;
+  .bp-hint[hidden] {
+    display: none;
+  }
+  .bp:hover .bp-hint,
+  .bp-hint:focus-visible {
     color: var(--c-fg);
   }
-
-  /* ---------------------------------------------------------- diagrams */
-  .viz {
-    margin-top: 0.35rem;
+  .bp-hint:focus-visible {
+    outline: 2px solid var(--c-focus);
+    outline-offset: 1px;
   }
-  .cap {
-    display: block;
-    margin-top: 0.6rem;
-    color: var(--c-fg-subtle);
+  .ico {
+    display: inline-block;
+    color: var(--c-signal);
   }
 
-  /* 01 — a wall of files, a few of them carrying the incident */
-  .files {
-    display: grid;
-    grid-template-columns: repeat(16, minmax(0, 1fr));
-    gap: 3px;
+  /* the drawing (blueprint-scene.ts): colours only, so the theme switch
+     needs no re-render */
+  .bp-svg :global(line),
+  .bp-svg :global(polygon),
+  .bp-svg :global(circle),
+  .bp-svg :global(path) {
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-  .f {
-    aspect-ratio: 3 / 4;
-    border: 1px solid var(--c-line-strong);
-    border-radius: 1px;
-    transition:
-      opacity var(--dur-3) var(--ease-out),
-      background-color var(--dur-3) var(--ease-out),
-      border-color var(--dur-3) var(--ease-out);
-    transition-delay: calc(var(--k) * 12ms);
+  .bp-svg :global(.bp-grid) {
+    stroke: var(--c-line);
   }
-  .f.hot {
-    border-color: var(--c-signal);
-    background: var(--c-signal-soft);
+  .bp-svg :global(.bp-edge) {
+    stroke: var(--c-line-strong);
   }
-
-  /* 02 — log lines, the recurring ones picked out by a scan */
-  .lines {
-    position: relative;
-    display: grid;
-    gap: 7px;
-    padding-block: 2px;
-    overflow: hidden;
+  .bp-svg :global(.bp-plan) {
+    fill: var(--c-signal-soft);
+    fill-opacity: 0.5;
+    stroke: var(--c-fg-muted);
   }
-  .ln {
-    width: var(--w);
-    height: 6px;
-    border-radius: 1px;
-    background: var(--c-line-strong);
-    transition: background-color var(--dur-3) var(--ease-out);
-    transition-delay: calc(200ms + var(--k) * 90ms);
+  .bp-svg :global(.bp-dim) {
+    stroke: var(--c-fg-subtle);
   }
-  .ln.hot {
-    background: var(--c-signal);
+  .bp-svg :global(.bp-need) {
+    stroke: var(--c-signal);
   }
-  .scan {
-    position: absolute;
-    inset-inline: 0;
-    top: 0;
-    height: 2px;
-    background: var(--c-signal);
-    box-shadow: 0 0 12px 2px var(--c-signal-soft);
-    opacity: 0;
+  .bp-svg :global(.bp-link) {
+    fill: none;
+    stroke: var(--c-fg-muted);
   }
-
-  /* 03 — the pipeline lights up stage by stage */
-  .viz-pipe {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.45rem 0;
+  /* the data's way over the modules */
+  .bp-svg :global(.bp-track) {
+    fill: none;
+    stroke: var(--c-signal);
+    stroke-opacity: 0.55;
   }
-  .viz-pipe li {
-    display: inline-flex;
-    align-items: center;
+  .bp-svg :global(.bp-frame) {
+    fill: none;
+    stroke: var(--c-signal);
   }
-  .viz-pipe li:not(:last-child)::after {
-    content: '→';
-    padding-inline: 0.45rem;
-    color: var(--c-fg-subtle);
+  .bp-svg :global(.bp-face) {
+    stroke: var(--c-fg-muted);
   }
-  .viz-pipe li {
-    --c: var(--c-signal);
+  .bp-svg :global(.bp-face.top) {
+    fill: color-mix(in srgb, var(--c-fg) 14%, var(--c-bg));
   }
-  .viz-pipe li::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    margin-inline-end: 0.4rem;
-    background: var(--c);
-    transition: background-color var(--dur-3) var(--ease-out);
-    transition-delay: calc(var(--k) * 220ms);
+  .bp-svg :global(.bp-face.l) {
+    fill: color-mix(in srgb, var(--c-fg) 7%, var(--c-bg));
   }
-
-  /* 04 — the import quality checks tick in */
-  .viz-checks {
-    display: grid;
-    gap: 0.45rem;
-    color: var(--c-fg-muted);
+  .bp-svg :global(.bp-face.r) {
+    fill: color-mix(in srgb, var(--c-fg) 3%, var(--c-bg));
   }
-  @media (min-width: 30rem) {
-    .viz-checks {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: 1rem;
-    }
+  .bp-svg :global(.bp-item .bp-face) {
+    stroke: var(--c-fg-subtle);
   }
-  .viz-checks li {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
+  .bp-svg :global(.bp-item .bp-face.top) {
+    fill: color-mix(in srgb, var(--c-fg) 30%, var(--c-bg));
   }
-  .box {
-    position: relative;
-    flex: none;
-    width: 0.95rem;
-    height: 0.95rem;
-    border: 1px solid var(--c-signal);
-    border-radius: 2px;
+  .bp-svg :global(.is-lit .bp-face) {
+    stroke: var(--c-signal);
   }
-  .box::after {
-    content: '';
-    position: absolute;
-    left: 31%;
-    top: 12%;
-    width: 30%;
-    height: 55%;
-    border: solid var(--c-signal);
-    border-width: 0 2px 2px 0;
-    rotate: 45deg;
-    transition:
-      opacity var(--dur-2) var(--ease-out),
-      scale var(--dur-3) var(--ease-out);
-    transition-delay: calc(150ms + var(--k) * 160ms);
+  .bp-svg :global(.is-lit .bp-face.top) {
+    fill: color-mix(in srgb, var(--c-signal) 40%, var(--c-bg));
   }
-
-  /* initial states, only when scroll-stack.ts is running and motion is on:
-     the diagram of a step plays once, when that step is in view */
-  @media (prefers-reduced-motion: no-preference) {
-    .stack:global(.is-ready) .card:not(:global(.is-seen)) .f {
-      opacity: 0;
-    }
-    .stack:global(.is-ready) .card:not(:global(.is-seen)) .ln.hot {
-      background: var(--c-line-strong);
-    }
-    .stack:global(.is-ready) .card:not(:global(.is-seen)) .viz-pipe li {
-      --c: var(--c-line-strong);
-    }
-    .stack:global(.is-ready) .card:not(:global(.is-seen)) .box::after {
-      opacity: 0;
-      scale: 0.3;
-    }
-    .card:global(.is-seen) .scan {
-      animation: scan-down 1.1s var(--ease-io) 0.1s both;
-    }
+  .bp-svg :global(.is-lit .bp-face.l) {
+    fill: color-mix(in srgb, var(--c-signal) 20%, var(--c-bg));
   }
-  @keyframes scan-down {
-    0% {
-      opacity: 0;
-      top: 0;
-    }
-    15%,
-    80% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-      top: 100%;
-    }
+  .bp-svg :global(.is-lit .bp-face.r) {
+    fill: color-mix(in srgb, var(--c-signal) 10%, var(--c-bg));
+  }
+  .bp-svg :global(.bp-dot) {
+    fill: var(--c-signal);
+  }
+  .bp-svg :global(.bp-ok) {
+    fill: var(--c-bg);
+    stroke: var(--c-signal);
+  }
+  .bp-svg :global(.bp-ok path) {
+    fill: none;
+  }
+  .bp-svg :global(text) {
+    font-family: var(--font-mono);
+    text-anchor: middle;
+    letter-spacing: 0.02em;
+    stroke: var(--c-bg);
+    paint-order: stroke;
+  }
+  .bp-svg :global(.bp-lb) {
+    fill: var(--c-fg-muted);
+  }
+  .bp-svg :global(.bp-q) {
+    fill: var(--c-signal);
+    font-weight: 600;
   }
 
   /* --------------------------------------------------------------- AI */

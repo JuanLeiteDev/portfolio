@@ -23,6 +23,11 @@ test.describe('without JavaScript', () => {
     );
     expect(hiddenHints).toBe(0);
     await expect(page.locator('[data-intent-btn]').first()).toHaveAttribute('aria-expanded', 'true');
+    // each "How I work" card shows its own blueprint, drawn at build time
+    // (the last one: built and checked); the view switch needs JS, so it is hidden
+    await expect(page.locator('[data-bp] svg')).toHaveCount(4);
+    await expect(page.locator('[data-bp]').nth(3).locator('.bp-ok')).toHaveCount(3);
+    await expect(page.locator('[data-bp-btn]:visible')).toHaveCount(0);
   });
 
   test('contact actions and project pages work', async ({ page }) => {
@@ -33,7 +38,7 @@ test.describe('without JavaScript', () => {
     // each accordion panel is a plain link (the log analyser comes first)
     await page.locator('a[data-acc-link]').first().click();
     await expect(page).toHaveURL(/\/projetos\/log-analyzer\/$/);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Analisador de logs');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('XI.Analyzer');
   });
 
   test('language switch is a plain link', async ({ page }) => {

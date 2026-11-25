@@ -4,7 +4,8 @@
  * The stacking itself is CSS (`position: sticky`); this adds:
  *  - depth: each card gets `--depth` = how many later cards already cover
  *    it (continuous), and CSS scales/dims it from that, transform only;
- *  - the step in view (`is-seen`, once): its diagram plays a single time;
+ *  - the step in view (`is-seen` + a `stack:seen` event, once): its
+ *    blueprint morphs into this step's version a single time (blueprint.ts);
  *  - a fit check: if any card is taller than the space it has under its
  *    sticky offset (short phones, landscape, large text), the cards fall
  *    back to a normal list so nothing is ever cut off.
@@ -45,7 +46,11 @@ export function initScrollStack(list: HTMLElement, reduced: boolean): () => void
       if (stuck && !reduced) for (let j = i + 1; j < p.length; j += 1) depth += p[j] ?? 0;
       inner[i]?.style.setProperty('--depth', depth.toFixed(3));
       // a step counts as seen once it is well into the viewport
-      if (r.top < vh * 0.6) cards[i]?.classList.add('is-seen');
+      const card = cards[i];
+      if (card && r.top < vh * 0.6 && !card.classList.contains('is-seen')) {
+        card.classList.add('is-seen');
+        card.dispatchEvent(new CustomEvent('stack:seen'));
+      }
     });
   };
   const onScroll = () => {

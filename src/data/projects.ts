@@ -103,8 +103,8 @@ const all: Project[] = [
   // identifiers anonymised by him. Streamlit and the visible domain confirmed public by Juan (20/11/2026).
   {
     slug: 'log-analyzer',
-    name: { pt: 'Analisador de logs', en: 'Log analyser' },
-    tagline: { pt: 'Diagnóstico de incidentes a partir de logs', en: 'Incident diagnosis from log files' },
+    name: { pt: 'XI.Analyzer', en: 'XI.Analyzer' },
+    tagline: { pt: 'Analisador de logs para deteção de anomalias', en: 'Log analyser for anomaly detection' },
     year: '2026',
     kind: 'professional',
     context: { pt: 'Eleven Systems · ferramenta interna', en: 'Eleven Systems · internal tool' },
@@ -114,8 +114,8 @@ const all: Project[] = [
       en: 'A Python tool that processes thousands of log files and shows on a dashboard where problems recur.',
     },
     description: {
-      pt: 'Analisador de logs em Python e Streamlit: mais de 10 000 ficheiros e 5 milhões de linhas processados em menos de 3 minutos. Estudo de caso de Juan Leite.',
-      en: 'A Python and Streamlit log analyser: more than 10,000 files and 5 million lines processed in under 3 minutes. Case study by Juan Leite.',
+      pt: 'XI.Analyzer: analisador de logs em Python e Streamlit. Mais de 10 000 ficheiros e 5 milhões de linhas processados em menos de 3 minutos. Caso de Juan Leite.',
+      en: 'XI.Analyzer: a Python and Streamlit log analyser. More than 10,000 files and 5 million lines processed in under 3 minutes. Case study by Juan Leite.',
     },
     lede: {
       pt: 'Uma ferramenta em Python que processa grandes volumes de logs e mostra, numa dashboard, onde os problemas se repetem.',
@@ -175,8 +175,8 @@ const all: Project[] = [
       {
         src: logQuality,
         alt: {
-          pt: 'Ecrã do analisador de logs com o histórico de análises concluídas e os indicadores de qualidade da importação: ficheiros incluídos, ficheiros falhados, percentagem de linhas reconhecidas, linhas lidas e reconhecidas, e período dos ficheiros.',
-          en: 'Log analyser screen with the history of completed analyses and the import quality indicators: included files, failed files, share of recognised lines, lines read and recognised, and file period.',
+          pt: 'Ecrã do XI.Analyzer com o histórico de análises concluídas e os indicadores de qualidade da importação: ficheiros incluídos, ficheiros falhados, percentagem de linhas reconhecidas, linhas lidas e reconhecidas, e período dos ficheiros.',
+          en: 'XI.Analyzer screen with the history of completed analyses and the import quality indicators: included files, failed files, share of recognised lines, lines read and recognised, and file period.',
         },
         caption: {
           pt: 'Qualidade de cada importação e histórico de análises. Identificadores anonimizados.',
@@ -186,8 +186,8 @@ const all: Project[] = [
       {
         src: logPerspective,
         alt: {
-          pt: 'Perspetiva geral do analisador com os totais de serviços e dispositivos analisados, os dispositivos que exigem avaliação e gráficos de barras por dispositivo.',
-          en: 'Overall view of the analyser with totals of services and devices analysed, devices that need assessment and bar charts per device.',
+          pt: 'Perspetiva geral do XI.Analyzer com os totais de serviços e dispositivos analisados, os dispositivos que exigem avaliação e gráficos de barras por dispositivo.',
+          en: 'Overall view of XI.Analyzer with totals of services and devices analysed, devices that need assessment and bar charts per device.',
         },
         caption: {
           pt: 'Perspetivas por dispositivo e por motorista, que mostram onde os problemas se repetem.',
@@ -203,7 +203,7 @@ const all: Project[] = [
   {
     slug: 'xi-repair',
     name: { pt: 'XI.Repair', en: 'XI.Repair' },
-    tagline: { pt: 'Reparações: do papel para uma app', en: 'Repairs moved from paper to an app' },
+    tagline: { pt: 'Automação na gestão de fichas de trabalho', en: 'Automated job sheet management' },
     year: '2026',
     kind: 'professional',
     context: { pt: 'Eleven Systems · ferramenta interna', en: 'Eleven Systems · internal tool' },
@@ -322,7 +322,7 @@ const all: Project[] = [
   {
     slug: 'xi-support',
     name: { pt: 'XI.Support', en: 'XI.Support' },
-    tagline: { pt: 'Tickets com JWT, 2FA e passkeys', en: 'Tickets with JWT, 2FA and passkeys' },
+    tagline: { pt: 'Plataforma de gestão de suporte técnico', en: 'Technical support management platform' },
     year: '2026',
     kind: 'professional',
     context: { pt: 'Eleven Systems · backend e autenticação', en: 'Eleven Systems · backend and authentication' },
@@ -412,7 +412,7 @@ const all: Project[] = [
   {
     slug: 'mini-shell',
     name: { pt: 'Mini Shell File System', en: 'Mini Shell File System' },
-    tagline: { pt: 'Shell em C sobre chamadas POSIX', en: 'A shell in C built on raw POSIX calls' },
+    tagline: { pt: 'Interpretador de comandos e gestão de ficheiros', en: 'Command interpreter and file management' },
     year: '2026',
     kind: 'academic',
     context: { pt: 'UPCA · Sistemas Operativos', en: 'UPCA · Operating Systems' },
