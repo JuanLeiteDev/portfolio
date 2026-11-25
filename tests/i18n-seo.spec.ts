@@ -74,10 +74,37 @@ test.describe('i18n + SEO metadata', () => {
     }
   });
 
-  test('structured data is valid JSON with a Person', async ({ page }) => {
-    await page.goto('/');
+  type Node = { '@type': string; '@id'?: string; name?: string; mainEntity?: { '@id': string }; author?: { '@id': string } };
+  const graphOf = async (page: import('@playwright/test').Page, path: string) => {
+    await page.goto(path);
     const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
-    const parsed = blocks.map((b) => JSON.parse(b) as { '@type': string; name?: string });
-    expect(parsed.some((d) => d['@type'] === 'Person' && d.name === 'Juan Lucas Souza Leite')).toBe(true);
+    expect(blocks).toHaveLength(1);
+    return (JSON.parse(blocks[0]!) as { '@graph': Node[] })['@graph'];
+  };
+
+  test('structured data: home has Person, WebSite (site name) and ProfilePage linked by @id', async ({ page }) => {
+    for (const path of ['/', '/en/']) {
+      const graph = await graphOf(page, path);
+      const person = graph.find((d) => d['@type'] === 'Person');
+      expect(person?.name).toBe('Juan Lucas Souza Leite');
+      expect(graph.find((d) => d['@type'] === 'WebSite')?.name).toBe('Juan Leite');
+      expect(graph.find((d) => d['@type'] === 'ProfilePage')?.mainEntity?.['@id']).toBe(person?.['@id']);
+    }
+    const project = await graphOf(page, PAGES.pt[1]!);
+    expect(project.some((d) => d['@type'] === 'WebSite')).toBe(false);
+    const person = project.find((d) => d['@type'] === 'Person');
+    expect(project.find((d) => d['@type'] === 'CreativeWork')?.author?.['@id']).toBe(person?.['@id']);
+  });
+
+  test('favicon: a raster icon of at least 48px is declared first (Google Search ignores SVG)', async ({ page, request }) => {
+    await page.goto('/');
+    const first = page.locator('link[rel="icon"]').first();
+    await expect(first).toHaveAttribute('type', 'image/png');
+    await expect(first).toHaveAttribute('sizes', '96x96');
+    const res = await request.get((await first.getAttribute('href'))!);
+    expect(res.status()).toBe(200);
+    expect(res.headers()['content-type']).toContain('image/png');
+    const ico = await (await request.get('/favicon.ico')).body();
+    expect(ico.readUInt16LE(4), 'ICO frame count').toBe(3);
   });
 });

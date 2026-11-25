@@ -2,7 +2,8 @@
  * Generates static brand assets with the site's own fonts and photo:
  *   public/og/og-pt.png, public/og/og-en.png   (1200×630 Open Graph cards)
  *   public/og/juan-leite.jpg                    (structured-data photo)
- *   public/apple-touch-icon.png (180), public/icon-512.png, public/favicon.ico (32, PNG-in-ICO)
+ *   public/favicon-96x96.png, public/favicon.ico (16/32/48), public/apple-touch-icon.png (180),
+ *   public/icon-192.png, public/icon-512.png   (all rendered from public/favicon.svg)
  *
  * Usage: node scripts/generate-assets.mjs   (re-run after changing copy/brand)
  */
@@ -49,12 +50,6 @@ p{font-size:34px;line-height:1.2;font-weight:500;letter-spacing:-.015em;margin-t
 <div class="ph"><img src="data:image/jpeg;base64,${photo}"><span class="c tl"></span><span class="c br"></span></div></div>
 <div class="ft"><span>juanleitedev.com</span><span>python · automation · applied ai</span></div></body></html>`;
 
-const icon = (size) => `<!doctype html><html><head><style>${fonts}
-body{width:${size}px;height:${size}px;background:#0d0e0c;display:grid;place-items:center;position:relative}
-span{font-family:M;font-weight:700;color:#ece9e1;font-size:${size * 0.4}px;letter-spacing:-.06em}
-i{position:absolute;right:${size * 0.2}px;bottom:${size * 0.22}px;width:${size * 0.13}px;height:${Math.max(2, size * 0.05)}px;background:#ff6b2c}
-</style></head><body><span>JL</span><i></i></body></html>`;
-
 await mkdir('public/og', { recursive: true });
 const browser = await chromium.launch();
 
@@ -66,36 +61,48 @@ for (const lang of ['pt', 'en']) {
   await page.close();
 }
 
-const shot = async (size) => {
-  const page = await browser.newPage({ viewport: { width: size, height: size } });
-  await page.setContent(icon(size), { waitUntil: 'load' });
-  await page.evaluate(() => document.fonts.ready);
-  const buf = await page.screenshot();
-  await page.close();
-  return buf;
-};
-await writeFile('public/apple-touch-icon.png', await shot(180));
-await writeFile('public/icon-512.png', await shot(512));
+await browser.close();
 
-// favicon.ico: single 32×32 PNG wrapped in an ICO container
-const png32 = await sharp(await shot(64)).resize(32, 32).png().toBuffer();
-const header = Buffer.alloc(22);
+// Icons: every raster is rendered from public/favicon.svg (the browser-tab icon),
+// so the tab, Google Search, iOS and the manifest all show the same mark.
+// The SVG's light-scheme media query is ignored by the rasteriser → dark variant.
+const svg = await readFile('public/favicon.svg');
+const raster = (size, { flatten = false } = {}) => {
+  let img = sharp(svg, { density: (72 * size) / 32 }).resize(size, size);
+  // iOS/Android apply their own mask: fill the rounded corners instead of leaving them transparent.
+  if (flatten) img = img.flatten({ background: '#0d0e0c' });
+  return img.png({ compressionLevel: 9 }).toBuffer();
+};
+
+// Google Search needs a raster favicon (SVG is not supported) of at least 48×48px.
+await writeFile('public/favicon-96x96.png', await raster(96));
+await writeFile('public/apple-touch-icon.png', await raster(180, { flatten: true }));
+await writeFile('public/icon-192.png', await raster(192, { flatten: true }));
+await writeFile('public/icon-512.png', await raster(512, { flatten: true }));
+
+// favicon.ico: 16/32/48 PNG frames in one ICO container
+const frames = await Promise.all([16, 32, 48].map(async (size) => ({ size, png: await raster(size) })));
+const header = Buffer.alloc(6);
 header.writeUInt16LE(0, 0); // reserved
 header.writeUInt16LE(1, 2); // type: icon
-header.writeUInt16LE(1, 4); // count
-header.writeUInt8(32, 6); // width
-header.writeUInt8(32, 7); // height
-header.writeUInt8(0, 8); // palette
-header.writeUInt8(0, 9); // reserved
-header.writeUInt16LE(1, 10); // planes
-header.writeUInt16LE(32, 12); // bpp
-header.writeUInt32LE(png32.length, 14); // size
-header.writeUInt32LE(22, 18); // offset
-await writeFile('public/favicon.ico', Buffer.concat([header, png32]));
+header.writeUInt16LE(frames.length, 4); // count
+let offset = 6 + 16 * frames.length;
+const entries = frames.map(({ size, png }) => {
+  const e = Buffer.alloc(16);
+  e.writeUInt8(size, 0); // width
+  e.writeUInt8(size, 1); // height
+  e.writeUInt8(0, 2); // palette
+  e.writeUInt8(0, 3); // reserved
+  e.writeUInt16LE(1, 4); // planes
+  e.writeUInt16LE(32, 6); // bpp
+  e.writeUInt32LE(png.length, 8); // size
+  e.writeUInt32LE(offset, 12); // offset
+  offset += png.length;
+  return e;
+});
+await writeFile('public/favicon.ico', Buffer.concat([header, ...entries, ...frames.map((f) => f.png)]));
 
 await sharp('src/assets/juan-leite.webp').resize(800).jpeg({ quality: 80, mozjpeg: true }).toFile('public/og/juan-leite.jpg');
-
-await browser.close();
 // Recompress OG cards (PNG screenshots are large)
 for (const lang of ['pt', 'en']) {
   const p = `public/og/og-${lang}.png`;

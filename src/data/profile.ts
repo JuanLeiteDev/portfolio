@@ -7,7 +7,20 @@ import type { L } from '@/i18n';
 export const profile = {
   name: 'Juan Leite',
   fullName: 'Juan Lucas Souza Leite',
+  /** Name parts and the variants people search for (structured data only). */
+  givenName: 'Juan',
+  additionalName: 'Lucas',
+  familyName: 'Souza Leite',
+  alternateNames: ['Juan Leite', 'Juan Lucas Leite', 'Juan Lucas'],
   url: 'https://juanleitedev.com',
+  /** Stable JSON-LD id so every page points at the same Person. */
+  personId: 'https://juanleitedev.com/#person',
+  /** Public profiles of the same person (schema.org sameAs). */
+  sameAs: [
+    'https://github.com/JuanLeiteDev',
+    'https://www.linkedin.com/in/juan-leite/',
+    'https://www.instagram.com/juannlucas._/',
+  ],
   location: { pt: 'Barcelos, Portugal', en: 'Barcelos, Portugal' } satisfies L,
   field: {
     pt: 'Software, automação e IA aplicada',

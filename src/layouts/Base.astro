@@ -32,13 +32,22 @@ const canonical = new URL(paths[lang], site).href;
 const alternate = new URL(paths[otherLang(lang)], site).href;
 const ogImage = new URL(`/og/og-${lang}.png`, site).href;
 
+/*
+ * Structured data as one @graph. Every page carries the same Person (by @id);
+ * the home pages add WebSite (Google's "site name": "Juan Leite" instead of the
+ * domain) and ProfilePage (the page is about that Person).
+ */
 const person = {
-  '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': profile.personId,
   name: profile.fullName,
-  alternateName: profile.name,
-  url: site.href,
+  givenName: profile.givenName,
+  additionalName: profile.additionalName,
+  familyName: profile.familyName,
+  alternateName: profile.alternateNames,
+  url: new URL('/', site).href,
   image: new URL('/og/juan-leite.jpg', site).href,
+  email: `mailto:${profile.email}`,
   jobTitle: lang === 'pt' ? 'Desenvolvedor de Software & Suporte de TI' : 'Software Developer & IT Support',
   worksFor: { '@type': 'Organization', name: 'Eleven Systems' },
   alumniOf: [
@@ -46,9 +55,34 @@ const person = {
   ],
   address: { '@type': 'PostalAddress', addressLocality: 'Barcelos', addressCountry: 'PT' },
   knowsLanguage: ['pt', 'en'],
-  sameAs: ['https://github.com/JuanLeiteDev', 'https://www.linkedin.com/in/juan-leite/'],
+  knowsAbout: ['Python', lang === 'pt' ? 'Automação de processos' : 'Process automation', 'Backend', t(profile.field, lang)],
+  sameAs: profile.sameAs,
 };
-const structured = [person, ...jsonLd];
+const websiteId = new URL('/#website', site).href;
+const homeNodes = onHome
+  ? [
+      {
+        '@type': 'WebSite',
+        '@id': websiteId,
+        url: new URL('/', site).href,
+        name: profile.name,
+        alternateName: [profile.fullName, site.hostname],
+        inLanguage: [htmlLang.pt, htmlLang.en],
+        publisher: { '@id': profile.personId },
+      },
+      {
+        '@type': 'ProfilePage',
+        '@id': `${canonical}#profilepage`,
+        url: canonical,
+        name: title,
+        description,
+        inLanguage: htmlLang[lang],
+        isPartOf: { '@id': websiteId },
+        mainEntity: { '@id': profile.personId },
+      },
+    ]
+  : [];
+const structured = { '@context': 'https://schema.org', '@graph': [person, ...homeNodes, ...jsonLd] };
 ---
 
 <!doctype html>
@@ -82,8 +116,10 @@ const structured = [person, ...jsonLd];
     <meta property="og:image:alt" content={`${profile.name} — ${t(profile.field, lang)}`} />
     <meta name="twitter:card" content="summary_large_image" />
 
+    <!-- Raster first: Google Search does not use SVG favicons (needs ≥48px). -->
+    <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
@@ -109,7 +145,7 @@ const structured = [person, ...jsonLd];
       })();
     </script>
 
-    {structured.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
+    <script type="application/ld+json" set:html={JSON.stringify(structured)} />
   </head>
   <body>
     <a class="skip-link" href="#main">{t(ui.skip, lang)}</a>
