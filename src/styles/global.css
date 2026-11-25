@@ -424,6 +424,14 @@
   :root.theme-vt::view-transition-new(root) {
     clip-path: circle(0 at 50% 50%);
   }
+  /* the new snapshot must show the final theme at once: a colour or
+     background still easing in would leave new-theme text on an old-theme
+     background inside the circle */
+  :root.theme-vt *,
+  :root.theme-vt *::before,
+  :root.theme-vt *::after {
+    transition: none !important;
+  }
   /* a downward arrow (in-page jump) moves the way it points */
   .btn:hover .arrow-down,
   .btn:focus-visible .arrow-down {
