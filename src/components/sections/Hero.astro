@@ -297,6 +297,13 @@ const { lang } = Astro.props;
   .flip:global(.is-flipped) .flip-in {
     transform: rotateY(180deg);
   }
+  /* theme switch: the page snapshot (View Transitions) ignores
+     backface-visibility in Safari and some Chrome builds, so the hidden face
+     would be drawn on top, mirrored. Hide it outright while switching. */
+  :global(:root.theme-vt) .flip:not(:global(.is-flipped)) .back,
+  :global(:root.theme-vt) .flip:global(.is-flipped) .portrait {
+    visibility: hidden;
+  }
   .face {
     position: absolute;
     inset: 0;

@@ -24,6 +24,8 @@ type ViewTransitionDoc = Document & {
   startViewTransition?: (update: () => void) => { ready: Promise<void>; finished: Promise<void> };
 };
 
+let switching = 0;
+
 /**
  * Flips the theme. Where the View Transitions API exists (and motion is
  * allowed) the new theme spreads over the page as a circle growing from
@@ -63,8 +65,10 @@ export const toggleTheme = (origin?: { x: number; y: number }): Theme => {
     .catch(() => {
       /* transition skipped: the theme is applied anyway */
     });
+  const id = ++switching;
   const done = () => {
-    root.classList.remove('theme-vt');
+    // a quick second tap skips this transition: leave the class to the newer one
+    if (id === switching) root.classList.remove('theme-vt');
     anim?.cancel(); // the pseudo-element is gone; don't leave the animation on <html>
   };
   vt.finished.then(done, done);
