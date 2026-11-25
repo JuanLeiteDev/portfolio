@@ -175,7 +175,11 @@ if (stackWorld) {
 
 const stack = document.querySelector<HTMLElement>('[data-stack]');
 if (stack) {
-  void import('./scroll-stack').then(({ initScrollStack }) => initScrollStack(stack, reduce.matches));
+  // blueprints first, so they hear the stack's first `stack:seen`
+  void Promise.all([import('./blueprint'), import('./scroll-stack')]).then(([{ initBlueprints }, { initScrollStack }]) => {
+    initBlueprints(stack, reduce.matches);
+    initScrollStack(stack, reduce.matches);
+  });
 }
 
 /* ------------------------------------------- portrait: flip card toggle */

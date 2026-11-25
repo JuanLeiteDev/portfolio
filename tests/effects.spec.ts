@@ -276,11 +276,48 @@ test.describe('scroll stack', () => {
     await expect(page.locator('[data-stack-card]').first()).toHaveCSS('position', 'static');
   });
 
+  test('blueprint evolves card by card (rev. A → D) and switches 3D ⇄ plan', async ({ page }, info) => {
+    const errors = trackErrors(page);
+    await page.goto('/');
+    const stack = page.locator('[data-stack]');
+    await expect(stack).toHaveClass(/is-ready/);
+    const bps = page.locator('[data-bp]');
+    await expect(bps).toHaveCount(4);
+    // bring each card to its sticky place in turn
+    const tops = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('[data-stack-card]')).map(
+        (c) => c.getBoundingClientRect().top + window.scrollY - (parseFloat(getComputedStyle(c).top) || 0),
+      ),
+    );
+    for (let i = 0; i < 4; i += 1) {
+      await page.evaluate((y) => window.scrollTo({ top: y + 30, behavior: 'instant' }), tops[i]!);
+      await expect(bps.nth(i).locator('[data-bp-rev]')).toHaveText('ABCD'[i]!, { timeout: 6000 });
+    }
+    // the last step: three modules, each checked, the result lit
+    const last = bps.nth(3);
+    await expect(last.locator('.bp-ok')).toHaveCount(3, { timeout: 6000 });
+    await expect(last.locator('.is-lit')).toHaveCount(1);
+    // a click (tap on phones) anywhere on the drawing switches to the plan view
+    const btn = last.getByRole('button', { name: 'Mudar o blueprint para planta' });
+    await expect(btn).toBeVisible();
+    // (on the drawing itself, while its data is flowing)
+    const at = { position: { x: 120, y: 60 } };
+    if (info.project.name.startsWith('mobile')) await last.tap(at);
+    else await last.click(at);
+    await expect(last).toHaveClass(/is-plan/);
+    await expect(last.getByRole('button')).toHaveAccessibleName('Mudar o blueprint para 3D');
+    // and the button (keyboard) switches back
+    await last.getByRole('button').focus();
+    await page.keyboard.press('Enter');
+    await expect(last).not.toHaveClass(/is-plan/);
+    expect(errors).toEqual([]);
+  });
+
   test('English copy is in place', async ({ page }) => {
     await page.goto('/en/');
-    await expect(page.locator('#step-test')).toContainText('Testing');
-    await expect(page.locator('.case-label').first()).toHaveText('In the log analyser');
-    await expect(page.locator('.stack-link')).toHaveAttribute('href', '/en/projects/log-analyzer/');
+    await expect(page.locator('#step-test')).toContainText('Delivery');
+    await expect(page.locator('[data-bp]').first().getByRole('button')).toHaveAccessibleName('Switch the blueprint to plan');
+    await expect(page.locator('[data-bp] text').filter({ hasText: 'solution' }).last()).toBeAttached();
   });
 });
 
@@ -293,7 +330,7 @@ test.describe('skills: option wheel', () => {
     const wheel = sk.getByRole('listbox');
     await expect(wheel).toBeVisible();
     const opts = wheel.getByRole('option');
-    await expect(opts).toHaveCount(6);
+    await expect(opts).toHaveCount(7);
     await expect(opts.first()).toHaveAttribute('aria-selected', 'true');
     const activeText = () => sk.locator('[data-sk-panel].is-active .count .cur').textContent();
     expect(await activeText()).toBe('01');
@@ -333,5 +370,43 @@ test.describe('skills: option wheel', () => {
     for (let i = 1; i <= 10; i += 1) await page.mouse.move(x, y - i * 20, { steps: 2 });
     await page.mouse.up();
     await expect(opts.first()).toHaveAttribute('aria-selected', 'false');
+  });
+
+  test('mobile: tapping a title goes straight to it (no flicker through the others)', async ({ page }, info) => {
+    test.skip(!info.project.name.startsWith('mobile'), 'mobile only');
+    await page.goto('/');
+    const sk = page.locator('[data-sk]');
+    await sk.scrollIntoViewIfNeeded();
+    const opts = sk.getByRole('option');
+    await expect(opts.first()).toHaveAttribute('aria-selected', 'true');
+    // record every title that becomes selected
+    await page.evaluate(() => {
+      const w = window as unknown as { skLog: number[] };
+      w.skLog = [];
+      const all = Array.from(document.querySelectorAll('[data-sk-opt]'));
+      new MutationObserver((ms) => {
+        for (const m of ms) {
+          const el = m.target as Element;
+          if (el.getAttribute('aria-selected') === 'true') w.skLog.push(all.indexOf(el));
+        }
+      }).observe(document.querySelector('[data-sk-wheel]')!, { subtree: true, attributeFilter: ['aria-selected'] });
+    });
+    const log = () => page.evaluate(() => (window as unknown as { skLog: number[] }).skLog);
+    for (const [to, from] of [
+      [1, 0],
+      [2, 1],
+      [1, 2],
+    ] as const) {
+      await page.evaluate(() => ((window as unknown as { skLog: number[] }).skLog = []));
+      // tap where the title is, like a finger (locator.tap() would first
+      // scrollIntoView it, which scrolls the strip itself)
+      const r = (await opts.nth(to).boundingBox())!;
+      await page.touchscreen.tap(r.x + r.width / 2, r.y + r.height / 2);
+      await expect(opts.nth(to)).toHaveAttribute('aria-selected', 'true');
+      // let the smooth scroll finish, then nothing but the tapped title was selected
+      await page.waitForTimeout(900);
+      expect(await log(), `tap ${from} → ${to}`).toEqual([to]);
+      await expect(opts.nth(to)).toHaveAttribute('aria-selected', 'true');
+    }
   });
 });
