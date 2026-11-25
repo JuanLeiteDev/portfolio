@@ -39,13 +39,12 @@ const labels = {
 
 const jsonLd = [
   {
-    '@context': 'https://schema.org',
     '@type': 'CreativeWork',
     name,
     description,
     dateCreated: p.year,
     inLanguage: lang === 'pt' ? 'pt-PT' : 'en',
-    author: { '@type': 'Person', name: profile.fullName, url: profile.url },
+    author: { '@id': profile.personId },
     keywords: p.stack.join(', '),
     ...(p.links[0] ? { url: p.links[0].href } : {}),
   },
