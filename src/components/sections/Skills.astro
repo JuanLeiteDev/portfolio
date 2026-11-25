@@ -12,7 +12,6 @@
  * (swipe, snap); the one in the centre is selected and the text below
  * follows. The page's vertical scroll is never captured.
  * Without JS: the titles are a plain list and every area's text is shown.
- * Previous bento grid: Skills.grid.astro (backup).
  */
 import Section from '@/components/ui/Section.astro';
 import { skills } from '@/data/home';
@@ -22,7 +21,7 @@ interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-// reading order (same as the old bento)
+// reading order
 const order = ['software', 'automation', 'systems', 'backend', 'ai', 'tooling'];
 const areas = order.map((id) => skills.areas.find((a) => a.id === id)!).filter(Boolean);
 const total = String(areas.length).padStart(2, '0');

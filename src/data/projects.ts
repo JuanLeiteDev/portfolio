@@ -618,4 +618,3 @@ const all: Project[] = [
 const order = ['log-analyzer', 'xi-repair', 'xi-support', 'mini-shell', 'ps2'];
 export const projects: Project[] = order.map((slug) => all.find((p) => p.slug === slug)!);
 
-export const getProject = (slug: string): Project | undefined => projects.find((p) => p.slug === slug);

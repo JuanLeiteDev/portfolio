@@ -3,14 +3,12 @@
  * Projects: every project, the log analyser included, in one accordion
  * gallery (after React Bits "Accordion Gallery", rebuilt in CSS + a few
  * lines of TS, no GSAP): one panel is open at a time. The log analyser opens
- * first. Its figures (projectsSection.featured.stats) and the Odometer
- * component are kept, unused for now, to be reused elsewhere.
+ * first.
  * Desktop: a row of panels; hover or keyboard focus opens one, the others
  * narrow, tilt slightly and go grey. Below 48rem: a vertical stack, a tap
  * on a closed panel opens it, a tap on the open one follows its link.
  * Each panel is one link (stretched over the panel); the GitHub link sits
  * above it, so links are never nested.
- * Previous list layout: Projects.list.astro (backup).
  */
 import Section from '@/components/ui/Section.astro';
 import { Image } from 'astro:assets';

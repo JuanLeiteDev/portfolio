@@ -178,54 +178,6 @@ if (stack) {
   void import('./scroll-stack').then(({ initScrollStack }) => initScrollStack(stack, reduce.matches));
 }
 
-/* ------------------------------------------------ skills bento: light */
-
-const bento = document.querySelector<HTMLElement>('[data-bento]');
-if (bento) {
-  const tiles = Array.from(bento.querySelectorAll<HTMLElement>('.tile'));
-  const place = (tile: HTMLElement, x: number, y: number) => {
-    const r = tile.getBoundingClientRect();
-    tile.style.setProperty('--mx', `${x - r.left}px`);
-    tile.style.setProperty('--my', `${y - r.top}px`);
-  };
-  if (finePointer.matches) {
-    // every tile near the pointer lights its border, not only the hovered one
-    let frame = 0;
-    let px = 0;
-    let py = 0;
-    bento.addEventListener(
-      'pointermove',
-      (e) => {
-        px = e.clientX;
-        py = e.clientY;
-        if (frame) return;
-        frame = requestAnimationFrame(() => {
-          frame = 0;
-          tiles.forEach((tile) => place(tile, px, py));
-          bento.classList.add('is-near');
-        });
-      },
-      { passive: true },
-    );
-    bento.addEventListener('pointerleave', () => bento.classList.remove('is-near'));
-  } else if (!reduce.matches) {
-    // touch: a light blooms from the point of contact
-    bento.addEventListener(
-      'pointerdown',
-      (e) => {
-        const tile = (e.target as Element | null)?.closest<HTMLElement>('.tile');
-        if (!tile) return;
-        place(tile, e.clientX, e.clientY);
-        tile.classList.remove('is-lit');
-        void tile.offsetWidth; // restart the transition on repeated taps
-        tile.classList.add('is-lit');
-        window.setTimeout(() => tile.classList.remove('is-lit'), 520);
-      },
-      { passive: true },
-    );
-  }
-}
-
 /* ------------------------------------------- portrait: flip card toggle */
 
 // The whole card is a button (aria-pressed); its back holds "about me".
