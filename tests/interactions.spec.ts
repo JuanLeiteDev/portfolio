@@ -16,7 +16,7 @@ test.describe('command menu (desktop)', () => {
     const input = page.getByRole('combobox');
     await expect(input).toBeFocused();
     await input.fill('percur');
-    await expect(page.getByRole('option')).toHaveCount(1);
+    await expect(dialog.getByRole('option')).toHaveCount(1);
     await page.keyboard.press('Enter');
     await expect(dialog).toBeHidden();
     await expect(page).toHaveURL(/#percurso$/);
@@ -67,7 +67,7 @@ test.describe('mobile navigation', () => {
     await page.locator('.dock [data-cmd-open]').tap();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
-    await page.getByRole('option', { name: /Mini Shell/ }).tap();
+    await dialog.getByRole('option', { name: /Mini Shell/ }).tap();
     await expect(page).toHaveURL(/\/projetos\/mini-shell\/$/);
     expect(errors).toEqual([]);
   });
@@ -100,11 +100,6 @@ test.describe('motion preferences', () => {
     page.on('request', (r) => requests.push(r.url()));
     await page.goto('/');
     await expect(page.locator('.dc-cell')).toHaveCount(0);
-    const odo = page.locator('[data-odometer]').first();
-    await expect(odo.locator('.sr-only')).toHaveText(/10\s?000\+/);
-    // never primed: the server-rendered final digits stay (1, 0 → "10K+")
-    await expect(odo).not.toHaveAttribute('data-odo', /.+/);
-    await expect(odo.locator('.odo-col').first()).toHaveAttribute('style', /--d:1/);
     // the Stack: no simulation, the objects rest in rows
     await page.evaluate(() => document.querySelector('[data-stackbox]')?.scrollIntoView({ block: 'center', behavior: 'instant' }));
     const world = page.locator('[data-stackbox] .sb-world');
@@ -138,7 +133,9 @@ test('project pages: back link returns to the project index', async ({ page }) =
   await expect(page).toHaveURL(/\/en\/#projects$/);
 });
 
-test('odometers start from 0 when the card appears and settle on the compact figure', async ({ page }) => {
+// The Odometer component is kept for reuse but is not on any page right now
+// (the project figures left the Projects section). Re-enable when it returns.
+test.skip('odometers start from 0 when the card appears and settle on the compact figure', async ({ page }) => {
   await page.goto('/');
   const odo = page.locator('[data-odometer]').first();
   const cols = odo.locator('.odo-col');

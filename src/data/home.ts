@@ -20,23 +20,11 @@ export const hero = {
     en: 'Software · Automation · Applied AI',
   },
   statement: {
-    pt: 'Construo ferramentas em Python que automatizam processos e ajudam a diagnosticar incidentes.',
-    en: 'I build Python tools that automate processes and help diagnose incidents.',
+    pt: 'Desenvolvo software para solução de problemas reais.',
+    en: 'I build software that solves real problems.',
   },
-  keywords: [
-    { pt: 'Python', en: 'Python' },
-    { pt: 'Backend', en: 'Backend' },
-    { pt: 'Dados', en: 'Data' },
-  ] satisfies L[],
   ctaPrimary: { pt: 'Ver projetos', en: 'See projects' },
   ctaSecondary: { pt: 'Vamos falar', en: "Let's talk" },
-  /** Live local time in the hero metadata (useful for remote-work contacts). */
-  clockLabel: { pt: 'hora local', en: 'local time' },
-  meta: [
-    { k: { pt: 'base', en: 'based' }, v: { pt: 'Barcelos, PT', en: 'Barcelos, PT' } },
-    { k: { pt: 'estudo', en: 'study' }, v: { pt: 'Eng. Sistemas Informáticos · UPCA', en: 'Computer Systems Eng. · UPCA' } },
-    { k: { pt: 'agora', en: 'now' }, v: { pt: 'Suporte Técnico N1 · Eleven Systems', en: 'L1 Technical Support · Eleven Systems' } },
-  ] satisfies { k: L; v: L }[],
   photoAlt: {
     pt: 'Retrato de Juan Leite, de camisa azul-escura, a sorrir.',
     en: 'Portrait of Juan Leite in a dark blue shirt, smiling.',
@@ -45,8 +33,8 @@ export const hero = {
   about: {
     title: { pt: 'Sobre mim', en: 'About me' },
     text: {
-      pt: 'Estudo Engenharia de Sistemas Informáticos na UPCA e trabalho no suporte técnico da Eleven Systems, onde resolvo incidentes e construo ferramentas internas em Python. Venho da eletrotecnia (PAP com 20/20) e em 2027 faço Erasmus na Bélgica.',
-      en: 'I study Computer Systems Engineering at UPCA and work in technical support at Eleven Systems, where I resolve incidents and build internal tools in Python. I come from electrical engineering (final project graded 20/20), and in 2027 I am off to Belgium on Erasmus.',
+      pt: 'Sou o Juan Leite, tenho 20 anos e foi a curiosidade pela tecnologia que me levou à engenharia informática. Gosto de compreender sistemas, procuro aperfeiçoar constantemente as minhas competências e aplicar a tecnologia à resolução de problemas.',
+      en: "I'm Juan Leite, I'm 20, and it was curiosity about technology that led me to computer engineering. I like understanding how systems work, I keep working to sharpen my skills, and I apply technology to solving problems.",
     },
     place: { pt: 'Barcelos, PT', en: 'Barcelos, PT' },
     flip: { pt: 'Ver sobre mim', en: 'Show about me' },
@@ -63,25 +51,22 @@ export interface RevealItem {
 /* --------------------------------------------------------------- projects */
 
 /**
- * Projects = the former "Impact" + "Projects" sections. The log analyser is
- * the featured card (its two documented figures carry it); the other projects
- * follow as rows.
+ * Projects: one accordion gallery; the log analyser (`featured`) opens first.
  */
 export const projectsSection = {
   title: { pt: 'Projetos.', en: 'Projects.' },
   featured: {
     slug: 'log-analyzer',
-    where: { pt: 'Python · Eleven Systems · 2026', en: 'Python · Eleven Systems · 2026' },
     /**
      * Documented figures (case study + CV: "more than 10 000 files and
-     * 5 million lines"). `value` is the real figure (read by screen readers);
+     * 5 million lines"), kept for the Odometer counter (not on the page
+     * right now). `value` is the real figure (read by screen readers);
      * `compact` + `abbr` is how it is drawn: 10K+, 5M+.
      */
     stats: [
       { value: 10_000, compact: 10, abbr: 'K', unit: { pt: 'ficheiros', en: 'files' } },
       { value: 5_000_000, compact: 5, abbr: 'M', unit: { pt: 'linhas', en: 'lines' } },
     ],
-    timing: { pt: 'processados em menos de 3 minutos', en: 'processed in under 3 minutes' },
   },
   code: {
     label: { pt: 'código', en: 'code' },
@@ -207,20 +192,11 @@ export const approach = {
 
 /* ----------------------------------------------------------------- skills */
 
-/** Where a skill is evidenced (doc 01 §6: keep these distinct). */
-export type Evidence = 'work' | 'project' | 'academic';
-
-export const evidenceLabel: Record<Evidence, L> = {
-  work: { pt: 'profissional', en: 'professional' },
-  project: { pt: 'projetos', en: 'projects' },
-  academic: { pt: 'académico', en: 'academic' },
-};
-
 export interface SkillArea {
   id: string;
   title: L;
+  /** The area's text, shown beside the wheel. */
   hint: L;
-  items: { name: string | L; ev: Evidence }[];
 }
 
 export const skills = {
@@ -230,66 +206,31 @@ export const skills = {
       id: 'software',
       title: { pt: 'Software', en: 'Software' },
       hint: { pt: 'Ferramentas internas, desktop, web e APIs.', en: 'Internal tools, desktop, web and APIs.' },
-      items: [
-        { name: 'Python', ev: 'work' },
-        { name: 'C', ev: 'academic' },
-        { name: 'C#', ev: 'academic' },
-      ],
     },
     {
       id: 'automation',
       title: { pt: 'Automação', en: 'Automation' },
       hint: { pt: 'Formulários e tarefas repetitivas passados para Python.', en: 'Forms and repetitive tasks moved into Python.' },
-      items: [
-        { name: { pt: 'Scripts Python', en: 'Python scripts' }, ev: 'work' },
-        { name: { pt: 'Plataformas web', en: 'Web platforms' }, ev: 'work' },
-      ],
     },
     {
       id: 'ai',
       title: { pt: 'IA aplicada', en: 'Applied AI' },
       hint: { pt: 'Agentes de código, com revisão e testes.', en: 'Coding agents, with review and tests.' },
-      items: [
-        { name: { pt: 'Prompts & contexto', en: 'Prompts & context' }, ev: 'project' },
-        { name: { pt: 'Agentes de código', en: 'Coding agents' }, ev: 'project' },
-        { name: { pt: 'Multiagente', en: 'Multi-agent' }, ev: 'project' },
-      ],
     },
     {
       id: 'systems',
       title: { pt: 'Sistemas', en: 'Systems' },
       hint: { pt: 'Diagnóstico de incidentes de software e hardware.', en: 'Diagnosing software and hardware incidents.' },
-      items: [
-        { name: 'Windows', ev: 'work' },
-        { name: 'Linux', ev: 'academic' },
-      ],
     },
     {
       id: 'backend',
       title: { pt: 'Backend & dados', en: 'Backend & data' },
       hint: { pt: 'APIs, autenticação e modelação relacional.', en: 'APIs, authentication and relational modelling.' },
-      items: [
-        { name: 'FastAPI', ev: 'work' },
-        { name: 'SQLAlchemy', ev: 'work' },
-        { name: 'Pydantic', ev: 'work' },
-        { name: 'Alembic', ev: 'work' },
-        { name: 'PostgreSQL', ev: 'work' },
-        { name: 'Redis', ev: 'work' },
-        { name: 'MinIO', ev: 'work' },
-        { name: 'SQL', ev: 'academic' },
-      ],
     },
     {
       id: 'tooling',
       title: { pt: 'Qualidade', en: 'Quality' },
       hint: { pt: 'Testes, lint, versões e contentores.', en: 'Tests, linting, versioning and containers.' },
-      items: [
-        { name: 'pytest', ev: 'work' },
-        { name: 'Ruff', ev: 'project' },
-        { name: 'uv', ev: 'project' },
-        { name: 'Git', ev: 'project' },
-        { name: 'Docker', ev: 'work' },
-      ],
     },
   ] satisfies SkillArea[],
 };
@@ -300,43 +241,18 @@ export interface JourneyEntry {
   period: L;
   title: L;
   org: L;
-  /** One-line detail revealed on hover/tap. */
-  hint?: L;
-  /** Short facts shown under the entry (former "Impact" cases without a case study). */
-  points?: L<string[]>;
-  /** Technologies used in this role, as evidenced by its projects. */
-  tags?: string[];
   upcoming?: boolean;
-  /** What Juan is doing now (the hero's "agora"; the degree in progress). */
+  /** What Juan is doing now (the job; the degree in progress). */
   current?: boolean;
 }
 
 export const journey = {
   title: { pt: 'Percurso.', en: 'Journey.' },
-  experienceLabel: { pt: 'Experiência', en: 'Experience' },
-  educationLabel: { pt: 'Formação', en: 'Education' },
-  upcomingLabel: { pt: 'próximo', en: 'next' },
-  currentLabel: { pt: 'atual', en: 'current' },
   experience: [
     {
       period: { pt: '2026', en: '2026' },
-      title: { pt: 'Suporte Técnico N1', en: 'L1 Technical Support' },
+      title: { pt: 'Desenvolvedor de Software & Suporte de TI', en: 'Software Developer & IT Support' },
       org: { pt: 'Eleven Systems · Braga', en: 'Eleven Systems · Braga' },
-      hint: {
-        pt: 'Resolvo incidentes de software e hardware e desenvolvo ferramentas internas em Python.',
-        en: 'I resolve software and hardware incidents and build internal tools in Python.',
-      },
-      points: {
-        pt: [
-          'Diagnostiquei crashes em produção causados por armazenamento cheio e resolvi o problema.',
-          'Automatizei em Python o preenchimento de formulários e tarefas repetitivas numa plataforma web interna.',
-        ],
-        en: [
-          'Traced production crashes to full storage and fixed the problem.',
-          'Automated form filling and repetitive tasks on an internal web platform with Python.',
-        ],
-      },
-      tags: ['Python', 'FastAPI', 'PostgreSQL', 'Qt', 'SQLite', 'Streamlit', 'Docker'],
       current: true,
     },
   ] satisfies JourneyEntry[],
@@ -344,27 +260,33 @@ export const journey = {
     {
       period: { pt: '2022—25', en: '2022—25' },
       title: { pt: 'Técnico de Eletrotecnia', en: 'Electrical Technician' },
-      org: { pt: 'Curso profissional · média final 18/20', en: 'Vocational diploma · final grade 18/20' },
-      hint: {
-        pt: 'PAP com 20/20 (junho de 2025): uma máquina automática de cocktails.',
-        en: 'Final project graded 20/20 (June 2025): an automatic cocktail machine.',
-      },
+      org: { pt: 'Curso profissional', en: 'Vocational diploma' },
     },
     {
       period: { pt: '2025—28', en: '2025—28' },
       title: { pt: 'Eng. de Sistemas Informáticos', en: 'Computer Systems Engineering' },
-      org: { pt: 'UPCA · licenciatura em curso, pós-laboral', en: 'UPCA · BSc in progress, evening classes' },
-      hint: { pt: 'Disciplinas de programação, bases de dados e sistemas operativos.', en: 'Courses in programming, databases and operating systems.' },
+      org: { pt: 'UPCA · licenciatura em curso', en: 'UPCA · BSc in progress' },
       current: true,
+    },
+    // supplementary training (doc 01 §5), grouped by year so the timeline
+    // doesn't repeat the same year
+    {
+      period: { pt: '2023', en: '2023' },
+      title: { pt: 'Formação complementar', en: 'Supplementary training' },
+      org: { pt: 'Algoritmos · Curso em Vídeo · 40 h', en: 'Algorithms · Curso em Vídeo · 40 h' },
+    },
+    {
+      period: { pt: '2026', en: '2026' },
+      title: { pt: 'Formação complementar', en: 'Supplementary training' },
+      org: {
+        pt: 'Python (160 h), Python POO (140 h), HTML5 e CSS3 (200 h)',
+        en: 'Python (160 h), Python OOP (140 h), HTML5 and CSS3 (200 h)',
+      },
     },
     {
       period: { pt: '2027', en: '2027' },
-      title: { pt: 'Erasmus · Bélgica', en: 'Erasmus · Belgium' },
-      org: { pt: '5 meses', en: '5 months' },
-      hint: {
-        pt: 'Cinco meses na Bélgica, em 2027, para continuar a licenciatura e melhorar o inglês.',
-        en: 'Five months in Belgium in 2027, continuing my degree and improving my English.',
-      },
+      title: { pt: 'AI Engineer Intermediate', en: 'AI Engineer Intermediate' },
+      org: { pt: 'Bélgica · 5 meses', en: 'Belgium · 5 months' },
       upcoming: true,
     },
   ] satisfies JourneyEntry[],

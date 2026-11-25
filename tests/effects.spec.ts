@@ -3,7 +3,7 @@ import { trackErrors } from './helpers';
 
 /**
  * Signature effects: the contact "Stack" (physics), odometers
- * (interactions.spec), journey timelines, scroll stack, bento and
+ * (interactions.spec), journey timeline, scroll stack, skills option wheel and
  * smooth wheel scrolling. These check behaviour and containment, not pixels.
  */
 
@@ -144,24 +144,23 @@ test.describe('stack (contact)', () => {
 });
 
 test.describe('journey', () => {
-  test('experience and education apart; the education trace draws with the scroll', async ({ page }, info) => {
+  test('experience and education in one timeline that draws with the scroll', async ({ page }, info) => {
     await page.goto('/');
-    // experience: the one professional role, as a single card
-    await expect(page.locator('#experiencia .job')).toHaveCount(1);
-    await expect(page.locator('#experiencia .job')).toContainText('Eleven Systems');
-    await expect(page.locator('#experiencia')).not.toContainText('Erasmus');
-    // education: Erasmus (next), the degree (current), the diploma
     const tls = page.locator('[data-timeline]');
     await expect(tls).toHaveCount(1);
-    const entries = page.locator('#formacoes [data-tl-item]');
-    await expect(entries).toHaveCount(3);
-    // oldest first, the newest last
+    const entries = page.locator('#percurso [data-tl-item]');
+    await expect(entries).toHaveCount(6);
+    // oldest first, the newest last; the job sits among the courses
     await expect(entries.first()).toContainText('Eletrotecnia');
-    await expect(entries.last()).toContainText('Erasmus');
-    await expect(page.locator('#formacoes .entry.upcoming')).toContainText('Erasmus');
-    // the middle entry sits on the other side of the spine (desktop)
+    await expect(entries.last()).toContainText('AI Engineer Intermediate');
+    await expect(entries.last()).toContainText('Bélgica');
+    await expect(page.locator('#percurso .entry.upcoming')).toContainText('AI Engineer Intermediate');
+    await expect(entries.filter({ hasText: 'Eleven Systems' })).toHaveCount(1);
+    await expect(page.locator('#percurso .entry.current')).toHaveCount(2);
+    // alternate sides of the spine (desktop)
     await expect(entries.nth(1)).toHaveClass(/flip/);
-    await expect(page.locator('#formacoes .entry.current')).toHaveCount(1);
+    // each entry is year, title and place only
+    await expect(page.locator('#percurso')).not.toContainText(/Erasmus|pós-laboral|Suporte técnico/i);
     // the trace follows the page's own scroll: nothing scrolls inside
     const inner = await page.locator('#percurso').evaluate((s) =>
       Array.from(s.querySelectorAll('*')).filter((e) => /(auto|scroll)/.test(getComputedStyle(e).overflowY)).length,
@@ -171,18 +170,22 @@ test.describe('journey', () => {
       const p = () => tls.first().evaluate((e) => Number(getComputedStyle(e).getPropertyValue('--p') || 1));
       await page.evaluate(() => document.getElementById('percurso')?.scrollIntoView({ behavior: 'instant' }));
       await expect.poll(p).toBeLessThan(1);
-      await page.evaluate(() => document.querySelector('#formacoes .tl')?.scrollIntoView({ block: 'start', behavior: 'instant' }));
+      // the end of the timeline above the trace's tip (60% of the viewport)
+      await page.evaluate(() => {
+        const b = document.querySelector('#percurso .tl')!.getBoundingClientRect().bottom;
+        window.scrollTo({ top: scrollY + b - innerHeight * 0.3, behavior: 'instant' });
+      });
       await expect.poll(p).toBe(1);
-      await expect(page.locator('#formacoes .entry').last()).toHaveClass(/is-reached/);
+      await expect(page.locator('#percurso .entry').last()).toHaveClass(/is-reached/);
     }
-    // additional courses and languages were removed from the section
-    await expect(page.locator('#percurso')).not.toContainText(/Formação complementar|Idiomas/i);
   });
 
   test('English copy is in place', async ({ page }) => {
     await page.goto('/en/');
-    await expect(page.locator('#education .blk-title')).toHaveText('Education');
-    await expect(page.locator('#experience .badge.now')).toHaveText('current');
+    const entries = page.locator('#journey [data-tl-item]');
+    await expect(entries).toHaveCount(6);
+    await expect(entries.filter({ hasText: 'Software Developer & IT Support' })).toHaveCount(1);
+    await expect(entries.last()).toContainText('Belgium');
   });
 });
 
@@ -199,7 +202,7 @@ test.describe('hero portrait: flip card', () => {
     await expect(flip).toHaveClass(/is-flipped/);
     await expect(btn).toHaveAttribute('aria-pressed', 'true');
     await expect(flip.locator('.back-title')).toHaveText('Sobre mim');
-    await expect(flip.locator('.back-text')).toContainText('Eleven Systems');
+    await expect(flip.locator('.back-text')).toContainText('curiosidade pela tecnologia');
     if (info.project.name.startsWith('mobile')) await btn.tap();
     else await btn.click();
     await expect(flip).not.toHaveClass(/is-flipped/);
@@ -281,11 +284,54 @@ test.describe('scroll stack', () => {
   });
 });
 
-test('skills bento: the area with most tools gets the largest tile', async ({ page }) => {
-  await page.goto('/');
-  const areas = await page.locator('[data-bento] .tile').evaluateAll((els) =>
-    els.map((e) => ({ id: e.className, area: e.getBoundingClientRect().width * e.getBoundingClientRect().height })),
-  );
-  const largest = areas.reduce((a, b) => (b.area > a.area ? b : a));
-  expect(largest.id).toContain('a-backend');
+test.describe('skills: option wheel', () => {
+  test('a title selects its area; the text beside it follows', async ({ page }, info) => {
+    const errors = trackErrors(page);
+    await page.goto('/');
+    const sk = page.locator('[data-sk]');
+    await sk.scrollIntoViewIfNeeded();
+    const wheel = sk.getByRole('listbox');
+    await expect(wheel).toBeVisible();
+    const opts = wheel.getByRole('option');
+    await expect(opts).toHaveCount(6);
+    await expect(opts.first()).toHaveAttribute('aria-selected', 'true');
+    const activeText = () => sk.locator('[data-sk-panel].is-active .count .cur').textContent();
+    expect(await activeText()).toBe('01');
+    if (info.project.name.startsWith('mobile')) await opts.nth(1).tap();
+    else await opts.nth(2).click();
+    const k = info.project.name.startsWith('mobile') ? 1 : 2;
+    await expect(opts.nth(k)).toHaveAttribute('aria-selected', 'true');
+    await expect(wheel).toHaveAttribute('aria-activedescendant', (await opts.nth(k).getAttribute('id'))!);
+    expect(await activeText()).toBe(`0${k + 1}`);
+    // keyboard
+    await wheel.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(opts.nth(k + 1)).toHaveAttribute('aria-selected', 'true');
+    expect(errors).toEqual([]);
+  });
+
+  test('desktop: dragging anywhere on the left turns the wheel; the mouse wheel scrolls the page', async ({ page }, info) => {
+    test.skip(info.project.name.startsWith('mobile'), 'desktop only');
+    await page.goto('/');
+    const sk = page.locator('[data-sk]');
+    await sk.scrollIntoViewIfNeeded();
+    const opts = sk.getByRole('option');
+    const w = (await sk.getByRole('listbox').boundingBox())!;
+    // the mouse wheel over the titles scrolls the page and leaves the selection alone
+    await page.mouse.move(w.x + 100, w.y + w.height / 2);
+    const y0 = await page.evaluate(() => scrollY);
+    await page.mouse.wheel(0, 200);
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(y0);
+    await expect(opts.first()).toHaveAttribute('aria-selected', 'true');
+    // grab an empty spot of the left column and drag up: later areas come to the apex
+    await sk.scrollIntoViewIfNeeded();
+    const b = (await sk.getByRole('listbox').boundingBox())!;
+    const x = b.x + b.width - 20;
+    const y = b.y + b.height - 40;
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    for (let i = 1; i <= 10; i += 1) await page.mouse.move(x, y - i * 20, { steps: 2 });
+    await page.mouse.up();
+    await expect(opts.first()).toHaveAttribute('aria-selected', 'false');
+  });
 });

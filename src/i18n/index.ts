@@ -6,7 +6,6 @@
  */
 export const LANGS = ['pt', 'en'] as const;
 export type Lang = (typeof LANGS)[number];
-export const DEFAULT_LANG: Lang = 'pt';
 
 /** A localised value. */
 export type L<T = string> = Record<Lang, T>;

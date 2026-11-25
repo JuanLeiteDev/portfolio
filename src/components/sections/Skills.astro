@@ -1,272 +1,455 @@
 ---
 /**
- * Skills — a bento of the six capability areas (after React Bits "Magic
- * Bento"). Keywords only (no percentages). Tile size follows weight: the
- * area with the most evidenced tools gets the large tile.
+ * Skills — the six capability areas on an option wheel (after React Bits
+ * "Option Wheel", rebuilt in plain TS + CSS, no React): the titles sit on a
+ * curved arc on the left, the selected one at the apex; the right side shows
+ * that area's text.
  *
- * Chips are plain keywords; where each one is evidenced (doc 01 §6:
- * professional / projects / academic) stays in the accessible text of the
- * chip. Each tile ends with its tool count. The one-line summary is
- * revealed on intent.
- *
- * Light: on fine pointers the borders of every tile near the cursor glow
- * (main.ts writes --mx/--my on all tiles) and the hovered one lights from
- * inside; on touch the light blooms from the point of contact. Nothing
- * here depends on hover: all content is in the tiles, summaries open on tap.
+ * Desktop (≥ 64rem): the wheel turns by grabbing anywhere on the left half
+ * and dragging (with a little momentum), by clicking a title, or with the
+ * arrow keys when focused. The mouse wheel never turns it.
+ * Below 64rem: the titles become a horizontal strip that scrolls natively
+ * (swipe, snap); the one in the centre is selected and the text below
+ * follows. The page's vertical scroll is never captured.
+ * Without JS: the titles are a plain list and every area's text is shown.
  */
 import Section from '@/components/ui/Section.astro';
-import Hint from '@/components/ui/Hint.astro';
-import IntentTitle from '@/components/ui/IntentTitle.astro';
-import { skills, evidenceLabel } from '@/data/home';
-import { t, type L, type Lang } from '@/i18n';
+import { skills } from '@/data/home';
+import { t, type Lang } from '@/i18n';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
-const name = (n: string | L) => (typeof n === 'string' ? n : t(n, lang));
-// reading order of the bento (matches the visual order on every layout)
+// reading order
 const order = ['software', 'automation', 'systems', 'backend', 'ai', 'tooling'];
 const areas = order.map((id) => skills.areas.find((a) => a.id === id)!).filter(Boolean);
+const total = String(areas.length).padStart(2, '0');
 ---
 
 <Section lang={lang} section="skills" title={t(skills.title, lang)}>
   <div class="frame">
-    <ul class="bento" role="list" data-bento>
-      {
-        areas.map((area, i) => (
-          <li class:list={['tile spot', `a-${area.id}`]} data-intent data-reveal style={`--i:${i}`}>
-            <div class="head">
-              <span class="ai mono num" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <IntentTitle controls={`skill-${area.id}`} class="at">
-                {t(area.title, lang)}
-              </IntentTitle>
-            </div>
-            <Hint text={t(area.hint, lang)} id={`skill-${area.id}`} />
-            <ul class="chips" role="list">
-              {area.items.map((it) => (
-                <li data-ev={it.ev}>
-                  {name(it.name)}
-                  <span class="sr-only">, {t(evidenceLabel[it.ev], lang)}</span>
-                </li>
-              ))}
-            </ul>
-            <span class="cnt mono num" aria-hidden="true">
-              {String(area.items.length).padStart(2, '0')}
-            </span>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="sk" data-sk data-reveal>
+      <ol class="wheel" aria-label={t(skills.title, lang).replace(/\.$/, '')} data-sk-wheel>
+        {
+          areas.map((a, i) => (
+            <li
+              class:list={['opt', { 'is-active': i === 0 }]}
+              id={`sk-opt-${lang}-${i}`}
+              data-sk-opt
+            >
+              {t(a.title, lang)}
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class="panels" aria-live="polite">
+        {
+          areas.map((a, i) => (
+            <article class:list={['panel', { 'is-active': i === 0 }]} data-sk-panel>
+              <p class="count mono num" aria-hidden="true">
+                <span class="cur">{String(i + 1).padStart(2, '0')}</span> / {total}
+              </p>
+              <h3 class="title">{t(a.title, lang)}</h3>
+              <p class="text">{t(a.hint, lang)}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </Section>
 
+<script>
+  const root = document.querySelector<HTMLElement>('[data-sk]');
+  const wheel = root?.querySelector<HTMLElement>('[data-sk-wheel]');
+  if (root && wheel) {
+    const opts = Array.from(wheel.querySelectorAll<HTMLElement>('[data-sk-opt]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[data-sk-panel]'));
+    const n = opts.length;
+    const desktop = window.matchMedia('(min-width: 64rem)');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const TILT = (7 * Math.PI) / 180; // radians per row
+    // kept light so the nearby titles stay ≥ 3:1 (large text); the soft
+    // fade towards the edges comes from the CSS mask
+    const FADE = 0.15;
+    const BLUR = 1.6;
+
+    let selected = 0;
+    let pos = 0; // eased position (rows)
+    let target = 0;
+    let raf = 0;
+    let last = 0;
+    let rowH = 60;
+
+    const select = (i: number) => {
+      if (i === selected) return;
+      selected = i;
+      opts.forEach((o, k) => {
+        o.classList.toggle('is-active', k === i);
+        o.setAttribute('aria-selected', String(k === i));
+      });
+      panels.forEach((p, k) => p.classList.toggle('is-active', k === i));
+      wheel.setAttribute('aria-activedescendant', opts[i]!.id);
+    };
+
+    /* ---------------------------------------------- desktop: the wheel */
+    const measure = () => {
+      rowH = parseFloat(getComputedStyle(opts[0]!).fontSize) * 1.45;
+    };
+    const layout = () => {
+      const R = rowH / TILT;
+      opts.forEach((o, i) => {
+        const d = i - pos;
+        const dist = Math.abs(d);
+        const ang = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, d * TILT));
+        const y = R * Math.sin(ang);
+        const x = -R * (1 - Math.cos(ang));
+        o.style.transform = `translate(${x.toFixed(2)}px, calc(${y.toFixed(2)}px - 50%)) rotate(${((ang * 180) / Math.PI).toFixed(3)}deg)`;
+        o.style.opacity = String(Math.max(0.08, 1 - dist * FADE));
+        o.style.filter = dist > 0.01 ? `blur(${(dist * BLUR).toFixed(2)}px)` : 'none';
+        o.style.setProperty('--p', Math.max(0, 1 - Math.min(dist, 1)).toFixed(3));
+      });
+    };
+    const frame = (now: number) => {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      const k = reduce.matches ? 1 : 1 - Math.exp(-dt / 0.13);
+      pos += (target - pos) * k;
+      const done = Math.abs(target - pos) < 0.001;
+      if (done) pos = target;
+      layout();
+      raf = done ? 0 : requestAnimationFrame(frame);
+    };
+    const go = (v: number, snap: boolean) => {
+      v = Math.min(Math.max(v, 0), n - 1);
+      if (snap) v = Math.round(v);
+      target = v;
+      select(Math.round(v));
+      if (!raf) {
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+      }
+    };
+
+    // grab and drag: press anywhere on the left half of the section (the
+    // wheel's column, above/below the titles included) and drag up/down.
+    // The wheel follows the pointer 1:1 and keeps a little momentum on
+    // release, then snaps to the nearest title. A press without movement on
+    // a title selects it. The mouse wheel does not turn it (the page scrolls).
+    const panelsEl = root.querySelector<HTMLElement>('.panels')!;
+    let drag: { y: number; start: number; id: number; opt: number; lastY: number; lastT: number; v: number } | null = null;
+    let moved = false;
+    const onLeft = (x: number) => x < panelsEl.getBoundingClientRect().left;
+    root.addEventListener('pointerdown', (e) => {
+      if (!desktop.matches || e.button !== 0 || !onLeft(e.clientX)) return;
+      e.preventDefault(); // no text selection / native drag while grabbing
+      const opt = (e.target as Element).closest<HTMLElement>('[data-sk-opt]');
+      drag = { y: e.clientY, start: target, id: e.pointerId, opt: opt ? opts.indexOf(opt) : -1, lastY: e.clientY, lastT: e.timeStamp, v: 0 };
+      moved = false;
+      root.setPointerCapture(e.pointerId);
+      root.classList.add('is-dragging');
+      wheel.focus({ preventScroll: true });
+    });
+    root.addEventListener('pointermove', (e) => {
+      if (desktop.matches) root.classList.toggle('is-over-wheel', onLeft(e.clientX));
+      if (!drag) return;
+      const dy = e.clientY - drag.y;
+      if (!moved && Math.abs(dy) > 3) moved = true;
+      if (!moved) return;
+      // pointer velocity in rows per second, lightly smoothed
+      const dt = Math.max(e.timeStamp - drag.lastT, 1) / 1000;
+      const inst = -(e.clientY - drag.lastY) / rowH / dt;
+      drag.v = drag.v * 0.6 + inst * 0.4;
+      drag.lastY = e.clientY;
+      drag.lastT = e.timeStamp;
+      go(drag.start - dy / rowH, false);
+    });
+    const endDrag = (e: PointerEvent) => {
+      if (!drag) return;
+      const d = drag;
+      drag = null;
+      root.classList.remove('is-dragging');
+      if (root.hasPointerCapture(e.pointerId)) root.releasePointerCapture(e.pointerId);
+      if (moved) {
+        // a quick flick carries on a little before snapping
+        const idle = e.timeStamp - d.lastT > 80;
+        const fling = idle ? 0 : Math.max(-2, Math.min(2, d.v * 0.12));
+        go(target + fling, true);
+      } else if (d.opt >= 0) go(d.opt, true);
+    };
+    root.addEventListener('pointerup', endDrag);
+    root.addEventListener('pointercancel', endDrag);
+    root.addEventListener('pointerleave', () => root.classList.remove('is-over-wheel'));
+
+    /* ------------------------------------ below desktop: a native strip */
+    const centre = (i: number, smooth = true) => {
+      const o = opts[i]!;
+      wheel.scrollTo({
+        left: o.offsetLeft - (wheel.clientWidth - o.offsetWidth) / 2,
+        behavior: smooth && !reduce.matches ? 'smooth' : 'instant',
+      });
+    };
+    let scrollFrame = 0;
+    wheel.addEventListener(
+      'scroll',
+      () => {
+        if (desktop.matches || scrollFrame) return;
+        scrollFrame = requestAnimationFrame(() => {
+          scrollFrame = 0;
+          const mid = wheel.scrollLeft + wheel.clientWidth / 2;
+          let best = 0;
+          let bestD = Infinity;
+          opts.forEach((o, i) => {
+            const d = Math.abs(o.offsetLeft + o.offsetWidth / 2 - mid);
+            if (d < bestD) {
+              bestD = d;
+              best = i;
+            }
+          });
+          select(best);
+        });
+      },
+      { passive: true },
+    );
+
+    /* ------------------------------------------------ both: click, keys */
+    // desktop clicks are handled by the grab logic above
+    opts.forEach((o, i) =>
+      o.addEventListener('click', () => {
+        if (desktop.matches) return;
+        select(i);
+        centre(i);
+      }),
+    );
+    wheel.addEventListener('keydown', (e) => {
+      const step = e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : 0;
+      if (!step) return;
+      e.preventDefault();
+      const next = Math.min(Math.max(selected + step, 0), n - 1);
+      if (desktop.matches) go(next, true);
+      else {
+        select(next);
+        centre(next);
+      }
+    });
+
+    /* ------------------------------------------------------------ mode */
+    const setMode = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      if (desktop.matches) {
+        measure();
+        pos = target = selected;
+        layout();
+      } else {
+        opts.forEach((o) => {
+          o.style.removeProperty('transform');
+          o.style.removeProperty('opacity');
+          o.style.removeProperty('filter');
+          o.style.removeProperty('--p');
+        });
+        centre(selected, false);
+      }
+    };
+    // listbox semantics only once the wheel is interactive (without JS: a plain list)
+    wheel.setAttribute('role', 'listbox');
+    wheel.tabIndex = 0;
+    wheel.setAttribute('aria-activedescendant', opts[selected]!.id);
+    opts.forEach((o, k) => {
+      o.setAttribute('role', 'option');
+      o.setAttribute('aria-selected', String(k === selected));
+    });
+    root.classList.add('is-ready');
+    setMode();
+    desktop.addEventListener('change', setMode);
+    window.addEventListener('resize', () => desktop.matches && (measure(), layout()), { passive: true });
+  }
+</script>
+
 <style>
-  /* ------------------------------------------------------------ layout */
-  /* phones: two columns, the light areas side by side, the rest full width */
-  .bento {
+  /* --------------------------------------------------------- layout */
+  .sk {
     display: grid;
-    gap: 0.65rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-areas:
-      'software software'
-      'automation systems'
-      'backend backend'
-      'ai ai'
-      'tooling tooling';
-  }
-  @media (min-width: 40rem) {
-    .bento {
-      gap: 0.85rem;
-      grid-template-areas:
-        'software software'
-        'automation systems'
-        'backend backend'
-        'ai tooling';
-    }
+    gap: 1.5rem;
   }
   @media (min-width: 64rem) {
-    .bento {
-      gap: 1rem;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      grid-template-areas:
-        'software software automation automation systems systems'
-        'backend backend backend ai ai ai'
-        'backend backend backend tooling tooling tooling';
-    }
-  }
-  .a-software {
-    grid-area: software;
-  }
-  .a-automation {
-    grid-area: automation;
-  }
-  .a-systems {
-    grid-area: systems;
-  }
-  .a-backend {
-    grid-area: backend;
-  }
-  .a-ai {
-    grid-area: ai;
-  }
-  .a-tooling {
-    grid-area: tooling;
-  }
-
-  /* -------------------------------------------------------------- tile */
-  .tile {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    min-width: 0;
-    padding: clamp(0.95rem, 0.8rem + 0.8vw, 1.5rem);
-    border: 1px solid var(--c-line);
-    border-radius: var(--radius-l);
-    background-color: var(--c-bg);
-    cursor: pointer;
-    transition:
-      border-color var(--dur-2) var(--ease-out),
-      background-color var(--dur-2) var(--ease-out),
-      translate var(--dur-3) var(--ease-out);
-  }
-  .tile:is(:hover, :focus-within, .is-open) {
-    border-color: var(--c-line-strong);
-    background-color: var(--c-bg-raised);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .tile:hover {
-      translate: 0 -2px;
-    }
-    /* Magic Bento border glow: tiles near the pointer light their border */
-    .bento:global(.is-near) .tile::after {
-      opacity: 1;
-    }
-    .tile::after {
-      background: radial-gradient(260px circle at var(--mx, -999px) var(--my, -999px), var(--c-signal), transparent 70%);
-    }
-  }
-  .a-backend {
-    background-image: radial-gradient(var(--c-grid) 1px, transparent 1.2px);
-    background-size: 22px 22px;
-  }
-  @media (min-width: 64rem) {
-    .a-backend {
-      padding: clamp(1.5rem, 1rem + 1.2vw, 2.25rem);
-    }
-    .a-backend :global(.at) {
-      font-size: var(--step-4);
-    }
-    .a-backend .chips li {
-      font-size: 1rem;
-      padding: 0.4rem 0.75rem;
+    .sk {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: clamp(2rem, 5vw, 5rem);
+      align-items: center;
     }
   }
 
-  .head {
-    display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
+  /* titles: without JS a plain list */
+  .wheel {
+    display: grid;
+    gap: 0.5rem;
+    outline: none;
   }
-  .ai {
-    color: var(--c-signal);
-  }
-  .tile :global(.at) {
+  .opt {
     font-size: var(--step-2);
-    letter-spacing: -0.025em;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--c-fg-subtle);
+    cursor: pointer;
+    user-select: none;
   }
-  /* the two small tiles share a phone row: smaller titles */
-  @media (max-width: 39.999rem) {
-    .a-automation :global(.at),
-    .a-systems :global(.at) {
-      font-size: var(--step-1);
-    }
-    .a-automation .head,
-    .a-systems .head {
-      flex-direction: column;
-      gap: 0.25rem;
-    }
+  .opt.is-active {
+    color: var(--c-fg);
   }
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-  .chips li {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    min-width: 0;
-    padding: 0.28rem 0.6rem;
-    border: 1px solid var(--c-line);
-    border-radius: var(--radius-s);
-    font-size: 0.85rem;
-    background: var(--c-bg-raised);
-    transition:
-      border-color var(--dur-2) var(--ease-out),
-      translate var(--dur-2) var(--ease-out);
-  }
-  .tile:hover .chips li {
-    border-color: var(--c-line-strong);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .chips li:hover {
-      border-color: var(--c-fg-subtle);
-      translate: 0 -1px;
-    }
+  .wheel:focus-visible {
+    outline: 2px solid var(--c-signal);
+    outline-offset: 6px;
+    border-radius: var(--radius-m);
   }
 
-  /* tool count, bottom-right of the tile */
-  .cnt {
-    margin-top: auto;
-    align-self: flex-end;
-    padding-top: 0.35rem;
+  /* panels: without JS all shown; with JS only the selected one */
+  .panels {
+    display: grid;
+    gap: 2rem;
+  }
+  .sk:global(.is-ready) .panels {
+    gap: 0;
+  }
+  .sk:global(.is-ready) .panel {
+    grid-area: 1 / 1;
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 10px;
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      translate var(--dur-3) var(--ease-out),
+      visibility 0s var(--dur-2);
+  }
+  .sk:global(.is-ready) .panel.is-active {
+    visibility: visible;
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--dur-3) var(--ease-out) 0.06s,
+      translate var(--dur-3) var(--ease-out) 0.06s,
+      visibility 0s;
+  }
+  .panel {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+  .count {
     color: var(--c-fg-subtle);
   }
+  .cur {
+    color: var(--c-signal);
+  }
+  .title {
+    font-size: var(--step-4);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  /* with JS the wheel/strip already shows the title: keep it for screen
+     readers only */
+  .sk:global(.is-ready) .title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .text {
+    max-width: 32ch;
+    color: var(--c-fg-muted);
+    font-size: var(--step-2);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
 
-  /* touch: light blooms from the tap point (main.ts sets --mx/--my) */
-  @media (hover: none), (pointer: coarse) {
-    /* the summary is collapsed until tapped: don't leave a double gap for it */
-    :global(:root.enhanced) .tile :global(.hint-wrap) {
-      transition:
-        grid-template-rows var(--dur-3) var(--ease-out),
-        margin-top var(--dur-3) var(--ease-out);
+  /* ------------------------------------------ desktop: the option wheel */
+  @media (min-width: 64rem) {
+    .sk:global(.is-ready) .wheel {
+      position: relative;
+      display: block;
+      height: clamp(22rem, 16rem + 10vw, 28rem);
+      overflow: hidden;
+      touch-action: none;
+      /* soften the top and bottom edges */
+      -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
+      mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
     }
-    :global(:root.enhanced) .tile:not(:global(.is-open)) :global(.hint-wrap) {
-      margin-top: -0.9rem;
+    /* the whole left half is the grab area */
+    .sk:global(.is-ready):global(.is-over-wheel),
+    .sk:global(.is-ready):global(.is-over-wheel) .opt {
+      cursor: grab;
     }
-    .tile::before,
-    .tile::after {
+    .sk:global(.is-ready):global(.is-dragging),
+    .sk:global(.is-ready):global(.is-dragging) .opt {
+      cursor: grabbing;
+    }
+    .sk:global(.is-ready) .opt {
+      position: absolute;
+      top: 50%;
+      left: 2.5rem; /* room for the far items, which curve back to the left */
+      font-size: var(--step-4);
+      transform-origin: left center;
+      will-change: transform, opacity, filter;
+      /* --p: 0 → 1 as an item reaches the apex */
+      color: color-mix(in srgb, var(--c-fg) calc(var(--p, 0) * 100%), var(--c-fg-muted));
+      transition: font-weight var(--dur-2) linear;
+    }
+    .sk:global(.is-ready) .opt:not(.is-active) {
+      font-weight: 400;
+    }
+    /* the apex marker */
+    .sk:global(.is-ready) .wheel::before {
       content: '';
       position: absolute;
-      border-radius: inherit;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 520ms var(--ease-out);
+      top: 50%;
+      left: 0.6rem;
+      width: 0.9rem;
+      height: 2px;
+      background: var(--c-signal);
     }
-    .tile::before {
-      inset: 0;
-      z-index: -1;
-      background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), var(--c-signal-soft), transparent 55%);
+    .text {
+      font-size: var(--step-3);
+      line-height: 1.2;
     }
-    .tile::after {
-      inset: -1px;
-      padding: 1px;
-      background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 50%), var(--c-signal), transparent 70%);
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask:
-        linear-gradient(#000 0 0) content-box exclude,
-        linear-gradient(#000 0 0);
+  }
+
+  /* ----------------------------------- below desktop: a swipeable strip */
+  @media (max-width: 63.999rem) {
+    .sk:global(.is-ready) .wheel {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      /* the first and last titles can still reach the centre */
+      padding-inline: 50%;
+      padding-block: 0.25rem 0.9rem;
+      margin-inline: calc(var(--gutter, 1rem) * -1);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
     }
-    .tile:global(.is-lit)::before,
-    .tile:global(.is-lit)::after {
-      opacity: 1;
-      transition-duration: 90ms;
+    .sk:global(.is-ready) .wheel::-webkit-scrollbar {
+      display: none;
+    }
+    .sk:global(.is-ready) .opt {
+      flex: none;
+      scroll-snap-align: center;
+      font-size: var(--step-3);
+      transition: color var(--dur-2) var(--ease-out);
+    }
+    /* a short underline under the selected title */
+    .sk:global(.is-ready) .opt.is-active {
+      box-shadow: 0 0.55rem 0 -0.45rem var(--c-signal);
+    }
+    .panel {
+      min-height: 6.5rem;
     }
   }
 </style>

@@ -11,8 +11,12 @@ test.describe('without JavaScript', () => {
       (els) => els.filter((e) => getComputedStyle(e).opacity !== '1').length,
     );
     expect(hidden).toBe(0);
-    // real figures are server-rendered
-    await expect(page.locator('.count .sr-only').first()).toHaveText(/10\s?000\+/);
+    // every project panel and every skill area's text is in the page
+    await expect(page.locator('[data-acc-panel]')).toHaveCount(5);
+    const hiddenPanels = await page.locator('[data-sk-panel]').evaluateAll(
+      (els) => els.filter((e) => getComputedStyle(e).visibility !== 'visible').length,
+    );
+    expect(hiddenPanels).toBe(0);
     // intent summaries are fully visible without JS
     const hiddenHints = await page.locator('.hint .w').evaluateAll(
       (els) => els.filter((e) => getComputedStyle(e).opacity !== '1').length,
@@ -26,9 +30,10 @@ test.describe('without JavaScript', () => {
     for (const key of ['whatsapp', 'linkedin', 'github', 'cv']) {
       await expect(page.locator(`a[data-contact="${key}"]`)).toHaveAttribute('href', /.+/);
     }
-    await page.locator('a.row').first().click();
-    await expect(page).toHaveURL(/\/projetos\/xi-repair\/$/);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('XI.Repair');
+    // each accordion panel is a plain link (the log analyser comes first)
+    await page.locator('a[data-acc-link]').first().click();
+    await expect(page).toHaveURL(/\/projetos\/log-analyzer\/$/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Analisador de logs');
   });
 
   test('language switch is a plain link', async ({ page }) => {

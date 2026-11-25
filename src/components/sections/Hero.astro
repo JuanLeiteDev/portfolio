@@ -42,14 +42,11 @@ const { lang } = Astro.props;
       </h1>
 
       <p class="statement">{t(hero.statement, lang)}</p>
-      <ul class="kw mono" role="list">
-        {hero.keywords.map((k) => <li>{t(k, lang)}</li>)}
-      </ul>
 
       <div class="ctas">
         <a class="btn btn-primary" href={sectionHref('projects', lang)}>
           {t(hero.ctaPrimary, lang)}
-          <span class="arrow" aria-hidden="true">↓</span>
+          <span class="arrow arrow-down" aria-hidden="true">↓</span>
         </a>
         <a class="btn" href={sectionHref('contact', lang)}>
           {t(hero.ctaSecondary, lang)}
@@ -105,22 +102,6 @@ const { lang } = Astro.props;
         <span class="hint-touch">{t(hero.about.hintTouch, lang)}</span>
       </p>
     </figure>
-
-    <dl class="meta mono">
-      {
-        hero.meta.map((m) => (
-          <div>
-            <dt>{t(m.k, lang)}</dt>
-            <dd>{t(m.v, lang)}</dd>
-          </div>
-        ))
-      }
-      <!-- live local time (Barcelos); filled by main.ts, hidden without JS -->
-      <div data-clock-row hidden>
-        <dt>{t(hero.clockLabel, lang)}</dt>
-        <dd><time class="num" data-clock data-tz="Europe/Lisbon" data-locale={lang === 'pt' ? 'pt-PT' : 'en-GB'}></time></dd>
-      </div>
-    </dl>
   </div>
 </Section>
 
@@ -135,8 +116,7 @@ const { lang } = Astro.props;
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       'copy'
-      'portrait'
-      'meta';
+      'portrait';
   }
   .copy {
     grid-area: copy;
@@ -157,18 +137,22 @@ const { lang } = Astro.props;
   .grid-hero {
     isolation: isolate;
   }
-  .meta {
-    grid-area: meta;
+  /* air before the next section: 1.5x the usual gap (the next section
+     already opens with --section-gap; this adds the other half) */
+  .grid-hero {
+    padding-bottom: calc(0.5 * var(--section-gap));
+  }
+  @media (max-width: 63.999rem) {
+    .grid-hero {
+      padding-bottom: calc(1.5 * clamp(3rem, 2rem + 4vw, 4.5rem) + 0.5 * var(--section-gap));
+    }
   }
 
   @media (min-width: 64rem) {
     .grid-hero {
       grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.5fr);
-      grid-template-areas:
-        'copy portrait'
-        'meta meta';
+      grid-template-areas: 'copy portrait';
       column-gap: clamp(2rem, 4vw, 5rem);
-      row-gap: 3.5rem;
       align-items: start;
     }
     .portrait-wrap {
@@ -271,19 +255,6 @@ const { lang } = Astro.props;
     font-weight: 500;
     text-wrap: balance;
   }
-  .kw {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1.25rem;
-  }
-  .kw li {
-    padding: 0.3rem 0.7rem;
-    border: 1px solid var(--c-line-strong);
-    border-radius: 999px;
-    color: var(--c-fg-muted);
-    font-size: 0.8rem;
-  }
   .ctas {
     display: flex;
     flex-wrap: wrap;
@@ -340,16 +311,27 @@ const { lang } = Astro.props;
   }
   .portrait :global(.photo),
   .portrait :global(img) {
+    /* grey until hover; touch screens have no hover, so colour from the start */
+    --gray: 1;
+    --con: 1.05;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: 50% 37%;
-    filter: grayscale(1) contrast(1.05);
+    filter: grayscale(var(--gray)) contrast(var(--con));
     transition: filter 0.7s var(--ease-out), scale 0.7s var(--ease-out);
   }
   @media (min-width: 64rem) {
     .portrait :global(img) {
       object-position: 50% 20%;
+    }
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .portrait :global(.photo),
+    .portrait :global(img) {
+      --gray: 0;
+      --con: 1;
     }
   }
 
@@ -510,10 +492,10 @@ const { lang } = Astro.props;
   }
   @keyframes develop {
     from {
-      filter: grayscale(1) contrast(1.6) brightness(1.7) blur(6px);
+      filter: grayscale(var(--gray)) contrast(1.6) brightness(1.7) blur(6px);
     }
     to {
-      filter: grayscale(1) contrast(1.05) brightness(1) blur(0);
+      filter: grayscale(var(--gray)) contrast(var(--con)) brightness(1) blur(0);
     }
   }
   @keyframes scan {
@@ -557,41 +539,5 @@ const { lang } = Astro.props;
     right: 10px;
     bottom: 10px;
     border-width: 0 1px 1px 0;
-  }
-  /* metadata */
-  .meta [hidden] {
-    display: none;
-  }
-  .meta {
-    display: grid;
-    gap: 0.4rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--c-line);
-  }
-  @media (min-width: 48rem) {
-    .meta {
-      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-      gap: 1.5rem;
-    }
-  }
-  .meta div {
-    display: flex;
-    gap: 0.75rem;
-  }
-  @media (min-width: 48rem) {
-    .meta div {
-      display: grid;
-      gap: 0.2rem;
-    }
-  }
-  dt {
-    color: var(--c-fg-subtle);
-    min-width: 4.5rem;
-  }
-  dt::after {
-    content: ':';
-  }
-  dd {
-    color: var(--c-fg-muted);
   }
 </style>
