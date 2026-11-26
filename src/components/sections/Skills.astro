@@ -11,6 +11,7 @@
  * Below 64rem: the titles become a horizontal strip that scrolls natively
  * (swipe, snap); the one in the centre is selected and the text below
  * follows. The page's vertical scroll is never captured.
+ * Both loop endlessly: past the last area comes the first, and vice versa.
  * Without JS: the titles are a plain list and every area's text is shown.
  */
 import Section from '@/components/ui/Section.astro';
@@ -75,19 +76,45 @@ const total = String(areas.length).padStart(2, '0');
     const BLUR = 1.6;
 
     let selected = 0;
-    let pos = 0; // eased position (rows)
+    let pos = 0; // eased position (rows) — unbounded: the wheel loops
     let target = 0;
     let raf = 0;
     let last = 0;
     let rowH = 60;
 
+    // the wheel is endless: any position maps to an area modulo n, and the
+    // distance from an item to the apex is taken the short way round
+    const mod = (v: number) => ((v % n) + n) % n;
+    const wrap = (d: number) => d - n * Math.round(d / n);
+
+    // below desktop the strip loops with copies of the titles on each side
+    // (built here, hidden on desktop); once a scroll settles it jumps
+    // invisibly back to the identical middle copy, so the ends are never reached
+    const COPIES = 2;
+    const makeCopies = () => {
+      const f = document.createDocumentFragment();
+      for (let c = 0; c < COPIES; c++)
+        opts.forEach((o) => {
+          const k = o.cloneNode(true) as HTMLElement;
+          // copies keep is-active: the selected title is underlined in every copy
+          k.removeAttribute('id');
+          k.setAttribute('aria-hidden', 'true');
+          k.dataset.skClone = '';
+          f.append(k);
+        });
+      return f;
+    };
+    wheel.prepend(makeCopies());
+    wheel.append(makeCopies());
+    const strip = Array.from(wheel.querySelectorAll<HTMLElement>('[data-sk-opt]'));
+    const MID = COPIES * n; // strip index of the first original title
+    let cur = MID; // strip index of the centred title
+
     const select = (i: number) => {
       if (i === selected) return;
       selected = i;
-      opts.forEach((o, k) => {
-        o.classList.toggle('is-active', k === i);
-        o.setAttribute('aria-selected', String(k === i));
-      });
+      strip.forEach((o, k) => o.classList.toggle('is-active', k % n === i));
+      opts.forEach((o, k) => o.setAttribute('aria-selected', String(k === i)));
       panels.forEach((p, k) => p.classList.toggle('is-active', k === i));
       wheel.setAttribute('aria-activedescendant', opts[i]!.id);
     };
@@ -99,7 +126,7 @@ const total = String(areas.length).padStart(2, '0');
     const layout = () => {
       const R = rowH / TILT;
       opts.forEach((o, i) => {
-        const d = i - pos;
+        const d = wrap(i - pos);
         const dist = Math.abs(d);
         const ang = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, d * TILT));
         const y = R * Math.sin(ang);
@@ -116,15 +143,16 @@ const total = String(areas.length).padStart(2, '0');
       const k = reduce.matches ? 1 : 1 - Math.exp(-dt / 0.13);
       pos += (target - pos) * k;
       const done = Math.abs(target - pos) < 0.001;
-      if (done) pos = target;
+      // at rest, fold back into 0…n-1 (same picture, the numbers stay small)
+      // (not mid-drag: the drag is measured from its unfolded start)
+      if (done) pos = drag ? target : (target = mod(target));
       layout();
       raf = done ? 0 : requestAnimationFrame(frame);
     };
     const go = (v: number, snap: boolean) => {
-      v = Math.min(Math.max(v, 0), n - 1);
       if (snap) v = Math.round(v);
       target = v;
-      select(Math.round(v));
+      select(mod(Math.round(v)));
       if (!raf) {
         last = performance.now();
         raf = requestAnimationFrame(frame);
@@ -175,7 +203,7 @@ const total = String(areas.length).padStart(2, '0');
         const idle = e.timeStamp - d.lastT > 80;
         const fling = idle ? 0 : Math.max(-2, Math.min(2, d.v * 0.12));
         go(target + fling, true);
-      } else if (d.opt >= 0) go(d.opt, true);
+      } else if (d.opt >= 0) go(target + wrap(d.opt - target), true);
     };
     root.addEventListener('pointerup', endDrag);
     root.addEventListener('pointercancel', endDrag);
@@ -196,11 +224,14 @@ const total = String(areas.length).padStart(2, '0');
       clearTimeout(lockTimer);
       lockTimer = window.setTimeout(unlock, ms);
     };
-    const centre = (i: number, smooth = true) => {
-      const o = opts[i]!;
+    // centre the strip item k (an index into strip, copies included)
+    const centre = (k: number, smooth = true) => {
+      k = Math.min(Math.max(k, 0), strip.length - 1);
+      cur = k;
+      const o = strip[k]!;
       const smoothly = smooth && !reduce.matches;
       if (smoothly) {
-        lock = i;
+        lock = k;
         holdLock(250); // released sooner by scrollend, or kept by each scroll event
       }
       wheel.scrollTo({
@@ -208,7 +239,20 @@ const total = String(areas.length).padStart(2, '0');
         behavior: smoothly ? 'smooth' : 'instant',
       });
     };
-    wheel.addEventListener('scrollend', unlock);
+    // once a scroll settles, jump to the same title in the middle copy (same
+    // picture, so the jump is invisible)
+    const recentre = () => {
+      if (desktop.matches || lock >= 0) return;
+      const home = MID + (cur % n);
+      if (home === cur) return;
+      wheel.scrollLeft += strip[home]!.offsetLeft - strip[cur]!.offsetLeft;
+      cur = home;
+    };
+    let settleTimer = 0;
+    wheel.addEventListener('scrollend', () => {
+      unlock();
+      recentre();
+    });
     // a new swipe takes over at once
     wheel.addEventListener('pointerdown', unlock, { passive: true });
     let scrollFrame = 0;
@@ -216,6 +260,9 @@ const total = String(areas.length).padStart(2, '0');
       'scroll',
       () => {
         if (desktop.matches) return;
+        // fallback for browsers without scrollend (older Safari)
+        clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(recentre, 200);
         if (lock >= 0) {
           holdLock(150); // no scrollend (older Safari): released once scrolling stops
           return;
@@ -227,14 +274,15 @@ const total = String(areas.length).padStart(2, '0');
           const mid = wheel.scrollLeft + wheel.clientWidth / 2;
           let best = 0;
           let bestD = Infinity;
-          opts.forEach((o, i) => {
+          strip.forEach((o, k) => {
             const d = Math.abs(o.offsetLeft + o.offsetWidth / 2 - mid);
             if (d < bestD) {
               bestD = d;
-              best = i;
+              best = k;
             }
           });
-          select(best);
+          cur = best;
+          select(best % n);
         });
       },
       { passive: true },
@@ -242,22 +290,21 @@ const total = String(areas.length).padStart(2, '0');
 
     /* ------------------------------------------------ both: click, keys */
     // desktop clicks are handled by the grab logic above
-    opts.forEach((o, i) =>
+    strip.forEach((o, k) =>
       o.addEventListener('click', () => {
         if (desktop.matches) return;
-        select(i);
-        centre(i);
+        select(k % n);
+        centre(k);
       }),
     );
     wheel.addEventListener('keydown', (e) => {
       const step = e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : 0;
       if (!step) return;
       e.preventDefault();
-      const next = Math.min(Math.max(selected + step, 0), n - 1);
-      if (desktop.matches) go(next, true);
+      if (desktop.matches) go(Math.round(target) + step, true);
       else {
-        select(next);
-        centre(next);
+        select(mod(cur + step));
+        centre(cur + step);
       }
     });
 
@@ -276,7 +323,7 @@ const total = String(areas.length).padStart(2, '0');
           o.style.removeProperty('filter');
           o.style.removeProperty('--p');
         });
-        centre(selected, false);
+        centre(MID + selected, false);
       }
     };
     // listbox semantics only once the wheel is interactive (without JS: a plain list)
@@ -428,6 +475,10 @@ const total = String(areas.length).padStart(2, '0');
     }
     .sk:global(.is-ready) .opt:not(.is-active) {
       font-weight: 400;
+    }
+    /* the looping copies are only for the strip below desktop */
+    .opt[data-sk-clone] {
+      display: none;
     }
     /* the apex marker */
     .sk:global(.is-ready) .wheel::before {

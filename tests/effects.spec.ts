@@ -12,7 +12,9 @@ const OBJ = '[data-stackbox] .obj';
 /** Scrolls the Stack frame into view and waits until every object rests in it. */
 async function settledPile(page: Page) {
   await page.evaluate(() => document.querySelector('[data-stackbox]')?.scrollIntoView({ block: 'center', behavior: 'instant' }));
-  await expect(page.locator(`${OBJ}.is-on`)).toHaveCount(12, { timeout: 10_000 });
+  const total = await page.locator(OBJ).count();
+  expect(total).toBeGreaterThan(0);
+  await expect(page.locator(`${OBJ}.is-on`)).toHaveCount(total, { timeout: 10_000 });
   const snapshot = () =>
     page.evaluate((sel) => {
       // plain object: a DOMRect does not serialise out of evaluate()
@@ -102,14 +104,14 @@ test.describe('stack (contact)', () => {
     const box = page.locator('[data-stackbox]');
     await expect(box.locator('.sb-label')).toHaveText('Stack');
     await expect(box.locator('.sb-world')).toHaveAttribute('aria-hidden', 'true');
-    await expect(box.locator('.sr-only')).toContainText('Python, FastAPI, PostgreSQL');
+    await expect(box.locator('.sr-only')).toContainText('Python, SQL Server, FastAPI');
     await expect(box.locator('button, [tabindex]')).toHaveCount(0);
-    // pills: brand background, name, original logo (11) or the SQL glyph (1)
+    // pills: brand background, name and the original logo, one per technology
     const pills = box.locator('.obj');
-    await expect(pills).toHaveCount(12);
+    await expect(pills).toHaveCount(15);
     await expect(pills.first()).toHaveCSS('background-color', 'rgb(55, 118, 171)');
     await expect(pills.first().locator('.sb-name')).toHaveText('Python');
-    await expect(box.locator('.sb-ico svg')).toHaveCount(11);
+    await expect(box.locator('.sb-ico svg')).toHaveCount(15);
     // centred in the content column
     const centred = await box.evaluate((el) => {
       const r = el.getBoundingClientRect();
@@ -372,6 +374,20 @@ test.describe('skills: option wheel', () => {
     await expect(opts.first()).toHaveAttribute('aria-selected', 'false');
   });
 
+  test('the wheel loops: before the first area comes the last, after the last the first', async ({ page }) => {
+    await page.goto('/');
+    const sk = page.locator('[data-sk]');
+    await sk.scrollIntoViewIfNeeded();
+    const wheel = sk.getByRole('listbox');
+    const opts = wheel.getByRole('option');
+    const last = (await opts.count()) - 1;
+    await wheel.focus();
+    await page.keyboard.press('ArrowUp');
+    await expect(opts.nth(last)).toHaveAttribute('aria-selected', 'true');
+    await page.keyboard.press('ArrowDown');
+    await expect(opts.first()).toHaveAttribute('aria-selected', 'true');
+  });
+
   test('mobile: tapping a title goes straight to it (no flicker through the others)', async ({ page }, info) => {
     test.skip(!info.project.name.startsWith('mobile'), 'mobile only');
     await page.goto('/');
@@ -383,7 +399,8 @@ test.describe('skills: option wheel', () => {
     await page.evaluate(() => {
       const w = window as unknown as { skLog: number[] };
       w.skLog = [];
-      const all = Array.from(document.querySelectorAll('[data-sk-opt]'));
+      // the real titles only (the strip's looping copies carry no aria-selected)
+      const all = Array.from(document.querySelectorAll('[data-sk-opt]:not([data-sk-clone])'));
       new MutationObserver((ms) => {
         for (const m of ms) {
           const el = m.target as Element;

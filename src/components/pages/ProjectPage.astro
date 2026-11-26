@@ -4,8 +4,8 @@
  * solution → technical decisions → result, with stack, status and verified
  * links in the facts sidebar. Blocks without confirmed content are absent.
  */
-import { ArrowLeft, ArrowUpRight } from '@lucide/astro';
-import { Picture } from 'astro:assets';
+import { ArrowLeft, ArrowUpRight, Play } from '@lucide/astro';
+import { Picture, getImage } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import { projects, kindLabel, caseOrder, caseHeadings, type Project } from '@/data/projects';
 import { profile } from '@/data/profile';
@@ -20,12 +20,27 @@ const idx = projects.findIndex((x) => x.slug === p.slug);
 const next = projects[(idx + 1) % projects.length];
 const paths = routes.project(p.slug);
 const name = t(p.name, lang);
+// characters in the name's longest word: the title shrinks so that word fits
+// on one line (a name like "XI.Analyzer" is never cut in the middle)
+const fit = Math.max(...name.split(/\s+/).map((w) => w.length));
+// presentation video: optimised posters (the PNGs from the render are ~1 MB)
+const v = p.video;
+const poster = v ? await getImage({ src: v.poster, format: 'webp', width: 1600, quality: 80 }) : null;
+const posterMobile = v ? await getImage({ src: v.posterMobile, format: 'webp', width: 800, quality: 80 }) : null;
 const title = `${name} — ${lang === 'pt' ? 'Estudo de caso' : 'Case study'} · ${profile.name}`;
 const description = t(p.description, lang);
 const blocks = caseOrder.flatMap((key) => {
   const b = p.study[key];
   return b ? [{ key, heading: t(caseHeadings[key], lang), ...b }] : [];
 });
+
+// the rail (desktop) and the dock (mobile) index this page's own sections:
+// an overview (title + screenshots) and then each numbered block
+const overview = { pt: 'Visão geral', en: 'Overview' };
+const nav = [
+  { key: 'overview', n: '00', label: t(overview, lang), href: '#case-overview' },
+  ...blocks.map((s, i) => ({ key: s.key, n: String(i + 1).padStart(2, '0'), label: s.heading, href: `#b-${s.key}` })),
+];
 
 const labels = {
   stack: { pt: 'Tecnologias', en: 'Technologies' },
@@ -51,7 +66,16 @@ const jsonLd = [
 ];
 ---
 
-<Base lang={lang} title={title} description={description} paths={paths} ogType="article" jsonLd={jsonLd}>
+<Base
+  lang={lang}
+  title={title}
+  description={description}
+  paths={paths}
+  ogType="article"
+  jsonLd={jsonLd}
+  nav={nav}
+  navLabel={lang === 'pt' ? 'Nesta página' : 'On this page'}
+>
   <article class="case frame" aria-labelledby="case-title">
     <nav class="crumbs mono" aria-label={lang === 'pt' ? 'Navegação estrutural' : 'Breadcrumb'}>
       <a class="back" href={sectionHref('projects', lang, false)}>
@@ -63,20 +87,60 @@ const jsonLd = [
       </span>
     </nav>
 
+    <div
+      id="case-overview"
+      class="overview"
+      data-section="overview"
+      data-index="00"
+      data-label={t(overview, lang)}
+      data-alt-id="case-overview"
+    >
     <header class="head">
       <p class="kind mono">
         <span aria-hidden="true">[</span>{t(kindLabel[p.kind], lang)}<span aria-hidden="true">]</span>
         <span class="sep" aria-hidden="true">·</span>
         {t(p.context, lang)}
       </p>
-      <h1 id="case-title" class="title" tabindex="-1">{name}</h1>
+      <h1 id="case-title" class="title" tabindex="-1" style={`--fit:${fit}`}>{name}</h1>
       <p class="lede">{t(p.lede, lang)}</p>
     </header>
 
     {
-      p.media && (
+      (p.media || v) && (
         <div class="gallery">
-          {p.media.map((m, i) => (
+          {v && poster && posterMobile && (
+            <figure class="shot wide clip" data-reveal data-clip data-poster-mobile={posterMobile.src}>
+              <div class="shot-bar mono" aria-hidden="true">
+                <span>{p.slug}</span>
+                <span>{lang === 'pt' ? 'vídeo' : 'video'} · {v.length}</span>
+              </div>
+              <div class="clip-frame">
+                <video
+                  class="clip-video"
+                  controls
+                  playsinline
+                  preload="none"
+                  poster={poster.src}
+                  aria-label={t(v.caption, lang)}
+                >
+                  <source media="(max-width: 47.999rem)" src={`${v.base}-4x5.mp4`} type="video/mp4" />
+                  <source src={`${v.base}-16x9.mp4`} type="video/mp4" />
+                  <track kind="captions" src={`${v.base}.pt.vtt`} srclang="pt-BR" label="Português" />
+                </video>
+                <button type="button" class="clip-play" data-clip-play hidden>
+                  <span class="clip-icon" aria-hidden="true">
+                    <Play size={22} stroke-width={1.8} fill="currentColor" />
+                  </span>
+                  <span class="clip-label">
+                    {lang === 'pt' ? 'Ver vídeo' : 'Play video'}
+                    <span class="clip-meta mono num">{v.length} · {lang === 'pt' ? 'com som' : 'with sound'}</span>
+                  </span>
+                </button>
+              </div>
+              <figcaption class="mono">{t(v.caption, lang)}</figcaption>
+            </figure>
+          )}
+          {p.media?.map((m, i) => (
         <figure class:list={['shot', { wide: i === 0 || (i === p.media!.length - 1 && i % 2 === 1) }]} data-reveal style={`--i:${i}`}>
           <div class="shot-bar mono" aria-hidden="true">
             <span>{p.slug}</span>
@@ -99,6 +163,7 @@ const jsonLd = [
         </div>
       )
     }
+    </div>
 
     <div class="body">
       <aside class="facts" aria-label={lang === 'pt' ? 'Ficha do projeto' : 'Project facts'}>
@@ -148,26 +213,20 @@ const jsonLd = [
             )
           }
         </dl>
-        <nav class="toc" aria-label={lang === 'pt' ? 'Nesta página' : 'On this page'}>
-          <p class="label">{lang === 'pt' ? 'Nesta página' : 'On this page'}</p>
-          <ol role="list">
-            {
-              blocks.map((s) => (
-                <li>
-                  <a href={`#b-${s.key}`} data-toc-link={`b-${s.key}`}>
-                    {s.heading}
-                  </a>
-                </li>
-              ))
-            }
-          </ol>
-        </nav>
       </aside>
 
       <div class="prose">
         {
           blocks.map((s, i) => (
-            <section class="block" aria-labelledby={`b-${s.key}`} data-reveal>
+            <section
+              class="block"
+              aria-labelledby={`b-${s.key}`}
+              data-reveal
+              data-section={s.key}
+              data-index={String(i + 1).padStart(2, '0')}
+              data-label={s.heading}
+              data-alt-id={`b-${s.key}`}
+            >
               <h2 id={`b-${s.key}`} class="bh">
                 <span class="bn mono num" aria-hidden="true">
                   {String(i + 1).padStart(2, '0')}
@@ -228,10 +287,14 @@ const jsonLd = [
   .back:hover {
     color: var(--c-signal);
   }
+  .overview {
+    scroll-margin-top: 2rem;
+  }
   .head {
     display: grid;
     gap: 1.25rem;
     max-width: 62rem;
+    container-type: inline-size; /* the title sizes itself to this width */
   }
   .kind {
     color: var(--c-signal);
@@ -246,10 +309,13 @@ const jsonLd = [
     color: inherit;
   }
   .title {
-    font-size: var(--step-display);
+    /* the display size, but never wider than the header can hold for the
+       longest word (≈ 0.64em per character in this weight and tracking) */
+    font-size: min(var(--step-display), 100cqi / (var(--fit, 8) * 0.64));
     font-weight: 700;
     line-height: 0.92;
     letter-spacing: -0.05em;
+    /* last resort only, for screens far narrower than any phone */
     overflow-wrap: anywhere;
     outline: none;
   }
@@ -304,6 +370,83 @@ const jsonLd = [
     border: 1px solid var(--c-line-strong);
     border-radius: 0 0 var(--radius-l) var(--radius-l);
   }
+  /* presentation video: same window frame as the screenshots; 16:9 on
+     desktop, 4:5 below 48rem (the files follow the same breakpoint) */
+  .clip-frame {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--c-line-strong);
+    border-radius: 0 0 var(--radius-l) var(--radius-l);
+    background: #000;
+  }
+  .clip-video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  @media (max-width: 47.999rem) {
+    .clip-video {
+      aspect-ratio: 4 / 5;
+    }
+  }
+  .clip-play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0.9rem;
+    width: 100%;
+    border: 0;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.55), rgb(0 0 0 / 0.1) 55%);
+    color: #fff;
+    cursor: pointer;
+  }
+  .clip-play[hidden] {
+    display: none;
+  }
+  .clip-icon {
+    display: grid;
+    place-items: center;
+    width: clamp(3.75rem, 3rem + 3vw, 5rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--c-signal);
+    color: var(--c-signal-ink);
+    box-shadow: 0 12px 30px -10px rgb(0 0 0 / 0.6);
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .clip-icon :global(svg) {
+    translate: 2px 0; /* optical centre of the triangle */
+  }
+  .clip-label {
+    display: grid;
+    justify-items: center;
+    gap: 0.25rem;
+    font-weight: 600;
+    font-size: var(--step-1);
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.5);
+  }
+  .clip-meta {
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.85;
+  }
+  .clip-play:hover .clip-icon,
+  .clip-play:focus-visible .clip-icon {
+    transform: scale(1.08);
+  }
+  .clip-play:focus-visible {
+    outline: 2px solid var(--c-signal);
+    outline-offset: -4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .clip-icon {
+      transition: none;
+    }
+  }
   .shot figcaption {
     margin-top: 0.75rem;
     color: var(--c-fg-subtle);
@@ -328,40 +471,7 @@ const jsonLd = [
       align-self: start;
     }
   }
-  /* "on this page" index: desktop only, under the sticky facts */
-  .toc {
-    display: none;
-  }
-  @media (min-width: 64rem) {
-    .toc {
-      display: grid;
-      gap: 0.6rem;
-      margin-top: 2rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid var(--c-line);
-    }
-  }
-  .toc ol {
-    display: grid;
-    gap: 0.15rem;
-    border-inline-start: 1px solid var(--c-line);
-  }
-  .toc a {
-    display: block;
-    margin-inline-start: -1px;
-    padding: 0.3rem 0 0.3rem 0.9rem;
-    border-inline-start: 1px solid transparent;
-    color: var(--c-fg-subtle);
-    font-size: 0.9rem;
-    transition: color var(--dur-1) linear, border-color var(--dur-1) linear;
-  }
-  .toc a:hover {
-    color: var(--c-fg);
-  }
-  .toc a[aria-current="true"] {
-    color: var(--c-fg);
-    border-color: var(--c-signal);
-  }
+  /* the "on this page" index lives in the rail (desktop) and the dock (mobile) */
   .facts dl {
     display: grid;
     gap: 1.1rem;
