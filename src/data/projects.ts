@@ -137,8 +137,8 @@ const all: Project[] = [
       en: 'A Python tool that processes thousands of log files and shows on a dashboard where problems recur.',
     },
     description: {
-      pt: 'XI.Analyzer: analisador de logs em Python e Streamlit. Mais de 10 000 ficheiros e 5 milhões de linhas processados em menos de 3 minutos. Caso de Juan Leite.',
-      en: 'XI.Analyzer: a Python and Streamlit log analyser. More than 10,000 files and 5 million lines processed in under 3 minutes. Case study by Juan Leite.',
+      pt: 'XI.Analyzer: analisador de logs em Python e Streamlit. 7 000 ficheiros e 19 milhões de linhas processados em pouco mais de 4 minutos. Caso de Juan Leite.',
+      en: 'XI.Analyzer: a Python and Streamlit log analyser. 7,000 files and 19 million lines processed in just over 4 minutes. Case study by Juan Leite.',
     },
     lede: {
       pt: 'Uma ferramenta em Python que processa grandes volumes de logs e mostra, numa dashboard, onde os problemas se repetem.',
@@ -185,10 +185,10 @@ const all: Project[] = [
       result: {
         body: {
           pt: [
-            'Em 2026, a ferramenta processou mais de 10 000 ficheiros e 5 milhões de linhas de logs em menos de 3 minutos. As vistas por dispositivo e por motorista mostram onde os problemas se repetem e apoiam o diagnóstico de incidentes.',
+            'Em 2026, a ferramenta processou 7 000 ficheiros e 19 milhões de linhas de logs em pouco mais de 4 minutos. As vistas por dispositivo e por motorista mostram onde os problemas se repetem e apoiam o diagnóstico de incidentes.',
           ],
           en: [
-            'In 2026 the tool processed more than 10,000 files and 5 million log lines in under 3 minutes. The per-device and per-driver views show where problems recur and support incident diagnosis.',
+            'In 2026 the tool processed 7,000 files and 19 million log lines in just over 4 minutes. The per-device and per-driver views show where problems recur and support incident diagnosis.',
           ],
         },
       },

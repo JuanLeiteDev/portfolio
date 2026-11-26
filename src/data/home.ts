@@ -58,14 +58,14 @@ export const projectsSection = {
   featured: {
     slug: 'log-analyzer',
     /**
-     * Documented figures (case study + CV: "more than 10 000 files and
-     * 5 million lines"), kept for the Odometer counter (not on the page
+     * Documented figures (case study + presentation video: 7 000 files and
+     * 19 million lines), kept for the Odometer counter (not on the page
      * right now). `value` is the real figure (read by screen readers);
-     * `compact` + `abbr` is how it is drawn: 10K+, 5M+.
+     * `compact` + `abbr` is how it is drawn: 7K, 19M.
      */
     stats: [
-      { value: 10_000, compact: 10, abbr: 'K', unit: { pt: 'ficheiros', en: 'files' } },
-      { value: 5_000_000, compact: 5, abbr: 'M', unit: { pt: 'linhas', en: 'lines' } },
+      { value: 7_000, compact: 7, abbr: 'K', unit: { pt: 'ficheiros', en: 'files' } },
+      { value: 19_000_000, compact: 19, abbr: 'M', unit: { pt: 'linhas', en: 'lines' } },
     ],
   },
   code: {
