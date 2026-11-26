@@ -55,6 +55,37 @@ test.describe('command menu (desktop)', () => {
     // the language switch now targets the equivalent EN section
     await expect(page.locator('header.rail a[data-lang-link="en"]')).toHaveAttribute('href', '/en/#projects');
   });
+
+  test('on a case study the rail indexes that page and tracks its sections', async ({ page }) => {
+    await page.goto('/projetos/xi-repair/');
+    const rail = page.locator('header.rail .index');
+    await expect(rail).toHaveAttribute('aria-label', 'Nesta página');
+    await expect(rail.locator('[data-rail-link="overview"]')).toHaveAttribute('aria-current', 'true');
+    // none of the home page's sections
+    await expect(rail.locator('[data-rail-link="projects"]')).toHaveCount(0);
+    await page.evaluate(() => document.getElementById('b-solution')?.scrollIntoView({ block: 'start', behavior: 'instant' }));
+    await expect(rail.locator('[data-rail-link="solution"]')).toHaveAttribute('aria-current', 'true');
+    await expect(page.locator('header.rail a[data-lang-link="en"]')).toHaveAttribute('href', '/en/projects/xi-repair/#b-solution');
+  });
+});
+
+test.describe('case study video', () => {
+  test('poster and play button first; nothing downloaded before play', async ({ page }) => {
+    const errors = trackErrors(page);
+    const fetched: string[] = [];
+    page.on('request', (r) => {
+      if (r.url().includes('/media/')) fetched.push(r.url());
+    });
+    await page.goto('/projetos/xi-repair/');
+    const clip = page.locator('[data-clip]');
+    await clip.scrollIntoViewIfNeeded();
+    await expect(clip.getByRole('button', { name: /Ver vídeo/ })).toBeVisible();
+    await expect(clip.locator('video')).toHaveAttribute('preload', 'none');
+    await expect(clip.locator('video track[kind="captions"]')).toHaveAttribute('src', /\.pt\.vtt$/);
+    await page.waitForTimeout(500);
+    expect(fetched.filter((u) => u.endsWith('.mp4'))).toEqual([]);
+    expect(errors).toEqual([]);
+  });
 });
 
 test.describe('mobile navigation', () => {

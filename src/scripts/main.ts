@@ -49,11 +49,14 @@ const setActive = (el: HTMLElement) => {
     dockN.textContent = el.dataset.index ?? '';
     dockT.textContent = el.dataset.label ?? '';
   }
-  // keep the language switch pointing at the equivalent section
+  // keep the language switch pointing at the equivalent section (the first
+  // one is the top of the page: no hash). Home page and case studies alike:
+  // every page whose sections carry data-section is tracked here.
   const alt = el.dataset.altId;
+  const top = el.dataset.index === '00';
   langLinks.forEach((a) => {
     const base = langBase.get(a) ?? '/';
-    a.setAttribute('href', alt && key !== 'about' ? `${base}#${alt}` : base);
+    a.setAttribute('href', alt && !top ? `${base}#${alt}` : base);
   });
 };
 
@@ -266,6 +269,46 @@ document.addEventListener('click', (e) => {
   setOpen(card, !card.classList.contains('is-open'));
 });
 
+/* ------------------------------------- case study: presentation video */
+
+/**
+ * Without JS the <video> keeps its native controls (preload="none": nothing
+ * is fetched before play). With JS a big play button covers the poster; a
+ * press plays the video with sound and hands over to the native controls.
+ * Below 48rem the 4:5 poster replaces the 16:9 one. Leaving the screen
+ * pauses it.
+ */
+document.querySelectorAll<HTMLElement>('[data-clip]').forEach((fig) => {
+  const video = fig.querySelector<HTMLVideoElement>('video');
+  const btn = fig.querySelector<HTMLButtonElement>('[data-clip-play]');
+  if (!video || !btn) return;
+  const narrow = window.matchMedia('(max-width: 47.999rem)');
+  const desktopPoster = video.poster;
+  const setPoster = () => {
+    if (!video.currentTime) video.poster = narrow.matches ? (fig.dataset.posterMobile ?? desktopPoster) : desktopPoster;
+  };
+  setPoster();
+  narrow.addEventListener('change', setPoster);
+  video.controls = false;
+  btn.hidden = false;
+  btn.addEventListener('click', () => {
+    btn.hidden = true;
+    video.controls = true;
+    void video.play().catch(() => {
+      // playback refused (rare): leave the native controls to the visitor
+    });
+    video.focus({ preventScroll: true });
+  });
+  // pause once less than a quarter is visible (isIntersecting stays true
+  // down to 0, so the ratio is what tells)
+  new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.intersectionRatio < 0.25) && !video.paused) video.pause();
+    },
+    { threshold: [0, 0.25] },
+  ).observe(video);
+});
+
 /* ------------------------------------------------------ copy to clipboard */
 
 document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
@@ -287,22 +330,3 @@ document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
     }, 2200);
   });
 });
-
-/* ------------------------------------- case study: "on this page" spy */
-
-const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
-if (tocLinks.length) {
-  const byId = new Map(tocLinks.map((a) => [a.dataset.tocLink ?? '', a]));
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (!e.isIntersecting) continue;
-        const id = (e.target as HTMLElement).querySelector('h2')?.id ?? '';
-        tocLinks.forEach((a) => a.removeAttribute('aria-current'));
-        byId.get(id)?.setAttribute('aria-current', 'true');
-      }
-    },
-    { rootMargin: '-30% 0px -60% 0px' },
-  );
-  document.querySelectorAll('.block').forEach((b) => io.observe(b));
-}

@@ -6,7 +6,7 @@
 import '@/styles/global.css';
 import { htmlLang, ogLocale, otherLang, ui, t, type L, type Lang } from '@/i18n';
 import { profile } from '@/data/profile';
-import Rail from '@/components/chrome/Rail.astro';
+import Rail, { type NavItem } from '@/components/chrome/Rail.astro';
 import TopBar from '@/components/chrome/TopBar.astro';
 import Dock from '@/components/chrome/Dock.astro';
 import Footer from '@/components/chrome/Footer.astro';
@@ -24,9 +24,12 @@ interface Props {
   jsonLd?: Record<string, unknown>[];
   /** Error pages: no canonical/hreflang, not indexed. */
   noindex?: boolean;
+  /** The page's own rail index (a case study's sections) and its name. */
+  nav?: NavItem[];
+  navLabel?: string;
 }
 
-const { lang, title, description, paths, onHome = false, ogType = 'website', jsonLd = [], noindex = false } = Astro.props;
+const { lang, title, description, paths, onHome = false, ogType = 'website', jsonLd = [], noindex = false, nav, navLabel } = Astro.props;
 const site = Astro.site ?? new URL(profile.url);
 const canonical = new URL(paths[lang], site).href;
 const alternate = new URL(paths[otherLang(lang)], site).href;
@@ -150,13 +153,13 @@ const structured = { '@context': 'https://schema.org', '@graph': [person, ...hom
   <body>
     <a class="skip-link" href="#main">{t(ui.skip, lang)}</a>
     <div class="grain" aria-hidden="true"></div>
-    <Rail lang={lang} paths={paths} onHome={onHome} />
+    <Rail lang={lang} paths={paths} onHome={onHome} items={nav} navLabel={navLabel} />
     <TopBar lang={lang} paths={paths} />
     <main id="main" tabindex="-1" class="with-rail">
       <slot />
     </main>
     <Footer lang={lang} paths={paths} onHome={onHome} />
-    <Dock lang={lang} onHome={onHome} />
+    <Dock lang={lang} onHome={onHome} first={nav?.[0]} />
     <CommandMenuIsland lang={lang} paths={paths} onHome={onHome} />
     <script>
       import '@/scripts/main';

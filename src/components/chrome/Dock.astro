@@ -10,14 +10,16 @@ import { sectionHref, sectionLabels, ui, t, type Lang } from '@/i18n';
 interface Props {
   lang: Lang;
   onHome: boolean;
+  /** The first entry of the page's own index (case studies), if any. */
+  first?: { n: string; label: string } | undefined;
 }
-const { lang, onHome } = Astro.props;
+const { lang, onHome, first } = Astro.props;
 ---
 
 <nav class="dock" aria-label={t(ui.menu, lang)}>
   <span class="where mono" aria-hidden="true">
-    <span class="n num" data-dock-n>00</span>
-    <span class="t" data-dock-t>{t(sectionLabels.about, lang)}</span>
+    <span class="n num" data-dock-n>{first?.n ?? '00'}</span>
+    <span class="t" data-dock-t>{first?.label ?? t(sectionLabels.about, lang)}</span>
   </span>
   <a class="btn-dock" href="#menu" data-cmd-open aria-haspopup="dialog">
     <span class="burger" aria-hidden="true"><span></span><span></span></span>

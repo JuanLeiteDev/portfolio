@@ -245,6 +245,26 @@ const { stack } = contact;
     overflow: hidden;
     background-color: var(--c-bg);
   }
+  /* narrow frames: the 15 pills need roughly twice their own area to pile
+     up loosely (a random heap fills about half the space), so the pills
+     shrink a little and the frame grows taller; otherwise the heap reaches
+     the ceiling and new pills spawn inside it */
+  @media (max-width: 40rem) {
+    .stackbox {
+      --o: 2.05rem;
+    }
+    .sb-world {
+      height: 19rem;
+    }
+  }
+  @media (max-width: 24rem) {
+    .stackbox {
+      --o: 1.95rem;
+    }
+    .sb-world {
+      height: 21rem;
+    }
+  }
   /* objects: brand-coloured pills, the original logo on a white badge */
   .obj {
     position: absolute;

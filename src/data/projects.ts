@@ -3,8 +3,12 @@ import type { L } from '@/i18n';
 import xiRepairDashboard from '@/assets/projects/xi-repair/dashboard.png';
 import xiRepairComponents from '@/assets/projects/xi-repair/components.png';
 import xiRepairRepairs from '@/assets/projects/xi-repair/repairs.png';
+import xiRepairPoster from '@/assets/projects/xi-repair/video-poster-16x9.png';
+import xiRepairPosterMobile from '@/assets/projects/xi-repair/video-poster-4x5.png';
 import logQuality from '@/assets/projects/log-analyzer/quality.png';
 import logPerspective from '@/assets/projects/log-analyzer/perspective.png';
+import logPoster from '@/assets/projects/log-analyzer/video-poster-16x9.webp';
+import logPosterMobile from '@/assets/projects/log-analyzer/video-poster-4x5.webp';
 import supportUsers from '@/assets/projects/xi-support/users.png';
 import support2fa from '@/assets/projects/xi-support/2fa.png';
 import ps2Dashboard from '@/assets/projects/ps2/dashboard.png';
@@ -65,6 +69,23 @@ export interface ProjectMedia {
   caption: L;
 }
 
+/**
+ * Presentation video made by Juan (Remotion), with narration. It plays only
+ * when the visitor presses play (nothing is downloaded before), with sound.
+ * Files live in `public/media/`: `<base>-16x9` (desktop) and `<base>-4x5`
+ * (below 48rem), as .mp4 (H.264, AAC). VP9 WebM was tried and came out no
+ * smaller, so MP4 alone covers every browser. Captions: `<base>.pt.vtt`, a
+ * faithful transcript of the narration (pt-BR, as spoken).
+ */
+export interface ProjectVideo {
+  base: string;
+  /** Length shown on the play button, e.g. "0:38". */
+  length: string;
+  poster: ImageMetadata;
+  posterMobile: ImageMetadata;
+  caption: L;
+}
+
 export interface Project {
   slug: string;
   name: L;
@@ -89,6 +110,8 @@ export interface Project {
   study: CaseStudy;
   links: { label: L; href: string }[];
   media?: ProjectMedia[];
+  /** Presentation video, shown first in the gallery. */
+  video?: ProjectVideo;
   /** Internal note on what still needs Juan's confirmation (not rendered). */
   pending?: string;
 }
@@ -114,8 +137,8 @@ const all: Project[] = [
       en: 'A Python tool that processes thousands of log files and shows on a dashboard where problems recur.',
     },
     description: {
-      pt: 'XI.Analyzer: analisador de logs em Python e Streamlit. Mais de 10 000 ficheiros e 5 milhões de linhas processados em menos de 3 minutos. Caso de Juan Leite.',
-      en: 'XI.Analyzer: a Python and Streamlit log analyser. More than 10,000 files and 5 million lines processed in under 3 minutes. Case study by Juan Leite.',
+      pt: 'XI.Analyzer: analisador de logs em Python e Streamlit. 7 000 ficheiros e 19 milhões de linhas processados em pouco mais de 4 minutos. Caso de Juan Leite.',
+      en: 'XI.Analyzer: a Python and Streamlit log analyser. 7,000 files and 19 million lines processed in just over 4 minutes. Case study by Juan Leite.',
     },
     lede: {
       pt: 'Uma ferramenta em Python que processa grandes volumes de logs e mostra, numa dashboard, onde os problemas se repetem.',
@@ -162,15 +185,25 @@ const all: Project[] = [
       result: {
         body: {
           pt: [
-            'Em 2026, a ferramenta processou mais de 10 000 ficheiros e 5 milhões de linhas de logs em menos de 3 minutos. As vistas por dispositivo e por motorista mostram onde os problemas se repetem e apoiam o diagnóstico de incidentes.',
+            'Em 2026, a ferramenta processou 7 000 ficheiros e 19 milhões de linhas de logs em pouco mais de 4 minutos. As vistas por dispositivo e por motorista mostram onde os problemas se repetem e apoiam o diagnóstico de incidentes.',
           ],
           en: [
-            'In 2026 the tool processed more than 10,000 files and 5 million log lines in under 3 minutes. The per-device and per-driver views show where problems recur and support incident diagnosis.',
+            'In 2026 the tool processed 7,000 files and 19 million log lines in just over 4 minutes. The per-device and per-driver views show where problems recur and support incident diagnosis.',
           ],
         },
       },
     },
     links: [],
+    video: {
+      base: '/media/xi-analyzer/xi-analyzer',
+      length: '0:30',
+      poster: logPoster,
+      posterMobile: logPosterMobile,
+      caption: {
+        pt: 'Apresentação do XI.Analyzer em 30 segundos, com narração. Dados reais com identificadores anonimizados.',
+        en: 'A 30-second presentation of XI.Analyzer, with narration (in Portuguese). Real data with anonymised identifiers.',
+      },
+    },
     media: [
       {
         src: logQuality,
@@ -279,6 +312,16 @@ const all: Project[] = [
       },
     },
     links: [],
+    video: {
+      base: '/media/xi-repair/xi-repair',
+      length: '0:38',
+      poster: xiRepairPoster,
+      posterMobile: xiRepairPosterMobile,
+      caption: {
+        pt: 'Apresentação do XI.Repair em 38 segundos, com narração. Dados fictícios.',
+        en: 'A 38-second presentation of XI.Repair, with narration (in Portuguese). Fictitious data.',
+      },
+    },
     media: [
       {
         src: xiRepairDashboard,

@@ -4,17 +4,38 @@
  * progress line. On the home page main.ts derives the active section and the
  * fill from one measure, so the line reaches each square exactly as it lights
  * up; elsewhere the fill follows the page scroll (CSS scroll-driven animation).
+ *
+ * A page can bring its own index (`items`): a case study lists its own
+ * sections, tracked by main.ts exactly like the home page's.
  */
 import { sectionOrder, sectionLabels, sectionHref, routes, ui, t, type L, type Lang } from '@/i18n';
 import LangSwitch from './LangSwitch.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
+/** One entry of the rail index; `key` matches the `data-section` it tracks. */
+export interface NavItem {
+  key: string;
+  n: string;
+  label: string;
+  href: string;
+}
+
 interface Props {
   lang: Lang;
   paths: L;
   onHome: boolean;
+  items?: NavItem[] | undefined;
+  navLabel?: string | undefined;
 }
-const { lang, paths, onHome } = Astro.props;
+const { lang, paths, onHome, items: own, navLabel } = Astro.props;
+const items: NavItem[] =
+  own ??
+  sectionOrder.map((key, i) => ({
+    key,
+    n: String(i).padStart(2, '0'),
+    label: t(sectionLabels[key], lang),
+    href: sectionHref(key, lang, onHome),
+  }));
 ---
 
 <header class="rail">
@@ -23,17 +44,17 @@ const { lang, paths, onHome } = Astro.props;
     <span class="name">Juan Leite<span class="sr-only">, {lang === 'pt' ? 'página inicial' : 'home page'}</span></span>
   </a>
 
-  <nav class="index" aria-label={t(ui.primaryNav, lang)}>
+  <nav class="index" aria-label={navLabel ?? t(ui.primaryNav, lang)}>
     <span class="track" aria-hidden="true"><span class="fill"></span></span>
     <ol>
       {
-        sectionOrder.map((key, i) => (
+        items.map((it) => (
           <li>
-            <a href={sectionHref(key, lang, onHome)} data-rail-link={key}>
+            <a href={it.href} data-rail-link={it.key}>
               <span class="n mono num" aria-hidden="true">
-                {String(i).padStart(2, '0')}
+                {it.n}
               </span>
-              <span class="t">{t(sectionLabels[key], lang)}</span>
+              <span class="t">{it.label}</span>
             </a>
           </li>
         ))

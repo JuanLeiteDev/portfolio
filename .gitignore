@@ -32,7 +32,7 @@ prompt-*.md
 
 # internal working material (never published)
 docs/
-assets/
+/assets/
 PLAN.md
 DEPLOY.md
 QA.md

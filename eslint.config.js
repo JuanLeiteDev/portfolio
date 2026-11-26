@@ -5,7 +5,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y-x';
 
 export default defineConfig(
   {
-    ignores: ['dist/', '.astro/', 'node_modules/', 'test-results/', 'playwright-report/', 'reports/'],
+    ignores: ['dist/', '.astro/', 'node_modules/', 'test-results/', 'playwright-report/', 'reports/', 'docs/'],
   },
   tseslint.configs.recommended,
   astro.configs.recommended,

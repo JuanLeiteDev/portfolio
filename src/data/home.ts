@@ -58,14 +58,14 @@ export const projectsSection = {
   featured: {
     slug: 'log-analyzer',
     /**
-     * Documented figures (case study + CV: "more than 10 000 files and
-     * 5 million lines"), kept for the Odometer counter (not on the page
+     * Documented figures (case study + presentation video: 7 000 files and
+     * 19 million lines), kept for the Odometer counter (not on the page
      * right now). `value` is the real figure (read by screen readers);
-     * `compact` + `abbr` is how it is drawn: 10K+, 5M+.
+     * `compact` + `abbr` is how it is drawn: 7K, 19M.
      */
     stats: [
-      { value: 10_000, compact: 10, abbr: 'K', unit: { pt: 'ficheiros', en: 'files' } },
-      { value: 5_000_000, compact: 5, abbr: 'M', unit: { pt: 'linhas', en: 'lines' } },
+      { value: 7_000, compact: 7, abbr: 'K', unit: { pt: 'ficheiros', en: 'files' } },
+      { value: 19_000_000, compact: 19, abbr: 'M', unit: { pt: 'linhas', en: 'lines' } },
     ],
   },
   code: {
@@ -291,24 +291,27 @@ export const contact = {
   emailLabel: { pt: 'email', en: 'email' },
   /**
    * "Stack": the technologies as physical objects in a minimalist frame
-   * (stack-physics.ts): brand-coloured pills with the original logo. Only tools that appear in
-   * `skills`, the journey, the projects or this site's own stack.
+   * (stack-physics.ts): brand-coloured pills with the original logo. The list
+   * is the one Juan chose; keep it to tools he actually uses.
    */
   stack: {
     title: { pt: 'Stack', en: 'Stack' },
     items: [
       { name: 'Python', icon: 'python', color: '#3776AB', ink: 'light' },
+      { name: 'SQL Server', icon: 'sqlserver', color: '#CC2927', ink: 'light' },
       { name: 'FastAPI', icon: 'fastapi', color: '#009688', ink: 'light' },
-      { name: 'PostgreSQL', icon: 'postgresql', color: '#336791', ink: 'light' },
-      { name: 'Docker', icon: 'docker', color: '#2496ED', ink: 'light' },
-      { name: 'Git', icon: 'git', color: '#F05032', ink: 'light' },
-      { name: 'SQL', color: '#334155', ink: 'light' },
-      { name: 'Linux', icon: 'linux', color: '#FCC624', ink: 'dark' },
-      { name: 'C', icon: 'c', color: '#A8B9CC', ink: 'dark' },
-      { name: 'HTML5', icon: 'html5', color: '#E34F26', ink: 'light' },
+      { name: 'HTML', icon: 'html5', color: '#E34F26', ink: 'light' },
       { name: 'CSS', icon: 'css', color: '#1572B6', ink: 'light' },
       { name: 'TypeScript', icon: 'typescript', color: '#3178C6', ink: 'light' },
+      { name: 'Git', icon: 'git', color: '#F05032', ink: 'light' },
       { name: 'Redis', icon: 'redis', color: '#DC382D', ink: 'light' },
+      { name: 'Linux', icon: 'linux', color: '#FCC624', ink: 'dark' },
+      { name: 'C#', icon: 'csharp', color: '#68217A', ink: 'light' },
+      { name: 'Docker', icon: 'docker', color: '#2496ED', ink: 'light' },
+      { name: 'Claude Code', icon: 'claude', color: '#D97757', ink: 'dark' },
+      { name: 'Codex', icon: 'openai', color: '#202123', ink: 'light' },
+      { name: 'React', icon: 'react', color: '#087EA4', ink: 'light' },
+      { name: 'Pytest', icon: 'pytest', color: '#0A9EDC', ink: 'light' },
     ] satisfies StackItem[],
   },
 };
